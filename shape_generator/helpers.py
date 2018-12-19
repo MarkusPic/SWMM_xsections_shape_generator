@@ -3,7 +3,6 @@ from pandas import read_csv
 from io import StringIO
 from os import path, listdir, remove
 from math import radians, cos, tan
-# from numbers import Rational
 
 x = Symbol('x', real=True, positive=True)
 d = Symbol('d', real=True)

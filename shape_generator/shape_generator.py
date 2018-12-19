@@ -1,8 +1,5 @@
 import warnings
-from pprint import pprint
-
 from sympy import symbols, Expr, sqrt, Symbol, solve, diff, Float  # , tan, cos
-# from sympy import rad as radians
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -13,7 +10,7 @@ from numpy import NaN
 from pandas import isna, notna, read_excel, read_csv
 from numbers import Rational
 
-from .profile_helpers import csv, deg2slope, channel_end, circle, linear, x, d
+from .helpers import deg2slope, channel_end, circle, linear, x
 
 
 ########################################################################################################################
@@ -249,7 +246,7 @@ class Profile(object):
             # print('*' * 15)
             # print(*self.p, sep='\n')
             (shape, width, height, name, number, add_dim) = (
-            self.shape_corrected, self.width, self.height, self.name, self.number, self.add_dim)
+                self.shape_corrected, self.width, self.height, self.name, self.number, self.add_dim)
 
             num_funktions = len([i for i in shape if isinstance(i, Expr)])
 
@@ -540,333 +537,302 @@ class Profile(object):
         area = (self.df_abs['x'].diff() * (self.df_abs['y'] - self.df_abs['y'].diff() / 2) * 2).sum() * 1e-6
         return area
 
+    ####################################################################################################################
+    @staticmethod
+    def standard(no, name, height, width=NaN, r_channel=NaN, r_roof=NaN, r_wall=NaN, slope_bench=NaN, r_round=NaN,
+                 r_wall_bottom=NaN, h_bench=NaN, pre_bench=NaN, w_channel=NaN, add_dim=False, add_dn=False):
+        """
+        Der Querschnitt des Standard Profils
 
-########################################################################################################################
-def std_profile(no, name, height, width=NaN, r_channel=NaN, r_roof=NaN, r_wall=NaN, slope_bench=NaN, r_round=NaN,
-                r_wall_bottom=NaN, h_bench=NaN, pre_bench=NaN, w_channel=NaN, add_dim=False, add_dn=False):
-    """
-    Der Querschnitt des Standard Profils
+        :type add_dn: bool
+        :type add_dim: bool
+        :param int | str no: number
+        :param str name: label of the profile
+        :param float height:
+        :param float width:
+        :param float r_channel: radius
+        :param float r_roof: radius
+        :param float r_wall: radius
+        :param float slope_bench: slope in degree
+        :param float r_round: radius
+        :param float r_wall_bottom: radius
+        :param float h_bench: height
+        :param float pre_bench: fist bench in degree
+        :param float w_channel: width
 
-    :type add_dn: bool
-    :type add_dim: bool
-    :param int | str no: number
-    :param str name: label of the profile
-    :param float height:
-    :param float width:
-    :param float r_channel: radius
-    :param float r_roof: radius
-    :param float r_wall: radius
-    :param float slope_bench: slope in degree
-    :param float r_round: radius
-    :param float r_wall_bottom: radius
-    :param float h_bench: height
-    :param float pre_bench: fist bench in degree
-    :param float w_channel: width
-
-    :rtype: Profile
-    """
-
-    # ------------------------------------------------
-    cross_section = Profile(number=no, name=name, height=height, width=(width if notna(width) else None),
-                            add_dim=add_dim, add_dn=add_dn)
-
-    # ------------------------------------------------
-    # TW-Rinne
-    if notna(r_channel):
-        cross_section.add(circle(r_channel, x_m=r_channel))
+        :rtype: Profile
+        """
 
         # ------------------------------------------------
-        if notna(pre_bench):
-            cross_section.add(channel_end(r_channel, pre_bench))
+        cross_section = Profile(number=no, name=name, height=height, width=(width if notna(width) else None),
+                                add_dim=add_dim, add_dn=add_dn)
 
-            if notna(h_bench) or isna(slope_bench):
-                cross_section.add(pre_bench, '°slope')
+        # ------------------------------------------------
+        # TW-Rinne
+        if notna(r_channel):
+            cross_section.add(circle(r_channel, x_m=r_channel))
 
-            if notna(h_bench):
-                cross_section.add(h_bench)
+            # ------------------------------------------------
+            if notna(pre_bench):
+                cross_section.add(channel_end(r_channel, pre_bench))
 
-        elif notna(w_channel):
-            cross_section.add(None, w_channel)
+                if notna(h_bench) or isna(slope_bench):
+                    cross_section.add(pre_bench, '°slope')
 
-        else:
-            if notna(h_bench):
-                cross_section.add(h_bench)
+                if notna(h_bench):
+                    cross_section.add(h_bench)
+
+            elif notna(w_channel):
+                cross_section.add(None, w_channel)
+
             else:
-                cross_section.add(r_channel)
-                if isna(r_round):
-                    r_round = 0
-                cross_section.add(r_channel + r_round, r_channel)
+                if notna(h_bench):
+                    cross_section.add(h_bench)
+                else:
+                    cross_section.add(r_channel)
+                    if isna(r_round):
+                        r_round = 0
+                    cross_section.add(r_channel + r_round, r_channel)
 
-    # ------------------------------------------------
-    if notna(slope_bench):
-        # Berme winkel in °
-        cross_section.add(slope_bench, '°slope')
+        # ------------------------------------------------
+        if notna(slope_bench):
+            # Berme winkel in °
+            cross_section.add(slope_bench, '°slope')
 
-    # ------------------------------------------------
-    if isna(r_channel) and isna(slope_bench):
-        cross_section.add(0, width / 2)
+        # ------------------------------------------------
+        if isna(r_channel) and isna(slope_bench):
+            cross_section.add(0, width / 2)
 
-    # ------------------------------------------------
-    if isna(r_roof):
-        # eckige Decke
-        cross_section.add(None, width / 2)
-        cross_section.add(height, width / 2)
-
-    else:
-        if isna(r_wall):
+        # ------------------------------------------------
+        if isna(r_roof):
+            # eckige Decke
             cross_section.add(None, width / 2)
-            cross_section.add(height - r_roof, width / 2)
+            cross_section.add(height, width / 2)
+
         else:
-            # ------------------------------------------------
-            h1 = sqrt((r_wall - r_roof) ** 2 - (r_wall - width / 2) ** 2)
-            h_middle = round(height - r_roof - h1, 8)
-
-            # ------------------------------------------------
-            if isna(r_wall_bottom):
+            if isna(r_wall):
                 cross_section.add(None, width / 2)
-                cross_section.add(h_middle, width / 2)
-
+                cross_section.add(height - r_roof, width / 2)
             else:
-                cross_section.add(circle(r_wall_bottom, x_m=h_middle, y_m=width / 2 - r_wall_bottom))
-                cross_section.add(h_middle)
+                # ------------------------------------------------
+                h1 = sqrt((r_wall - r_roof) ** 2 - (r_wall - width / 2) ** 2)
+                h_middle = round(height - r_roof - h1, 8)
+
+                # ------------------------------------------------
+                if isna(r_wall_bottom):
+                    cross_section.add(None, width / 2)
+                    cross_section.add(h_middle, width / 2)
+
+                else:
+                    cross_section.add(circle(r_wall_bottom, x_m=h_middle, y_m=width / 2 - r_wall_bottom))
+                    cross_section.add(h_middle)
+
+                # ------------------------------------------------
+                cross_section.add(circle(r_wall, x_m=h_middle, y_m=width / 2 - r_wall))
+                cross_section.add(h_middle + h1 / (r_wall - r_roof) * r_wall)
 
             # ------------------------------------------------
-            cross_section.add(circle(r_wall, x_m=h_middle, y_m=width / 2 - r_wall))
-            cross_section.add(h_middle + h1 / (r_wall - r_roof) * r_wall)
+            cross_section.add(circle(r_roof, x_m=height - r_roof))
 
         # ------------------------------------------------
-        cross_section.add(circle(r_roof, x_m=height - r_roof))
-
-    # ------------------------------------------------
-    return cross_section
-
-
-########################################################################################################################
-def box_profile_from_string(label, height, width, custom_label=None):
-    """
-
-    :type custom_label: str
-    :type width: float
-    :type height: float
-    :param label: label of box profile
-
-    :return:
-    :rtype: Profile
-    """
-
-    import re
-    infos = re.findall(r'(K)(\.?)(\d*)([RH]?)_?([BK]?)', label)  # _(\d+)x(\d+)
-    if len(infos) == 1:
-        infos = infos[0]
-        _, _, channel, bench, roof = infos
-
-        if channel != '':
-            channel = float(channel) * 10  # from cm to mm
-        else:
-            channel = None
-
-        bench, roof = [x if x != '' else None for x in (bench, roof)]
-
-        cross_section = box_profile(label, height=height, width=width, channel=channel, bench=bench, roof=roof,
-                                    custom_label=custom_label)
         return cross_section
 
-    # --------------------------------------
-    else:
-        raise NotImplementedError('"{}" unknown !'.format(label))
+    ####################################################################################################################
+    @staticmethod
+    def box(no, height, width, channel=None, bench=None, roof=None, rounding=0.0, add_dim=True,
+            custom_label=None):
+        """
+        Kasten
 
-    # --------------------------------------
-    # if label.startswith('K'):
-    #     string = label
-    #     string = string.replace('K', '')
-    #
-    #     if '.' not in string:
-    #         bench = None
-    #         roof = None
-    #         channel = None
-    #         width = None
-    #         height = None
-    #
-    #         if ' ' in string:
-    #             channel_bench, roof = string.split()
-    #
-    #         if channel_bench.isnumeric():
-    #             channel = float(channel_bench)
-    #
-    #         elif channel_bench.isalpha():
-    #             bench = channel_bench
-    #
-    #         elif channel_bench.isalnum():
-    #             pass
-    #
-    #         return cross_section
-    #
-    #         # --------------------------------------
-    #     elif (label == 'K') or (label.startswith('K') and ('.' not in label)):
-    #         raise NotImplementedError('RechteckKasten - "{}"'.format(label))
-    #
-    #     # --------------------------------------
+        :type add_dim: bool
+        :type custom_label: str
+        :type no: profile number
+        :param float height: in [mm]
+        :param float width: in [mm]
+        :param float channel: diameter in [mm]
+        :param str bench: ''=flache Berme <|> 'R'=V-förmiges Profil <|> 'H'=Schräge Verschneidung
+        :param str roof: ''=gerade <|> 'B'= Bogen <|>  'K'=Kreis
+        :type rounding: float
 
+        :rtype: Profile
+        :return:
+        """
+        name = 'K'
+        cross_section = Profile(number=no, name=custom_label, width=width, height=height, add_dim=add_dim)
 
-########################################################################################################################
-def box_profile(no, height, width, channel=None, bench=None, roof=None, rounding=0.0, add_dim=True, custom_label=None):
-    """
-    Kasten
+        if isna(channel):
+            channel = None
+        else:
+            channel = float(channel)
 
-    :type add_dim: bool
-    :type custom_label: str
-    :type no: profile number
-    :param float height: in [mm]
-    :param float width: in [mm]
-    :param float channel: diameter in [mm]
-    :param str bench: ''=flache Berme <|> 'R'=V-förmiges Profil <|> 'H'=Schräge Verschneidung
-    :param str roof: ''=gerade <|> 'B'= Bogen <|>  'K'=Kreis
-    :type rounding: float
+        if isna(bench):
+            bench = ''
 
-    :rtype: Profile
-    :return:
-    """
-    name = 'K'
-    cross_section = Profile(number=no, name=custom_label, width=width, height=height, add_dim=add_dim)
+        if isna(roof):
+            roof = ''
 
-    if isna(channel):
-        channel = None
-    else:
-        channel = float(channel)
+        if channel or bench:
+            name += '.'
+            bench = str(bench).strip()
 
-    if isna(bench):
-        bench = ''
+            if isinstance(channel, float):
+                name += '{:0.0f}'.format(channel)
+                channel /= 2
+                cross_section.add(circle(channel, x_m=channel))
 
-    if isna(roof):
-        roof = ''
+            if isinstance(bench, str):
+                if bench != '45':
+                    name += str(bench)
 
-    if channel or bench:
-        name += '.'
-        bench = str(bench).strip()
+                if bench == 'R':
+                    cross_section.add(30, '%slope')
+                    cross_section.add(None, width / 2)
 
-        if isinstance(channel, float):
-            name += '{:0.0f}'.format(channel)
-            channel /= 2
-            cross_section.add(circle(channel, x_m=channel))
-
-        if isinstance(bench, str):
-            if bench != '45':
-                name += str(bench)
-
-            if bench == 'R':
-                cross_section.add(30, '%slope')
-                cross_section.add(None, width / 2)
-
-            elif bench == 'H':
-                cross_section.add(channel_end(channel, 45))
-                cross_section.add(45, '°slope')
-                cross_section.add(None, width / 2)
-
-            elif bench == '45':
-                cross_section.add(channel_end(channel, 45))
-                cross_section.add(45, '°slope')
-                cross_section.add(channel + rounding)
-                cross_section.add(channel + rounding, width / 2)
-
-            else:
-                # Berme
-                # cross_section.add(channel, width / 2)
-                # cross_section.add(channel + rounding, width / 2)
-
-                if 1:
+                elif bench == 'H':
                     cross_section.add(channel_end(channel, 45))
                     cross_section.add(45, '°slope')
+                    cross_section.add(None, width / 2)
+
+                elif bench == '45':
+                    cross_section.add(channel_end(channel, 45))
+                    cross_section.add(45, '°slope')
+                    cross_section.add(channel + rounding)
+                    cross_section.add(channel + rounding, width / 2)
+
                 else:
-                    cross_section.add(channel, channel)
-                cross_section.add(channel + rounding, None)
-                cross_section.add(5, '°slope')
-                cross_section.add(None, width / 2)
+                    # Berme
+                    # cross_section.add(channel, width / 2)
+                    # cross_section.add(channel + rounding, width / 2)
 
-    else:
-        # ebene Sohle
-        cross_section.add(0, width / 2)
+                    if 1:
+                        cross_section.add(channel_end(channel, 45))
+                        cross_section.add(45, '°slope')
+                    else:
+                        cross_section.add(channel, channel)
+                    cross_section.add(channel + rounding, None)
+                    cross_section.add(5, '°slope')
+                    cross_section.add(None, width / 2)
 
-    if roof:
-        name += '_' + str(roof)
+        else:
+            # ebene Sohle
+            cross_section.add(0, width / 2)
 
-        if roof == '':
+        if roof:
+            name += '_' + str(roof)
+
+            if roof == '':
+                # gerade Decke
+                cross_section.add(height, width / 2)
+
+            elif roof == 'B':
+                # Bogen-Decke
+                cross_section.add(height - width * (1 - cos(radians(30))), width / 2)
+                cross_section.add(circle(width, x_m=height - width))
+
+            elif roof == 'K':
+                # Kreis Decke
+                cross_section.add(height - width / 2, width / 2)
+                cross_section.add(circle(width / 2, x_m=height - width / 2))
+        else:
             # gerade Decke
             cross_section.add(height, width / 2)
 
-        elif roof == 'B':
-            # Bogen-Decke
-            cross_section.add(height - width * (1 - cos(radians(30))), width / 2)
-            cross_section.add(circle(width, x_m=height - width))
+        if cross_section.name is None or cross_section.name == '':
+            cross_section.name = name
+        cross_section.generator(show=False)
+        return cross_section
 
-        elif roof == 'K':
-            # Kreis Decke
-            cross_section.add(height - width / 2, width / 2)
-            cross_section.add(circle(width / 2, x_m=height - width / 2))
-    else:
-        # gerade Decke
-        cross_section.add(height, width / 2)
+    ####################################################################################################################
+    @staticmethod
+    def box_from_string(label, height, width, custom_label=None):
+        """
 
-    if cross_section.name is None or cross_section.name == '':
-        cross_section.name = name
-    cross_section.generator(show=False)
-    return cross_section
+        :type custom_label: str
+        :type width: float
+        :type height: float
+        :param label: label of box profile
 
+        :return:
+        :rtype: Profile
+        """
 
-def from_point_cloud(excel_filename='/home/markus/Downloads/Haltung 6560086.xlsx',
-                     number=950, name='Profil 950', height=2250, width=1800, add_dim=True, add_dn=False):
-    """
+        import re
+        infos = re.findall(r'(K)(\.?)(\d*)([RH]?)_?([BK]?)', label)  # _(\d+)x(\d+)
+        if len(infos) == 1:
+            infos = infos[0]
+            _, _, channel, bench, roof = infos
 
-    :param excel_filename:
-    :param number:
-    :param name:
-    :param height:
-    :param width:
-    :param add_dim:
-    :param add_dn:
+            if channel != '':
+                channel = float(channel) * 10  # from cm to mm
+            else:
+                channel = None
 
-    :rtype: Profile
-    :return:
-    """
-    X = 'x'  # horizontal distance to lowest point (dry weather channel)
-    Y = 'y'  # vertical distance to lowest point (dry weather channel)
+            bench, roof = [x if x != '' else None for x in (bench, roof)]
 
-    # distances in meter
-    if excel_filename.endswith('.csv'):
-        coordinates = read_csv(excel_filename, header=0, usecols=[0, 1], names=[X, Y]).mul(1000).round(0).set_index(Y)[
-            X]
-    elif excel_filename.endswith('.xlsx'):
-        coordinates = \
-        read_excel(excel_filename, skiprows=3, header=None, usecols=[0, 1], names=[X, Y]).mul(1000).set_index(Y)[X]
-    else:
-        raise NotImplementedError
+            cross_section = Profile.box(label, height=height, width=width, channel=channel, bench=bench, roof=roof,
+                                        custom_label=custom_label)
+            return cross_section
 
-    # height of the profile = maximum Y coordinate
-    height_pr = coordinates.index.max()
+        # --------------------------------------
+        else:
+            raise NotImplementedError('"{}" unknown !'.format(label))
 
-    # horizontal distance to lowest point (dry weather channel)
-    # split to left and right part of the profile
-    y_df = pd.concat([coordinates.loc[:height_pr].rename('right'),
-                      coordinates.loc[height_pr:].rename('left')], axis=1)
-    y_df.loc[0] = 0
-    # interpolate to an even number of points on the left and right part of the profile
-    y_df_filled = y_df.interpolate()
+    @staticmethod
+    def from_point_cloud(excel_filename='/home/markus/Downloads/Haltung 6560086.xlsx',
+                         number=950, name='Profil 950', height=2250, width=1800, add_dim=True, add_dn=False):
+        """
 
-    # for debugging
-    # plot of the point cloud
-    y_df_filled.plot()
+        :param excel_filename:
+        :param number:
+        :param name:
+        :param height:
+        :param width:
+        :param add_dim:
+        :param add_dn:
 
-    # s = (y_df_filled['right'] - y_df_filled['left']) / 2
-    # df = pd.DataFrame()
-    # df[X] = s.index.values
-    # df[Y] = s.values
+        :rtype: Profile
+        :return:
+        """
+        X = 'x'  # horizontal distance to lowest point (dry weather channel)
+        Y = 'y'  # vertical distance to lowest point (dry weather channel)
 
-    df = pd.DataFrame(
-        {
-            X: y_df.index,
-            Y: (y_df_filled['right'] - y_df_filled['left']) / 2
-        })
+        # distances in meter
+        if excel_filename.endswith('.csv'):
+            coordinates = read_csv(excel_filename, header=0, usecols=[0, 1], names=[X, Y]).mul(1000).round(0).set_index(Y)[
+                X]
+        elif excel_filename.endswith('.xlsx'):
+            coordinates = \
+                read_excel(excel_filename, skiprows=3, header=None, usecols=[0, 1], names=[X, Y]).mul(1000).set_index(Y)[X]
+        else:
+            raise NotImplementedError
 
-    cross_section = Profile(number=number, name=name, height=height, width=width, add_dim=add_dim, add_dn=add_dn)
-    cross_section.df_abs = df
-    cross_section.check_point_cloud(df, double=False)
-    return cross_section
+        # height of the profile = maximum Y coordinate
+        height_pr = coordinates.index.max()
+
+        # horizontal distance to lowest point (dry weather channel)
+        # split to left and right part of the profile
+        y_df = pd.concat([coordinates.loc[:height_pr].rename('right'),
+                          coordinates.loc[height_pr:].rename('left')], axis=1)
+        y_df.loc[0] = 0
+        # interpolate to an even number of points on the left and right part of the profile
+        y_df_filled = y_df.interpolate()
+
+        # for debugging
+        # plot of the point cloud
+        y_df_filled.plot()
+
+        # s = (y_df_filled['right'] - y_df_filled['left']) / 2
+        # df = pd.DataFrame()
+        # df[X] = s.index.values
+        # df[Y] = s.values
+
+        df = pd.DataFrame(
+            {
+                X: y_df.index,
+                Y: (y_df_filled['right'] - y_df_filled['left']) / 2
+            })
+
+        cross_section = Profile(number=number, name=name, height=height, width=width, add_dim=add_dim, add_dn=add_dn)
+        cross_section.df_abs = df
+        cross_section.check_point_cloud(df, double=False)
+        return cross_section
