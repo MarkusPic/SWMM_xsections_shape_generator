@@ -1,5 +1,5 @@
 from sympy import Expr, sqrt, Symbol, solve, Float
-from pandas import read_csv
+from pandas import read_csv, DataFrame
 from io import StringIO
 from os import path, listdir, remove
 from math import radians, cos, tan
@@ -10,7 +10,7 @@ d = Symbol('d', real=True)
 
 def csv(txt, comment=None):
     """
-    get the data of the text csv
+    Read the string in txt as csv file and return the content as DataFrame.
 
     :param txt: content of csv
     :type txt: str
@@ -18,8 +18,8 @@ def csv(txt, comment=None):
     :param comment: comment sign
     :type comment: str
 
-    :return: csv table as DataFrame
-    :rtype: pd.DataFrame
+    :return: csv table as pandas DataFrame
+    :rtype: DataFrame
     """
     df = read_csv(StringIO(txt), index_col=0, skipinitialspace=True, skip_blank_lines=True, comment=comment)
     df = df[df.index.notnull()].copy()
@@ -31,8 +31,11 @@ def deg2slope(deg):
     """
     convert degrees to a slope (delta y / delta x)
 
+    :math:`\\delta`
+
     :param deg: angle in degree
     :type deg: float
+
     :return: slope
     :rtype: float
     """
@@ -44,7 +47,9 @@ def channel_end(r, alpha):
     get vertical end of the channel
 
     :param float r:
+
     :param float alpha: in grad
+
     :return:
     :rtype: float
     """
@@ -68,7 +73,9 @@ def linear(slope, p0):
     """
 
     :param float slope:
+
     :param tuple p0:
+
     :return: linear function
     :rtype: Expr
     """
@@ -85,7 +92,9 @@ def combine_input_files(shape_path, delete_original=False):
     """
 
     :param shape_path: path where the shapes are stored
+
     :param delete_original:
+
     :return:
     """
     with open(path.join(shape_path, 'all_shapes.txt'), 'w') as outfile:
