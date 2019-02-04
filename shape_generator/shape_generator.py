@@ -16,7 +16,20 @@ from .helpers import deg2slope, channel_end, circle, linear, x
 ########################################################################################################################
 ########################################################################################################################
 class Profile(object):
-    def __init__(self, number, name=None, height=None, width=None, add_dim=False, add_dn=False, output_path=''):
+    """A Class that should help to generate custom cross section shapes for the SWMM software."""
+
+    def __init__(self, number, name=None, height=None, width=None, add_dim=False, add_dn=False, working_directory=''):
+        """
+
+        Args:
+            number (str):
+            name (str):
+            height (float):
+            width (float):
+            add_dim (bool):
+            add_dn (bool):
+            working_directory (str):
+        """
         if isinstance(number, (float, int)):
             self.number = '{:0.0f}'.format(number)
         else:
@@ -35,7 +48,7 @@ class Profile(object):
         self.add_dim = add_dim
         self.add_dn = add_dn
         self.accuracy = 4
-        self.out_path = output_path
+        self.out_path = working_directory
 
         # Profile data
         self.df_abs = pd.DataFrame()
@@ -483,7 +496,12 @@ class Profile(object):
         ax.set_axisbelow(True)
         # ax.set_ylabel('rel H')
         # ax.set_xlabel('B/H')
-        ax.set_title('{}: {}\n{:0.0f}x{:0.0f}mm'.format(self.number, self.name, h, custom_round(w * 2, 50)))
+
+        n = self.number
+        if self.number != 'Pr_{}'.format(self.name):
+            n += ': {}'.format(self.name)
+
+        ax.set_title('{}\n{:0.0f}x{:0.0f}mm'.format(n, h, custom_round(w * 2, 50)))
         self.cross_section_area()
 
         if self.height < 10:
@@ -676,7 +694,7 @@ class Profile(object):
             bench = str(bench).strip()
 
             if isinstance(channel, float):
-                name += '{:0.0f}'.format(channel)
+                name += '{:0.0f}'.format(channel / 10)
                 channel /= 2
                 cross_section.add(circle(channel, x_m=channel))
 
@@ -798,11 +816,13 @@ class Profile(object):
 
         # distances in meter
         if excel_filename.endswith('.csv'):
-            coordinates = read_csv(excel_filename, header=0, usecols=[0, 1], names=[X, Y]).mul(1000).round(0).set_index(Y)[
+            coordinates = \
+            read_csv(excel_filename, header=0, usecols=[0, 1], names=[X, Y]).mul(1000).round(0).set_index(Y)[
                 X]
         elif excel_filename.endswith('.xlsx'):
             coordinates = \
-                read_excel(excel_filename, skiprows=3, header=None, usecols=[0, 1], names=[X, Y]).mul(1000).set_index(Y)[X]
+                read_excel(excel_filename, skiprows=3, header=None, usecols=[0, 1], names=[X, Y]).mul(1000).set_index(
+                    Y)[X]
         else:
             raise NotImplementedError
 
