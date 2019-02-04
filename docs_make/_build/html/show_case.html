@@ -1,0 +1,1099 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Examples for general profile shapes &mdash; SWMM CrossSection shape Generator 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples for box shaped profiles" href="show_case-kasten.html" />
+    <link rel="prev" title="API" href="api.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SWMM CrossSection shape Generator
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples for general profile shapes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="show_case-kasten.html">Examples for box shaped profiles</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SWMM CrossSection shape Generator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Examples for general profile shapes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/show_case.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 5ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="Examples-for-general-profile-shapes">
+<h1>Examples for general profile shapes<a class="headerlink" href="#Examples-for-general-profile-shapes" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">shape_generator</span> <span class="k">import</span> <span class="n">Profile</span><span class="p">,</span> <span class="n">circle</span><span class="p">,</span> <span class="n">csv</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">profile_dimensions</span> <span class="o">=</span> <span class="n">csv</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">nr,name,r</span>
+<span class="s2">P0,0,300</span>
+<span class="s2">P1,1,350</span>
+<span class="s2">P2,2,400</span>
+<span class="s2">P3,3,450</span>
+<span class="s2">P4,4,500</span>
+<span class="s2">P5,5,550</span>
+<span class="s2">P6,6,600</span>
+<span class="s2">P7,6a,650</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="n">profile_dimensions</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>r</th>
+    </tr>
+    <tr>
+      <th>nr</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>P0</th>
+      <td>0</td>
+      <td>300</td>
+    </tr>
+    <tr>
+      <th>P1</th>
+      <td>1</td>
+      <td>350</td>
+    </tr>
+    <tr>
+      <th>P2</th>
+      <td>2</td>
+      <td>400</td>
+    </tr>
+    <tr>
+      <th>P3</th>
+      <td>3</td>
+      <td>450</td>
+    </tr>
+    <tr>
+      <th>P4</th>
+      <td>4</td>
+      <td>500</td>
+    </tr>
+    <tr>
+      <th>P5</th>
+      <td>5</td>
+      <td>550</td>
+    </tr>
+    <tr>
+      <th>P6</th>
+      <td>6</td>
+      <td>600</td>
+    </tr>
+    <tr>
+      <th>P7</th>
+      <td>6a</td>
+      <td>650</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">no</span> <span class="o">=</span> <span class="s1">&#39;P0&#39;</span>
+<span class="n">name</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">profile_dimensions</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">no</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">R</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">r</span>
+<span class="n">roh</span> <span class="o">=</span> <span class="n">r</span> <span class="o">/</span> <span class="mi">2</span>
+<span class="n">height</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="mi">3</span>
+<span class="n">width</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="c1"># h1 = roh - (r + roh) / (R - roh) * roh</span>
+<span class="n">h1</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">r</span>
+
+<span class="n">cross_section</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="n">no</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">)</span>
+<span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">circle</span><span class="p">(</span><span class="n">roh</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="n">roh</span><span class="p">))</span>
+<span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">h1</span><span class="p">)</span>
+<span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">circle</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">r</span><span class="p">,</span> <span class="n">y_m</span><span class="o">=-</span><span class="p">(</span><span class="n">R</span> <span class="o">-</span> <span class="n">r</span><span class="p">)))</span>
+<span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">r</span><span class="p">)</span>
+<span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">circle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">r</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+______________________________
+Pr_P0  -&gt;  0
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">cross_section</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0 :  sqrt(-(x - 150.0)**2 + 22500.0)
+1 :  (60.0, None)
+2 :  sqrt(-(x - 600.0)**2 + 810000.0) - 600.0
+3 :  (600.0, None)
+4 :  sqrt(-(x - 600.0)**2 + 90000.0)
+          x        y
+0         0        0
+1        10  53.8516
+2        20  74.8331
+3        30       90
+4        40   101.98
+5        50  111.803
+6        60      120
+7   69.4737  127.009
+8   78.9474  133.828
+9   88.4211  140.464
+10  97.8947  146.921
+11  107.368  153.202
+12  116.842  159.314
+13  126.316   165.26
+14  135.789  171.044
+15  145.263  176.669
+16  154.737  182.139
+17  164.211  187.457
+18  173.684  192.625
+19  183.158  197.648
+20  192.632  202.528
+21  202.105  207.267
+22  211.579  211.868
+23  221.053  216.333
+24  230.526  220.664
+25      240  224.864
+26  249.474  228.934
+27  258.947  232.876
+28  268.421  236.693
+29  277.895  240.386
+..      ...      ...
+67  628.125  298.679
+68    637.5  297.647
+69  646.875  296.315
+70   656.25  294.679
+71  665.625  292.734
+72      675  290.474
+73  684.375   287.89
+74   693.75  284.975
+75  703.125  281.718
+76    712.5  278.107
+77  721.875  274.129
+78   731.25  269.766
+79  740.625  264.999
+80      750  259.808
+81  759.375  254.165
+82   768.75  248.039
+83  778.125  241.395
+84    787.5  234.187
+85  796.875  226.363
+86   806.25  217.855
+87  815.625  208.581
+88      825  198.431
+89  834.375  187.265
+90   843.75  174.888
+91  853.125  161.021
+92    862.5  145.237
+93  871.875  126.823
+94   881.25  104.396
+95  890.625  74.4118
+96      900        0
+
+[97 rows x 2 columns]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">cross_section</span><span class="o">.</span><span class="n">df_abs</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>x</th>
+      <th>y</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.00</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>9.99</td>
+      <td>53.82</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>19.98</td>
+      <td>74.79</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>29.97</td>
+      <td>90.00</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>39.96</td>
+      <td>101.97</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>50.04</td>
+      <td>111.78</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>60.03</td>
+      <td>119.97</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>69.48</td>
+      <td>126.99</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>78.93</td>
+      <td>133.83</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>88.38</td>
+      <td>140.49</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>97.92</td>
+      <td>146.88</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>107.37</td>
+      <td>153.18</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>116.82</td>
+      <td>159.30</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>126.36</td>
+      <td>165.24</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>135.81</td>
+      <td>171.00</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>145.26</td>
+      <td>176.67</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>154.71</td>
+      <td>182.16</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>164.25</td>
+      <td>187.47</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>173.70</td>
+      <td>192.60</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>183.15</td>
+      <td>197.64</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>192.60</td>
+      <td>202.50</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>202.14</td>
+      <td>207.27</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>211.59</td>
+      <td>211.86</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>221.04</td>
+      <td>216.36</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>230.49</td>
+      <td>220.68</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>240.03</td>
+      <td>224.82</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>249.48</td>
+      <td>228.96</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>258.93</td>
+      <td>232.92</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>268.38</td>
+      <td>236.70</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>277.92</td>
+      <td>240.39</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>67</th>
+      <td>628.11</td>
+      <td>298.71</td>
+    </tr>
+    <tr>
+      <th>68</th>
+      <td>637.47</td>
+      <td>297.63</td>
+    </tr>
+    <tr>
+      <th>69</th>
+      <td>646.92</td>
+      <td>296.28</td>
+    </tr>
+    <tr>
+      <th>70</th>
+      <td>656.28</td>
+      <td>294.66</td>
+    </tr>
+    <tr>
+      <th>71</th>
+      <td>665.64</td>
+      <td>292.77</td>
+    </tr>
+    <tr>
+      <th>72</th>
+      <td>675.00</td>
+      <td>290.43</td>
+    </tr>
+    <tr>
+      <th>73</th>
+      <td>684.36</td>
+      <td>287.91</td>
+    </tr>
+    <tr>
+      <th>74</th>
+      <td>693.72</td>
+      <td>284.94</td>
+    </tr>
+    <tr>
+      <th>75</th>
+      <td>703.08</td>
+      <td>281.70</td>
+    </tr>
+    <tr>
+      <th>76</th>
+      <td>712.53</td>
+      <td>278.10</td>
+    </tr>
+    <tr>
+      <th>77</th>
+      <td>721.89</td>
+      <td>274.14</td>
+    </tr>
+    <tr>
+      <th>78</th>
+      <td>731.25</td>
+      <td>269.73</td>
+    </tr>
+    <tr>
+      <th>79</th>
+      <td>740.61</td>
+      <td>264.96</td>
+    </tr>
+    <tr>
+      <th>80</th>
+      <td>749.97</td>
+      <td>259.83</td>
+    </tr>
+    <tr>
+      <th>81</th>
+      <td>759.42</td>
+      <td>254.16</td>
+    </tr>
+    <tr>
+      <th>82</th>
+      <td>768.78</td>
+      <td>248.04</td>
+    </tr>
+    <tr>
+      <th>83</th>
+      <td>778.14</td>
+      <td>241.38</td>
+    </tr>
+    <tr>
+      <th>84</th>
+      <td>787.50</td>
+      <td>234.18</td>
+    </tr>
+    <tr>
+      <th>85</th>
+      <td>796.86</td>
+      <td>226.35</td>
+    </tr>
+    <tr>
+      <th>86</th>
+      <td>806.22</td>
+      <td>217.89</td>
+    </tr>
+    <tr>
+      <th>87</th>
+      <td>815.58</td>
+      <td>208.62</td>
+    </tr>
+    <tr>
+      <th>88</th>
+      <td>825.03</td>
+      <td>198.45</td>
+    </tr>
+    <tr>
+      <th>89</th>
+      <td>834.39</td>
+      <td>187.29</td>
+    </tr>
+    <tr>
+      <th>90</th>
+      <td>843.75</td>
+      <td>174.87</td>
+    </tr>
+    <tr>
+      <th>91</th>
+      <td>853.11</td>
+      <td>161.01</td>
+    </tr>
+    <tr>
+      <th>92</th>
+      <td>862.47</td>
+      <td>145.26</td>
+    </tr>
+    <tr>
+      <th>93</th>
+      <td>871.92</td>
+      <td>126.81</td>
+    </tr>
+    <tr>
+      <th>94</th>
+      <td>881.28</td>
+      <td>104.40</td>
+    </tr>
+    <tr>
+      <th>95</th>
+      <td>890.64</td>
+      <td>74.43</td>
+    </tr>
+    <tr>
+      <th>96</th>
+      <td>900.00</td>
+      <td>0.00</td>
+    </tr>
+  </tbody>
+</table>
+<p>96 rows × 2 columns</p>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">cross_section</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/show_case_6_0.png" src="_images/show_case_6_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">no</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span>
+<span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Kreis&#39;</span>
+<span class="n">r</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="n">kreis</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="n">no</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">r</span><span class="p">)</span>
+<span class="n">kreis</span><span class="o">.</span><span class="n">add_and_show</span><span class="p">(</span><span class="n">circle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="n">r</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+______________________________
+Pr_test  -&gt;  Kreis
+[sqrt(-(x - 200.0)**2 + 40000.0)]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/show_case_7_1.png" src="_images/show_case_7_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">kreis</span><span class="o">.</span><span class="n">add_and_show</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[sqrt(-(x - 200.0)**2 + 40000.0), (200.0, 200.0)]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/show_case_8_1.png" src="_images/show_case_8_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">kreis</span><span class="o">.</span><span class="n">add_and_show</span><span class="p">(</span><span class="n">r</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[sqrt(-(x - 200.0)**2 + 40000.0), (200.0, 200.0), (400.0, 200.0)]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/show_case_9_1.png" src="_images/show_case_9_1.png" />
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="show_case-kasten.html" class="btn btn-neutral float-right" title="Examples for box shaped profiles" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="api.html" class="btn btn-neutral" title="API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Pichler
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
