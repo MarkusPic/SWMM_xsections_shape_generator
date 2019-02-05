@@ -29,7 +29,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Examples for general profile shapes" href="show_case.html" />
-    <link rel="prev" title="Welcome to SWMM CrossSection shape Generator’s documentation!" href="index.html" /> 
+    <link rel="prev" title="General information" href="main.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -80,6 +80,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="main.html">General information</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-shape_generator.helpers">Helper Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#main-function">Main Function</a></li>
@@ -180,81 +181,9 @@
 <div class="section" id="module-shape_generator.helpers">
 <span id="helper-functions"></span><h2>Helper Functions<a class="headerlink" href="#module-shape_generator.helpers" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="shape_generator.helpers.channel_end">
-<code class="descclassname">shape_generator.helpers.</code><code class="descname">channel_end</code><span class="sig-paren">(</span><em>r</em>, <em>alpha</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#channel_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.channel_end" title="Permalink to this definition">¶</a></dt>
-<dd><p>get vertical end of the channel</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – </li>
-<li><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – in degree</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">height of the channel when the circle reaches a certain angle</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)">float</a></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="shape_generator.helpers.circle">
-<code class="descclassname">shape_generator.helpers.</code><code class="descname">circle</code><span class="sig-paren">(</span><em>r</em>, <em>x_m=0</em>, <em>y_m=0</em>, <em>clockwise=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#circle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.circle" title="Permalink to this definition">¶</a></dt>
-<dd><p>get funktion of a circle with a given mid point</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – radius</li>
-<li><strong>x_m</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – x axis value of the mid point</li>
-<li><strong>y_m</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – y axis value of the mid point</li>
-<li><strong>clockwise</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – whether the circle is clockwise or anticlockwise</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">function of the circle</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.sympy.org/latest/modules/core.html#sympy.core.expr.Expr" title="(in SymPy v1.3)">sympy.core.expr.Expr</a></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="shape_generator.helpers.combine_input_files">
-<code class="descclassname">shape_generator.helpers.</code><code class="descname">combine_input_files</code><span class="sig-paren">(</span><em>shape_path</em>, <em>delete_original=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#combine_input_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.combine_input_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>combine all generated shape text files to a single inp-like text file</p>
-<p>When running the <a class="reference internal" href="#shape_generator.shape_generator.Profile.input_file" title="shape_generator.shape_generator.Profile.input_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">shape_generator.shape_generator.Profile.input_file()</span></code></a> function, a .txt file will be created.
-Those txt files will be combines to a single file with this function.
-This makes it easier to import all shapes to the .inp file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>shape_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – path where the shapes are stored</li>
-<li><strong>delete_original</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – whether to delete the original single files</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
 <dt id="shape_generator.helpers.csv">
 <code class="descclassname">shape_generator.helpers.</code><code class="descname">csv</code><span class="sig-paren">(</span><em>txt</em>, <em>comment=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.csv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the string in txt as csv file</p>
-<p>Read the string in txt as csv file and return the content as DataFrame.</p>
+<dd><p>Read the string in txt as csv file and return the content as DataFrame.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -277,13 +206,13 @@ This makes it easier to import all shapes to the .inp file.</p>
 
 <dl class="function">
 <dt id="shape_generator.helpers.deg2slope">
-<code class="descclassname">shape_generator.helpers.</code><code class="descname">deg2slope</code><span class="sig-paren">(</span><em>deg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#deg2slope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.deg2slope" title="Permalink to this definition">¶</a></dt>
-<dd><p>convert degrees to a slope (<span class="math notranslate nohighlight">\(\Delta y / \Delta x\)</span>)</p>
+<code class="descclassname">shape_generator.helpers.</code><code class="descname">deg2slope</code><span class="sig-paren">(</span><em>degree</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#deg2slope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.deg2slope" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert degrees to a slope (<span class="math notranslate nohighlight">\(\Delta x / \Delta y\)</span>)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>deg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – angle in degree</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>degree</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – angle in degree</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">slope</td>
 </tr>
@@ -293,16 +222,21 @@ This makes it easier to import all shapes to the .inp file.</p>
 </table>
 </dd></dl>
 
-<dl class="function">
+<div class="align-center figure" id="id1">
+<img alt="make_shape" src="_images/slope.gif" />
+<p class="caption"><span class="caption-text">Slope</span></p>
+</div>
+<span class="target" id="module-shape_generator.helpers"></span><dl class="function">
 <dt id="shape_generator.helpers.linear">
 <code class="descclassname">shape_generator.helpers.</code><code class="descname">linear</code><span class="sig-paren">(</span><em>slope</em>, <em>p0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#linear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.linear" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
+<dd><p>get function/expression of a straight line with a given point which it intercepts</p>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>slope</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – </li>
-<li><strong>p0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – </li>
+<li><strong>slope</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – slope</li>
+<li><strong>p0</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.7)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>]</em>) – point as a set of a x and a y coordinate</li>
 </ul>
 </td>
 </tr>
@@ -316,16 +250,155 @@ This makes it easier to import all shapes to the .inp file.</p>
 </table>
 </dd></dl>
 
+<div class="align-center figure" id="id2">
+<img alt="make_shape" src="_images/gerade.gif" />
+<p class="caption"><span class="caption-text">Straight line</span></p>
+</div>
+<span class="target" id="module-shape_generator.helpers"></span><dl class="function">
+<dt id="shape_generator.helpers.circle">
+<code class="descclassname">shape_generator.helpers.</code><code class="descname">circle</code><span class="sig-paren">(</span><em>r</em>, <em>x_m=0</em>, <em>y_m=0</em>, <em>clockwise=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#circle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.circle" title="Permalink to this definition">¶</a></dt>
+<dd><p>get function/expression of a circle with a given mid point</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – radius</li>
+<li><strong>x_m</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – x axis value of the mid point</li>
+<li><strong>y_m</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – y axis value of the mid point</li>
+<li><strong>clockwise</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – whether the circle is clockwise or anticlockwise</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">function of the circle</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.sympy.org/latest/modules/core.html#sympy.core.expr.Expr" title="(in SymPy v1.3)">sympy.core.expr.Expr</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="align-center figure" id="id3">
+<img alt="make_shape" src="_images/kreis.gif" />
+<p class="caption"><span class="caption-text">Circle</span></p>
+</div>
+<span class="target" id="module-shape_generator.helpers"></span><dl class="function">
+<dt id="shape_generator.helpers.channel_end">
+<code class="descclassname">shape_generator.helpers.</code><code class="descname">channel_end</code><span class="sig-paren">(</span><em>r</em>, <em>end_degree</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#channel_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.channel_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>get vertical end of the channel based on the radius of the channel and an end angle</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – radius of the channel</li>
+<li><strong>end_degree</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – end angle in degree (°)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">height of the channel when the circle reaches a certain angle</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)">float</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="align-center figure" id="id4">
+<img alt="make_shape" src="_images/channel_end.gif" />
+<p class="caption"><span class="caption-text">Channel end</span></p>
+</div>
+<span class="target" id="module-shape_generator.helpers"></span><dl class="function">
+<dt id="shape_generator.helpers.combine_input_files">
+<code class="descclassname">shape_generator.helpers.</code><code class="descname">combine_input_files</code><span class="sig-paren">(</span><em>shape_path</em>, <em>delete_original=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#combine_input_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.combine_input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>combine all generated shape text files to a single inp-like text file</p>
+<p>When running the <code class="xref py py-func docutils literal notranslate"><span class="pre">shape_generator.shape_generator.Profile.input_file()</span></code> function, a .txt file will be created.
+Those txt files will be combines to a single file with this function.
+This makes it easier to import all shapes to the .inp file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>shape_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – path where the shapes are stored</li>
+<li><strong>delete_original</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – whether to delete the original single files</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="main-function">
 <h2>Main Function<a class="headerlink" href="#main-function" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="shape_generator.shape_generator.Profile">
-<em class="property">class </em><code class="descclassname">shape_generator.shape_generator.</code><code class="descname">Profile</code><span class="sig-paren">(</span><em>number</em>, <em>name=None</em>, <em>height=None</em>, <em>width=None</em>, <em>add_dim=False</em>, <em>add_dn=False</em>, <em>working_directory=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#Profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.Profile" title="Permalink to this definition">¶</a></dt>
+<dt id="shape_generator.shape_generator.CrossSection">
+<em class="property">class </em><code class="descclassname">shape_generator.shape_generator.</code><code class="descname">CrossSection</code><span class="sig-paren">(</span><em>label</em>, <em>long_label=None</em>, <em>height=None</em>, <em>width=None</em>, <em>add_dim=False</em>, <em>add_dn=False</em>, <em>working_directory=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection" title="Permalink to this definition">¶</a></dt>
 <dd><p>A Class that should help to generate custom cross section shapes for the SWMM software.</p>
+<dl class="attribute">
+<dt id="shape_generator.shape_generator.CrossSection.accuracy">
+<code class="descname">accuracy</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of decimal points to use for the export</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="shape_generator.shape_generator.CrossSection.shape">
+<code class="descname">shape</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>descriptions of the cross section as commands in a list</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="shape_generator.shape_generator.CrossSection.shape_corrected">
+<code class="descname">shape_corrected</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.shape_corrected" title="Permalink to this definition">¶</a></dt>
+<dd><p>points and functions to describe the cross section</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="shape_generator.shape_generator.CrossSection.df_abs">
+<code class="descname">df_abs</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.df_abs" title="Permalink to this definition">¶</a></dt>
+<dd><p>maximum 100 points to describe the cross section</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.24.1)">pandas.DataFrame</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
-<dt id="shape_generator.shape_generator.Profile.add">
-<code class="descname">add</code><span class="sig-paren">(</span><em>x_or_expr</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#Profile.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.Profile.add" title="Permalink to this definition">¶</a></dt>
+<dt id="shape_generator.shape_generator.CrossSection.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>x_or_expr</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>add part of cross section
 can be a:
 - function/expression
@@ -347,8 +420,8 @@ can be a:
 </dd></dl>
 
 <dl class="staticmethod">
-<dt id="shape_generator.shape_generator.Profile.box">
-<em class="property">static </em><code class="descname">box</code><span class="sig-paren">(</span><em>no</em>, <em>height</em>, <em>width</em>, <em>channel=None</em>, <em>bench=None</em>, <em>roof=None</em>, <em>rounding=0.0</em>, <em>add_dim=True</em>, <em>custom_label=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#Profile.box"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.Profile.box" title="Permalink to this definition">¶</a></dt>
+<dt id="shape_generator.shape_generator.CrossSection.box">
+<em class="property">static </em><code class="descname">box</code><span class="sig-paren">(</span><em>no</em>, <em>height</em>, <em>width</em>, <em>channel=None</em>, <em>bench=None</em>, <em>roof=None</em>, <em>rounding=0.0</em>, <em>add_dim=True</em>, <em>custom_label=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.box"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.box" title="Permalink to this definition">¶</a></dt>
 <dd><p>Kasten</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -363,7 +436,7 @@ can be a:
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#shape_generator.shape_generator.Profile" title="shape_generator.shape_generator.Profile">Profile</a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#shape_generator.shape_generator.CrossSection" title="shape_generator.shape_generator.CrossSection">CrossSection</a></p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
@@ -374,8 +447,8 @@ can be a:
 </dd></dl>
 
 <dl class="staticmethod">
-<dt id="shape_generator.shape_generator.Profile.box_from_string">
-<em class="property">static </em><code class="descname">box_from_string</code><span class="sig-paren">(</span><em>label</em>, <em>height</em>, <em>width</em>, <em>custom_label=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#Profile.box_from_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.Profile.box_from_string" title="Permalink to this definition">¶</a></dt>
+<dt id="shape_generator.shape_generator.CrossSection.box_from_string">
+<em class="property">static </em><code class="descname">box_from_string</code><span class="sig-paren">(</span><em>label</em>, <em>height</em>, <em>width</em>, <em>custom_label=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.box_from_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.box_from_string" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -384,15 +457,15 @@ can be a:
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#shape_generator.shape_generator.Profile" title="shape_generator.shape_generator.Profile">Profile</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#shape_generator.shape_generator.CrossSection" title="shape_generator.shape_generator.CrossSection">CrossSection</a></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="shape_generator.shape_generator.Profile.check_for_slopes">
-<code class="descname">check_for_slopes</code><span class="sig-paren">(</span><em>show=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#Profile.check_for_slopes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.Profile.check_for_slopes" title="Permalink to this definition">¶</a></dt>
+<dt id="shape_generator.shape_generator.CrossSection.check_for_slopes">
+<code class="descname">check_for_slopes</code><span class="sig-paren">(</span><em>show=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.check_for_slopes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.check_for_slopes" title="Permalink to this definition">¶</a></dt>
 <dd><p>convert slopes into point coordinates
 and specify boundary condition to (x,y) coordinates</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -406,8 +479,8 @@ and specify boundary condition to (x,y) coordinates</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="shape_generator.shape_generator.Profile.check_point_cloud">
-<code class="descname">check_point_cloud</code><span class="sig-paren">(</span><em>df</em>, <em>double=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#Profile.check_point_cloud"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.Profile.check_point_cloud" title="Permalink to this definition">¶</a></dt>
+<dt id="shape_generator.shape_generator.CrossSection.check_point_cloud">
+<code class="descname">check_point_cloud</code><span class="sig-paren">(</span><em>df</em>, <em>double=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.check_point_cloud"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.check_point_cloud" title="Permalink to this definition">¶</a></dt>
 <dd><p>remove errors from point cloud and create the</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -427,8 +500,8 @@ and specify boundary condition to (x,y) coordinates</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="shape_generator.shape_generator.Profile.create_point_cloud">
-<code class="descname">create_point_cloud</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#Profile.create_point_cloud"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.Profile.create_point_cloud" title="Permalink to this definition">¶</a></dt>
+<dt id="shape_generator.shape_generator.CrossSection.create_point_cloud">
+<code class="descname">create_point_cloud</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.create_point_cloud"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.create_point_cloud" title="Permalink to this definition">¶</a></dt>
 <dd><p>create a point cloud out of the functions</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -443,8 +516,8 @@ and specify boundary condition to (x,y) coordinates</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="shape_generator.shape_generator.Profile.cross_section_area">
-<code class="descname">cross_section_area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#Profile.cross_section_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.Profile.cross_section_area" title="Permalink to this definition">¶</a></dt>
+<dt id="shape_generator.shape_generator.CrossSection.cross_section_area">
+<code class="descname">cross_section_area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.cross_section_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.cross_section_area" title="Permalink to this definition">¶</a></dt>
 <dd><p>calculate the cross section a</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -459,15 +532,15 @@ and specify boundary condition to (x,y) coordinates</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="shape_generator.shape_generator.Profile.dat_file">
-<code class="descname">dat_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#Profile.dat_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.Profile.dat_file" title="Permalink to this definition">¶</a></dt>
+<dt id="shape_generator.shape_generator.CrossSection.dat_file">
+<code class="descname">dat_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.dat_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.dat_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>create the EPASWMM Curve Data file
 to import the file in SWMM</p>
 </dd></dl>
 
 <dl class="staticmethod">
-<dt id="shape_generator.shape_generator.Profile.from_point_cloud">
-<em class="property">static </em><code class="descname">from_point_cloud</code><span class="sig-paren">(</span><em>excel_filename='/home/markus/Downloads/Haltung 6560086.xlsx'</em>, <em>number=950</em>, <em>name='Profil 950'</em>, <em>height=2250</em>, <em>width=1800</em>, <em>add_dim=True</em>, <em>add_dn=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#Profile.from_point_cloud"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.Profile.from_point_cloud" title="Permalink to this definition">¶</a></dt>
+<dt id="shape_generator.shape_generator.CrossSection.from_point_cloud">
+<em class="property">static </em><code class="descname">from_point_cloud</code><span class="sig-paren">(</span><em>excel_filename='/home/markus/Downloads/Haltung 6560086.xlsx'</em>, <em>number=950</em>, <em>name='Profil 950'</em>, <em>height=2250</em>, <em>width=1800</em>, <em>add_dim=True</em>, <em>add_dn=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.from_point_cloud"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.from_point_cloud" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -483,7 +556,7 @@ to import the file in SWMM</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#shape_generator.shape_generator.Profile" title="shape_generator.shape_generator.Profile">Profile</a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#shape_generator.shape_generator.CrossSection" title="shape_generator.shape_generator.CrossSection">CrossSection</a></p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
@@ -494,14 +567,14 @@ to import the file in SWMM</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="shape_generator.shape_generator.Profile.input_file">
-<code class="descname">input_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#Profile.input_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.Profile.input_file" title="Permalink to this definition">¶</a></dt>
+<dt id="shape_generator.shape_generator.CrossSection.input_file">
+<code class="descname">input_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.input_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.input_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>create the profile table for the “.inp”-SWMM-file as a seperate txt-file</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="shape_generator.shape_generator.Profile.make">
-<code class="descname">make</code><span class="sig-paren">(</span><em>double=False</em>, <em>show=False</em>, <em>plot=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#Profile.make"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.Profile.make" title="Permalink to this definition">¶</a></dt>
+<dt id="shape_generator.shape_generator.CrossSection.make">
+<code class="descname">make</code><span class="sig-paren">(</span><em>double=False</em>, <em>show=False</em>, <em>plot=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.make"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.make" title="Permalink to this definition">¶</a></dt>
 <dd><p>just a macro</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -518,8 +591,8 @@ to import the file in SWMM</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="shape_generator.shape_generator.Profile.profile_abs_figure">
-<code class="descname">profile_abs_figure</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#Profile.profile_abs_figure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.Profile.profile_abs_figure" title="Permalink to this definition">¶</a></dt>
+<dt id="shape_generator.shape_generator.CrossSection.profile_abs_figure">
+<code class="descname">profile_abs_figure</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.profile_abs_figure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.profile_abs_figure" title="Permalink to this definition">¶</a></dt>
 <dd><p>create a png plot into</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -532,8 +605,8 @@ to import the file in SWMM</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="shape_generator.shape_generator.Profile.profile_rel_plot">
-<code class="descname">profile_rel_plot</code><span class="sig-paren">(</span><em>show=False</em>, <em>file_format='png'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#Profile.profile_rel_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.Profile.profile_rel_plot" title="Permalink to this definition">¶</a></dt>
+<dt id="shape_generator.shape_generator.CrossSection.profile_rel_plot">
+<code class="descname">profile_rel_plot</code><span class="sig-paren">(</span><em>show=False</em>, <em>file_format='png'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.profile_rel_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.profile_rel_plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>create a png plot into</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -546,8 +619,8 @@ to import the file in SWMM</p>
 </dd></dl>
 
 <dl class="staticmethod">
-<dt id="shape_generator.shape_generator.Profile.standard">
-<em class="property">static </em><code class="descname">standard</code><span class="sig-paren">(</span><em>no</em>, <em>name</em>, <em>height</em>, <em>width=nan</em>, <em>r_channel=nan</em>, <em>r_roof=nan</em>, <em>r_wall=nan</em>, <em>slope_bench=nan</em>, <em>r_round=nan</em>, <em>r_wall_bottom=nan</em>, <em>h_bench=nan</em>, <em>pre_bench=nan</em>, <em>w_channel=nan</em>, <em>add_dim=False</em>, <em>add_dn=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#Profile.standard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.Profile.standard" title="Permalink to this definition">¶</a></dt>
+<dt id="shape_generator.shape_generator.CrossSection.standard">
+<em class="property">static </em><code class="descname">standard</code><span class="sig-paren">(</span><em>no</em>, <em>name</em>, <em>height</em>, <em>width=nan</em>, <em>r_channel=nan</em>, <em>r_roof=nan</em>, <em>r_wall=nan</em>, <em>slope_bench=nan</em>, <em>r_round=nan</em>, <em>r_wall_bottom=nan</em>, <em>h_bench=nan</em>, <em>pre_bench=nan</em>, <em>w_channel=nan</em>, <em>add_dim=False</em>, <em>add_dn=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.standard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.standard" title="Permalink to this definition">¶</a></dt>
 <dd><p>Der Querschnitt des Standard Profils</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -570,7 +643,7 @@ to import the file in SWMM</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#shape_generator.shape_generator.Profile" title="shape_generator.shape_generator.Profile">Profile</a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#shape_generator.shape_generator.CrossSection" title="shape_generator.shape_generator.CrossSection">CrossSection</a></p>
 </td>
 </tr>
 </tbody>
@@ -593,7 +666,7 @@ to import the file in SWMM</p>
         <a href="show_case.html" class="btn btn-neutral float-right" title="Examples for general profile shapes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="Welcome to SWMM CrossSection shape Generator’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="main.html" class="btn btn-neutral" title="General information" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -15,32 +15,41 @@ from .helpers import deg2slope, channel_end, circle, linear, x
 
 ########################################################################################################################
 ########################################################################################################################
-class Profile(object):
-    """A Class that should help to generate custom cross section shapes for the SWMM software."""
+class CrossSection(object):
+    """
+    A Class that should help to generate custom cross section shapes for the SWMM software.
 
-    def __init__(self, number, name=None, height=None, width=None, add_dim=False, add_dn=False, working_directory=''):
+    Attributes:
+        accuracy (int): number of decimal points to use for the export
+        shape (list): descriptions of the cross section as commands in a list
+        shape_corrected (list): points and functions to describe the cross section
+        df_abs (pandas.DataFrame): maximum 100 points to describe the cross section in absolute values
+    """
+
+    def __init__(self, label, long_label=None, height=None, width=None, add_dim=False, add_dn=False,
+                 working_directory=''):
         """
 
         Args:
-            number (str):
-            name (str):
-            height (float):
-            width (float):
-            add_dim (bool):
-            add_dn (bool):
+            label (str): main name/label/number of the cross section
+            long_label (str): optional longer name of the cross section
+            height (float): absolute height of the CS
+            width (float): absolute width of the CS (optional) can be calculated
+            add_dim (bool): if the dimensions should be added to the label used for the export
+            add_dn (bool):if the channel dimension should be added to the label used for the export
             working_directory (str):
         """
-        if isinstance(number, (float, int)):
-            self.number = '{:0.0f}'.format(number)
+        if isinstance(label, (float, int)):
+            self.label = '{:0.0f}'.format(label)
         else:
-            self.number = number
+            self.label = label
 
-        if not self.number.startswith('Pr_'):
-            self.number = 'Pr_' + self.number
+        if not self.label.startswith('Pr_'):
+            self.label = 'Pr_' + self.label
 
         self._name = ''
-        if name is not None:
-            self.name = str(name).strip()
+        if long_label is not None:
+            self.name = str(long_label).strip()
         self.height = height
         self.width = width
         self.shape = list()
@@ -48,7 +57,7 @@ class Profile(object):
         self.add_dim = add_dim
         self.add_dn = add_dn
         self.accuracy = 4
-        self.out_path = working_directory
+        self.working_directory = working_directory
 
         # Profile data
         self.df_abs = pd.DataFrame()
@@ -66,9 +75,9 @@ class Profile(object):
     @property
     def out_filename(self, long=False):
         if long:
-            file = path.join(self.out_path, '{}_{}'.format(self.number, self.name))
+            file = path.join(self.working_directory, '{}_{}'.format(self.label, self.name))
         else:
-            file = path.join(self.out_path, '{}'.format(self.number))
+            file = path.join(self.working_directory, '{}'.format(self.label))
         if self.add_dim:
             file += '_{:0.0f}'.format(self.height)
             if self.width:
@@ -82,7 +91,7 @@ class Profile(object):
     def name(self, value):
         self._name = value
         print('_' * 30)
-        print(self.number, ' -> ', self._name)
+        print(self.label, ' -> ', self._name)
 
     def add(self, x_or_expr, y=None):
         """
@@ -259,7 +268,7 @@ class Profile(object):
             # print('*' * 15)
             # print(*self.p, sep='\n')
             (shape, width, height, name, number, add_dim) = (
-                self.shape_corrected, self.width, self.height, self.name, self.number, self.add_dim)
+                self.shape_corrected, self.width, self.height, self.name, self.label, self.add_dim)
 
             num_funktions = len([i for i in shape if isinstance(i, Expr)])
 
@@ -420,7 +429,7 @@ class Profile(object):
         ax.set_aspect('equal', 'box')
         ax.set_ylabel('rel H')
         ax.set_xlabel('B/H')
-        ax.set_title('{}: {}'.format(self.number, self.name))
+        ax.set_title('{}: {}'.format(self.label, self.name))
 
         if self.height < 10:
             self.height = int(self.height * 1000)
@@ -454,9 +463,9 @@ class Profile(object):
         :param show: open the plot file in a viewer
         """
 
-        if self.number == 'Pr_18':
+        if self.label == 'Pr_18':
             df = self.df_rel * 1950
-        elif self.number == 'Pr_66':
+        elif self.label == 'Pr_66':
             df = self.df_rel * 2100
         else:
             df = self.df_abs
@@ -497,8 +506,8 @@ class Profile(object):
         # ax.set_ylabel('rel H')
         # ax.set_xlabel('B/H')
 
-        n = self.number
-        if self.number != 'Pr_{}'.format(self.name):
+        n = self.label
+        if self.label != 'Pr_{}'.format(self.name):
             n += ': {}'.format(self.name)
 
         ax.set_title('{}\n{:0.0f}x{:0.0f}mm'.format(n, h, custom_round(w * 2, 50)))
@@ -522,7 +531,7 @@ class Profile(object):
         dim = 'H={}'.format(self.height)
         if self.width:
             dim += ', B={}'.format(self.width)
-        csv.write('{} - {}: {}\n'.format(self.number, self.name, dim))
+        csv.write('{} - {}: {}\n'.format(self.label, self.name, dim))
         self.df_rel.iloc[1:-1].to_csv(csv, sep=' ', index=False, header=False,
                                       float_format='%0.{}f'.format(self.accuracy))
 
@@ -578,12 +587,12 @@ class Profile(object):
         :param float pre_bench: fist bench in degree
         :param float w_channel: width
 
-        :rtype: Profile
+        :rtype: CrossSection
         """
 
         # ------------------------------------------------
-        cross_section = Profile(number=no, name=name, height=height, width=(width if notna(width) else None),
-                                add_dim=add_dim, add_dn=add_dn)
+        cross_section = CrossSection(label=no, long_label=name, height=height, width=(width if notna(width) else None),
+                                     add_dim=add_dim, add_dn=add_dn)
 
         # ------------------------------------------------
         # TW-Rinne
@@ -672,11 +681,11 @@ class Profile(object):
         :param str roof: ''=gerade <|> 'B'= Bogen <|>  'K'=Kreis
         :type rounding: float
 
-        :rtype: Profile
+        :rtype: CrossSection
         :return:
         """
         name = 'K'
-        cross_section = Profile(number=no, name=custom_label, width=width, height=height, add_dim=add_dim)
+        cross_section = CrossSection(label=no, long_label=custom_label, width=width, height=height, add_dim=add_dim)
 
         if isna(channel):
             channel = None
@@ -771,7 +780,7 @@ class Profile(object):
         :param label: label of box profile
 
         :return:
-        :rtype: Profile
+        :rtype: CrossSection
         """
 
         import re
@@ -787,8 +796,8 @@ class Profile(object):
 
             bench, roof = [x if x != '' else None for x in (bench, roof)]
 
-            cross_section = Profile.box(label, height=height, width=width, channel=channel, bench=bench, roof=roof,
-                                        custom_label=custom_label)
+            cross_section = CrossSection.box(label, height=height, width=width, channel=channel, bench=bench, roof=roof,
+                                             custom_label=custom_label)
             return cross_section
 
         # --------------------------------------
@@ -808,7 +817,7 @@ class Profile(object):
         :param add_dim:
         :param add_dn:
 
-        :rtype: Profile
+        :rtype: CrossSection
         :return:
         """
         X = 'x'  # horizontal distance to lowest point (dry weather channel)
@@ -852,7 +861,7 @@ class Profile(object):
                 Y: (y_df_filled['right'] - y_df_filled['left']) / 2
             })
 
-        cross_section = Profile(number=number, name=name, height=height, width=width, add_dim=add_dim, add_dn=add_dn)
+        cross_section = CrossSection(label=number, long_label=name, height=height, width=width, add_dim=add_dim, add_dn=add_dn)
         cross_section.df_abs = df
         cross_section.check_point_cloud(df, double=False)
         return cross_section

@@ -6,13 +6,14 @@ from io import StringIO
 from os import path, listdir, remove
 from math import radians, cos, tan
 
+# these variables are used to solve symbolic mathematical equations
+# ie.
 x = Symbol('x', real=True, positive=True)
 d = Symbol('d', real=True)
 
 
 def csv(txt, comment=None):
-    """Read the string in txt as csv file
-
+    """
     Read the string in txt as csv file and return the content as DataFrame.
 
     Args:
@@ -28,40 +29,39 @@ def csv(txt, comment=None):
     return df
 
 
-def deg2slope(deg):
+def deg2slope(degree):
     """
-
-    convert degrees to a slope (:math:`\\Delta y / \\Delta x`)
+    convert degrees to a slope (:math:`\\Delta x / \\Delta y`)
 
     Args:
-        deg (float): angle in degree
+        degree (float): angle in degree
 
     Returns:
         float: slope
     """
-    return round(tan(radians(deg)), 5)
+    return round(tan(radians(degree)), 5)
 
 
-def channel_end(r, alpha):
+def channel_end(r, end_degree):
     """
-    get vertical end of the channel
+    get vertical end of the channel based on the radius of the channel and an end angle
 
     Args:
-        r (float):
-        alpha (float): in degree
+        r (float): radius of the channel
+        end_degree (float): end angle in degree (°)
 
     Returns:
         float: height of the channel when the circle reaches a certain angle
     """
-    return r * (1 - cos(radians(alpha)))
+    return r * (1 - cos(radians(end_degree)))
 
 
 def circle(r, x_m=0, y_m=0, clockwise=False):
     """
-    get funktion of a circle with a given mid point
+    get function/expression of a circle with a given mid point
 
     Args:
-        r (float):  radius
+        r (float): radius
         x_m (float): x axis value of the mid point
         y_m (float): y axis value of the mid point
         clockwise (bool): whether the circle is clockwise or anticlockwise
@@ -74,10 +74,11 @@ def circle(r, x_m=0, y_m=0, clockwise=False):
 
 def linear(slope, p0):
     """
+    get function/expression of a straight line with a given point which it intercepts
 
     Args:
-        slope (float):
-        p0 (float):
+        slope (float): slope
+        p0 (set[float, float]): point as a set of a x and a y coordinate
 
     Returns:
         sympy.core.expr.Expr: linear function

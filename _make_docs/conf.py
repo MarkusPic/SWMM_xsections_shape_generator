@@ -38,17 +38,18 @@ release = '0.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'nbsphinx',
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
+    'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'sphinx.ext.autosummary',
     'sphinx.ext.extlinks',
-    #'numpydoc',
-    'sphinx.ext.napoleon'
+    'sphinx.ext.napoleon',  # numpy/google docstrings
+    'nbsphinx',  # jupyter notebook
+    'recommonmark'  # markdown
 ]
 
 # Add any paths that contain templates here, relative to this directory.

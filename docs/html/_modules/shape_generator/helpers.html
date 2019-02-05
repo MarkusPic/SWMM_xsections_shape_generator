@@ -78,6 +78,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">General information</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../show_case.html">Examples for general profile shapes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../show_case-kasten.html">Examples for box shaped profiles</a></li>
@@ -152,13 +153,14 @@
 <span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">path</span><span class="p">,</span> <span class="n">listdir</span><span class="p">,</span> <span class="n">remove</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">radians</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">tan</span>
 
+<span class="c1"># these variables are used to solve symbolic mathematical equations</span>
+<span class="c1"># ie.</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">real</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">positive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">d</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">real</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="csv"><a class="viewcode-back" href="../../api.html#shape_generator.helpers.csv">[docs]</a><span class="k">def</span> <span class="nf">csv</span><span class="p">(</span><span class="n">txt</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Read the string in txt as csv file</span>
-
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read the string in txt as csv file and return the content as DataFrame.</span>
 
 <span class="sd">    Args:</span>
@@ -174,40 +176,39 @@
     <span class="k">return</span> <span class="n">df</span></div>
 
 
-<div class="viewcode-block" id="deg2slope"><a class="viewcode-back" href="../../api.html#shape_generator.helpers.deg2slope">[docs]</a><span class="k">def</span> <span class="nf">deg2slope</span><span class="p">(</span><span class="n">deg</span><span class="p">):</span>
+<div class="viewcode-block" id="deg2slope"><a class="viewcode-back" href="../../api.html#shape_generator.helpers.deg2slope">[docs]</a><span class="k">def</span> <span class="nf">deg2slope</span><span class="p">(</span><span class="n">degree</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="sd">    convert degrees to a slope (:math:`\\Delta y / \\Delta x`)</span>
+<span class="sd">    convert degrees to a slope (:math:`\\Delta x / \\Delta y`)</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        deg (float): angle in degree</span>
+<span class="sd">        degree (float): angle in degree</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        float: slope</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">tan</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="n">deg</span><span class="p">)),</span> <span class="mi">5</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">tan</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="n">degree</span><span class="p">)),</span> <span class="mi">5</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="channel_end"><a class="viewcode-back" href="../../api.html#shape_generator.helpers.channel_end">[docs]</a><span class="k">def</span> <span class="nf">channel_end</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+<div class="viewcode-block" id="channel_end"><a class="viewcode-back" href="../../api.html#shape_generator.helpers.channel_end">[docs]</a><span class="k">def</span> <span class="nf">channel_end</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">end_degree</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    get vertical end of the channel</span>
+<span class="sd">    get vertical end of the channel based on the radius of the channel and an end angle</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        r (float):</span>
-<span class="sd">        alpha (float): in degree</span>
+<span class="sd">        r (float): radius of the channel</span>
+<span class="sd">        end_degree (float): end angle in degree (°)</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        float: height of the channel when the circle reaches a certain angle</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">r</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">cos</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="n">alpha</span><span class="p">)))</span></div>
+    <span class="k">return</span> <span class="n">r</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">cos</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="n">end_degree</span><span class="p">)))</span></div>
 
 
 <div class="viewcode-block" id="circle"><a class="viewcode-back" href="../../api.html#shape_generator.helpers.circle">[docs]</a><span class="k">def</span> <span class="nf">circle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y_m</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">clockwise</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    get funktion of a circle with a given mid point</span>
+<span class="sd">    get function/expression of a circle with a given mid point</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        r (float):  radius</span>
+<span class="sd">        r (float): radius</span>
 <span class="sd">        x_m (float): x axis value of the mid point</span>
 <span class="sd">        y_m (float): y axis value of the mid point</span>
 <span class="sd">        clockwise (bool): whether the circle is clockwise or anticlockwise</span>
@@ -220,10 +221,11 @@
 
 <div class="viewcode-block" id="linear"><a class="viewcode-back" href="../../api.html#shape_generator.helpers.linear">[docs]</a><span class="k">def</span> <span class="nf">linear</span><span class="p">(</span><span class="n">slope</span><span class="p">,</span> <span class="n">p0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get function/expression of a straight line with a given point which it intercepts</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        slope (float):</span>
-<span class="sd">        p0 (float):</span>
+<span class="sd">        slope (float): slope</span>
+<span class="sd">        p0 (set[float, float]): point as a set of a x and a y coordinate</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        sympy.core.expr.Expr: linear function</span>
