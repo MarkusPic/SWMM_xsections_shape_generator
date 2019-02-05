@@ -11,8 +11,7 @@ Helper Functions
 
     Slope
 
-.. automodule:: shape_generator.helpers
-    :members: linear
+.. autofunction:: shape_generator.helpers.linear
 
 .. figure:: images/gerade.gif
     :align: center
@@ -21,8 +20,7 @@ Helper Functions
 
     Straight line
 
-.. automodule:: shape_generator.helpers
-    :members: circle
+.. autofunction:: shape_generator.helpers.circle
 
 .. figure:: images/kreis.gif
     :align: center
@@ -31,8 +29,7 @@ Helper Functions
 
     Circle
 
-.. automodule:: shape_generator.helpers
-    :members: channel_end
+.. autofunction:: shape_generator.helpers.channel_end
 
 .. figure:: images/channel_end.gif
     :align: center
@@ -41,5 +38,4 @@ Helper Functions
 
     Channel end
 
-.. automodule:: shape_generator.helpers
-    :members: combine_input_files
+.. autofunction:: shape_generator.helpers.combine_input_files

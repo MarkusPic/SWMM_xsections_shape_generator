@@ -10,6 +10,7 @@ Welcome to SWMM CrossSection shape Generator's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   install
    main
    api
    show_case

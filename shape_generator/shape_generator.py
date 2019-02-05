@@ -1,14 +1,15 @@
 import warnings
-from sympy import symbols, Expr, sqrt, Symbol, solve, diff, Float  # , tan, cos
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-from webbrowser import open as show_file
+from math import radians, cos
+from numbers import Rational
 from os import path
-from math import radians, cos, atan, tan, sin, acos, degrees
+from webbrowser import open as show_file
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 from numpy import NaN
 from pandas import isna, notna, read_excel, read_csv
-from numbers import Rational
+from sympy import Expr, sqrt, solve, diff, Float  # , tan, cos
 
 from .helpers import deg2slope, channel_end, circle, linear, x
 
@@ -808,6 +809,8 @@ class CrossSection(object):
     def from_point_cloud(excel_filename='/home/markus/Downloads/Haltung 6560086.xlsx',
                          number=950, name='Profil 950', height=2250, width=1800, add_dim=True, add_dn=False):
         """
+
+
 
         :param excel_filename:
         :param number:

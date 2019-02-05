@@ -3,7 +3,7 @@ General information
 
 This application should help you to generate cross-sections for the US-EPA Storm Water Management Model (SWMM) [#f1]_.
 
-To understand the general usage of shapes in context to cross-sections,
+To understand the general usage of shape curves in context to cross-sections,
 read the documentation of SWMM provided on the official website of EPA [#f1]_.
 
 Units
@@ -25,6 +25,20 @@ The unit can be chosen freely, but must be consistent.
     :figclass: align-center
 
     A simple example of a shape
+
+Dictionary
+""""""""""
+
++---------+---------------------+--------------------------+
+| english | deutsch             | description              |
++=========+=====================+==========================+
+| channel | Trockenwetter-Rinne |                          |
++---------+---------------------+--------------------------+
+| roof    | Firste              | Boden an der Rohr Firste |
++---------+---------------------+--------------------------+
+| wall    | Wand                | Radius der Wand          |
++---------+---------------------+--------------------------+
+
 
 .. --------------------------------------------------------
 

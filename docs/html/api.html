@@ -80,6 +80,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="main.html">General information</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-shape_generator.helpers">Helper Functions</a></li>
@@ -226,7 +227,7 @@
 <img alt="make_shape" src="_images/slope.gif" />
 <p class="caption"><span class="caption-text">Slope</span></p>
 </div>
-<span class="target" id="module-shape_generator.helpers"></span><dl class="function">
+<dl class="function">
 <dt id="shape_generator.helpers.linear">
 <code class="descclassname">shape_generator.helpers.</code><code class="descname">linear</code><span class="sig-paren">(</span><em>slope</em>, <em>p0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#linear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.linear" title="Permalink to this definition">¶</a></dt>
 <dd><p>get function/expression of a straight line with a given point which it intercepts</p>
@@ -254,7 +255,7 @@
 <img alt="make_shape" src="_images/gerade.gif" />
 <p class="caption"><span class="caption-text">Straight line</span></p>
 </div>
-<span class="target" id="module-shape_generator.helpers"></span><dl class="function">
+<dl class="function">
 <dt id="shape_generator.helpers.circle">
 <code class="descclassname">shape_generator.helpers.</code><code class="descname">circle</code><span class="sig-paren">(</span><em>r</em>, <em>x_m=0</em>, <em>y_m=0</em>, <em>clockwise=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#circle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.circle" title="Permalink to this definition">¶</a></dt>
 <dd><p>get function/expression of a circle with a given mid point</p>
@@ -284,7 +285,7 @@
 <img alt="make_shape" src="_images/kreis.gif" />
 <p class="caption"><span class="caption-text">Circle</span></p>
 </div>
-<span class="target" id="module-shape_generator.helpers"></span><dl class="function">
+<dl class="function">
 <dt id="shape_generator.helpers.channel_end">
 <code class="descclassname">shape_generator.helpers.</code><code class="descname">channel_end</code><span class="sig-paren">(</span><em>r</em>, <em>end_degree</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#channel_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.channel_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>get vertical end of the channel based on the radius of the channel and an end angle</p>
@@ -312,7 +313,7 @@
 <img alt="make_shape" src="_images/channel_end.gif" />
 <p class="caption"><span class="caption-text">Channel end</span></p>
 </div>
-<span class="target" id="module-shape_generator.helpers"></span><dl class="function">
+<dl class="function">
 <dt id="shape_generator.helpers.combine_input_files">
 <code class="descclassname">shape_generator.helpers.</code><code class="descname">combine_input_files</code><span class="sig-paren">(</span><em>shape_path</em>, <em>delete_original=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#combine_input_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.combine_input_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>combine all generated shape text files to a single inp-like text file</p>
@@ -385,7 +386,7 @@ This makes it easier to import all shapes to the .inp file.</p>
 <dl class="attribute">
 <dt id="shape_generator.shape_generator.CrossSection.df_abs">
 <code class="descname">df_abs</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.df_abs" title="Permalink to this definition">¶</a></dt>
-<dd><p>maximum 100 points to describe the cross section</p>
+<dd><p>maximum 100 points to describe the cross section in absolute values</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
