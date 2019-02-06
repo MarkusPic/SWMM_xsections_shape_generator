@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>shape_generator.shape_generator &mdash; SWMM CrossSection shape Generator 0.1 documentation</title>
+  <title>shape_generator.shape_generator &mdash; SWMM CrossSection shape Generator 0.1 alpha documentation</title>
   
 
   
@@ -54,6 +54,10 @@
 
           
             
+            
+              <div class="version">
+                0.1
+              </div>
             
           
 
@@ -165,7 +169,7 @@
 <span class="c1">########################################################################################################################</span>
 <span class="c1">########################################################################################################################</span>
 <div class="viewcode-block" id="CrossSection"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection">[docs]</a><span class="k">class</span> <span class="nc">CrossSection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;main class</span>
 <span class="sd">    A Class that should help to generate custom cross section shapes for the SWMM software.</span>
 
 <span class="sd">    Attributes:</span>
@@ -175,18 +179,19 @@
 <span class="sd">        df_abs (pandas.DataFrame): maximum 100 points to describe the cross section in absolute values</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">long_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">add_dim</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_dn</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<div class="viewcode-block" id="CrossSection.__init__"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">long_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">add_dim</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_dn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">working_directory</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Initialise the cross section class</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            label (str): main name/label/number of the cross section</span>
-<span class="sd">            long_label (str): optional longer name of the cross section</span>
+<span class="sd">            long_label (Optional[str]): optional longer name of the cross section</span>
 <span class="sd">            height (float): absolute height of the CS</span>
-<span class="sd">            width (float): absolute width of the CS (optional) can be calculated</span>
+<span class="sd">            width (Optional[float]): absolute width of the CS (optional) can be calculated</span>
 <span class="sd">            add_dim (bool): if the dimensions should be added to the label used for the export</span>
-<span class="sd">            add_dn (bool):if the channel dimension should be added to the label used for the export</span>
-<span class="sd">            working_directory (str):</span>
+<span class="sd">            add_dn (Optional[float]): if the channel dimension should be added to the label used for the export enter the diameter</span>
+<span class="sd">                            as float</span>
+<span class="sd">            working_directory (str): directory where the files get saved</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:0.0f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
@@ -209,24 +214,39 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">=</span> <span class="n">working_directory</span>
 
         <span class="c1"># Profile data</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
 
-    <span class="k">def</span> <span class="nf">get_width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nd">@name</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;_&#39;</span> <span class="o">*</span> <span class="mi">30</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="s1">&#39; -&gt; &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CrossSection.get_width"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.get_width">[docs]</a>    <span class="k">def</span> <span class="nf">get_width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        get absolute width of cross section</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: width of cross section</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">out_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">long</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">long</span><span class="p">:</span>
-            <span class="n">file</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">working_directory</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">file</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">working_directory</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">out_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        filename of the figure/text-file to be created</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str: filename</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">working_directory</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_dim</span><span class="p">:</span>
             <span class="n">file</span> <span class="o">+=</span> <span class="s1">&#39;_</span><span class="si">{:0.0f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">:</span>
@@ -236,29 +256,39 @@
             <span class="n">file</span> <span class="o">+=</span> <span class="s1">&#39;_DN</span><span class="si">{:0.0f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_dn</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">file</span>
 
-    <span class="nd">@name</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">value</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;_&#39;</span> <span class="o">*</span> <span class="mi">30</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="s1">&#39; -&gt; &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
-
 <div class="viewcode-block" id="CrossSection.add"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_or_expr</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        add part of cross section</span>
+
 <span class="sd">        can be a:</span>
+
 <span class="sd">        - function/expression</span>
-<span class="sd">        - point (x,y)</span>
-<span class="sd">        - boundary condition (x or y) of a surrounding function</span>
+<span class="sd">        - point (x,y) coordinates</span>
+<span class="sd">        - boundary condition (x or y) of a surrounding function = only x or y is given and the other is :obj:`None`</span>
 <span class="sd">        - slope (x=slope, y=unit of slope)</span>
 
-<span class="sd">        :param x_or_expr:</span>
-<span class="sd">        :type x_or_expr: float | Expr | None</span>
-<span class="sd">        :param y: y coordinate of unit of slope</span>
-<span class="sd">        :type y: float | str</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x_or_expr (Optional[float , Expr , None , tuple]):</span>
+
+<span class="sd">                - :obj:`float` : x coordinate or x-axis boundary or slope if any str keyword is used in argument ``y``</span>
+<span class="sd">                - :obj:`Expr` : Expression/function for the cross section part</span>
+<span class="sd">                - :obj:`None` : if a y-axis boundary is given</span>
+<span class="sd">                - :obj:`tuple` : will be seen as the full input for this function</span>
+
+<span class="sd">            y (Optional[float,str]): y coordinate of unit of slope</span>
+
+<span class="sd">                - :obj:`float` : x coordinate or x-axis boundary</span>
+<span class="sd">                - :obj:`None` : if a x-axis boundary is given or an expression in ``x_or_expr``</span>
+<span class="sd">                - :obj:`str` : argument x is a slope</span>
+
+<span class="sd">                    - ``slope`` : ready to use slope 1 / :math:`\\Delta` y</span>
+<span class="sd">                    - ``°slope`` : slope as an angle in degree (°)</span>
+<span class="sd">                    - ``%slope`` : slope in percentage (%)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x_or_expr</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">x_or_expr</span><span class="p">)</span>
-            <span class="c1"># self.shape.append((float(i) for i in x_or_expr))</span>
+            <span class="k">return</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x_or_expr</span><span class="p">,</span> <span class="n">Expr</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_or_expr</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -279,18 +309,20 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="CrossSection.check_for_slopes"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.check_for_slopes">[docs]</a>    <span class="k">def</span> <span class="nf">check_for_slopes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        convert slopes into point coordinates</span>
-<span class="sd">        and specify boundary condition to (x,y) coordinates</span>
+<div class="viewcode-block" id="CrossSection.check_for_slopes"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.check_for_slopes">[docs]</a>    <span class="k">def</span> <span class="nf">check_for_slopes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;convert slopes to points</span>
 
-<span class="sd">        :param show: for debugging</span>
-<span class="sd">        :type show: bool</span>
+<span class="sd">        Use this function after adding all the necessary descriptions of the cross section with :py:attr:`~add`.</span>
+<span class="sd">        This function converts slopes into point coordinates and specify boundary condition to (x,y) coordinates</span>
+<span class="sd">        for Expressions and slopes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            debug (bool): to print debug messages during the runtime</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shape_corrected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape_corrected</span><span class="p">)):</span>
-            <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;: &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape_corrected</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
 
             <span class="c1"># ----------------------------------------------------------------------------------------------------------</span>
@@ -330,7 +362,7 @@
 
                 <span class="c1"># fi: lineare Funktion durch &quot;p0&quot; mit der Steigung &quot;slope&quot;</span>
                 <span class="n">fi</span> <span class="o">=</span> <span class="n">linear</span><span class="p">(</span><span class="n">slope</span><span class="p">,</span> <span class="n">p0</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; &#39;</span><span class="p">,</span> <span class="n">fi</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
 
                 <span class="c1"># wenn es der letzte Punkt ist, ist der nachfolgende Punkt der Scheitel</span>
@@ -353,7 +385,7 @@
                         <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
                             <span class="c1"># print(solve(diff(f2) - slope, x))</span>
                             <span class="n">x2</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">diff</span><span class="p">(</span><span class="n">f2</span><span class="p">)</span> <span class="o">-</span> <span class="n">slope</span><span class="p">,</span> <span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                            <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
                                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; same slope&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
 
                     <span class="bp">self</span><span class="o">.</span><span class="n">shape_corrected</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x2</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
@@ -383,7 +415,7 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">shape_corrected</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">p0</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">y2</span><span class="p">))</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">shape_corrected</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x2</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">y2</span><span class="p">))</span>
-                <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape_corrected</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
             <span class="c1"># ----------------------------------------------------------------------------------------------------------</span>
@@ -395,114 +427,98 @@
                     <span class="n">y0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape_corrected</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
                     <span class="n">x0</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">fi</span> <span class="o">-</span> <span class="n">y0</span><span class="p">,</span> <span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">shape_corrected</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x0</span><span class="p">),</span> <span class="n">y0</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
                         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--&gt; &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape_corrected</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
                         <span class="nb">print</span><span class="p">()</span>
 
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="CrossSection.create_point_cloud"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.create_point_cloud">[docs]</a>    <span class="k">def</span> <span class="nf">create_point_cloud</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        create a point cloud out of the functions</span>
+        <span class="sd">&quot;&quot;&quot;create a :obj:`pandas.DataFrame` of point coordinates</span>
 
-<span class="sd">        :rtype: pd.DataFrame</span>
-<span class="sd">        :return:</span>
+<span class="sd">        To create a :obj:`pandas.DataFrame` of all the points to describe the cross section.</span>
+<span class="sd">        This function replaces the Expressions given in :py:attr:`~add` to points with x and y coordinates.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pandas.DataFrame: coordinates to describe the cross section in absolute values</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># print(*self.p, sep=&#39;\n&#39;)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># print(&#39;*&#39; * 15)</span>
-            <span class="c1"># print(*self.p, sep=&#39;\n&#39;)</span>
-            <span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">number</span><span class="p">,</span> <span class="n">add_dim</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">shape_corrected</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_dim</span><span class="p">)</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape_corrected</span>
 
-            <span class="n">num_funktions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">shape</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">Expr</span><span class="p">)])</span>
+        <span class="c1"># number of expressions used in shape</span>
+        <span class="n">num_functions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">shape</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">Expr</span><span class="p">)])</span>
 
-            <span class="c1"># if height is None:</span>
-            <span class="c1">#     height = 10000</span>
+        <span class="c1"># added first and last fix points</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)]</span> <span class="o">+</span> <span class="n">shape</span> <span class="o">+</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)]</span>
 
-            <span class="n">shape</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">+</span> <span class="n">shape</span> <span class="o">+</span> <span class="p">[(</span><span class="n">height</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
+        <span class="c1"># if functions are used in shape</span>
+        <span class="k">if</span> <span class="n">num_functions</span><span class="p">:</span>
+            <span class="c1"># number of fixed points in shape</span>
+            <span class="n">num_points</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">shape</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)])</span>
 
-            <span class="k">if</span> <span class="n">num_funktions</span><span class="p">:</span>
-                <span class="n">num_points</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">shape</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)])</span>
-                <span class="c1"># num_shapes = len(shape)</span>
-                <span class="c1"># if num_shapes == 1:</span>
-                <span class="n">funktion_steps</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="k">if</span>
-                                  <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Expr</span><span class="p">)}</span>
-                <span class="n">step</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">funktion_steps</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="mi">100</span> <span class="o">-</span> <span class="n">num_points</span><span class="p">)</span>
+            <span class="c1"># calculate the net height of the functions.</span>
+            <span class="n">function_steps</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="k">if</span>
+                              <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Expr</span><span class="p">)}</span>
+            <span class="c1"># step size used to discretise the expressions</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">function_steps</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="mi">100</span> <span class="o">-</span> <span class="n">num_points</span><span class="p">)</span>
 
-            <span class="n">is_filled</span> <span class="o">=</span> <span class="s1">&#39;filled&#39;</span>
+        <span class="c1"># only used as an temporary variable</span>
+        <span class="c1"># only to fill point with an expression</span>
+        <span class="n">is_filled</span> <span class="o">=</span> <span class="s1">&#39;filled&#39;</span>
 
-            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)):</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)):</span>
-                        <span class="k">continue</span>
-                    <span class="k">if</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">is_filled</span><span class="p">:</span>
-                        <span class="k">continue</span>
-                    <span class="n">pi</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-                    <span class="n">new</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pi</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
-                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Expr</span><span class="p">):</span>
-                    <span class="n">yi</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="c1"># the absolute points of the final shape</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
 
-                    <span class="n">start</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                    <span class="n">end</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># convert every expression to points and add it to the resulting DataFrame ``df``</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)):</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">is_filled</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">pi</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">new</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pi</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Expr</span><span class="p">):</span>
+                <span class="n">yi</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
-                    <span class="n">this_step</span> <span class="o">=</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="n">step</span><span class="p">)</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)):</span>
-                        <span class="n">end</span> <span class="o">+=</span> <span class="n">this_step</span>
-                        <span class="n">shape</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">is_filled</span><span class="p">)</span>
+                <span class="n">this_step</span> <span class="o">=</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="n">step</span><span class="p">)</span>
 
-                    <span class="k">if</span> <span class="n">start</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="n">start</span> <span class="o">+=</span> <span class="n">this_step</span>
-                    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)):</span>
-                        <span class="n">start</span> <span class="o">+=</span> <span class="n">this_step</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)):</span>
+                    <span class="n">end</span> <span class="o">+=</span> <span class="n">this_step</span>
+                    <span class="n">shape</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">is_filled</span><span class="p">)</span>
 
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">this_step</span><span class="p">)</span>
-                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">yi</span><span class="p">)</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">this_step</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
-                        <span class="k">raise</span> <span class="ne">ValueError</span>
+                <span class="k">if</span> <span class="n">start</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">start</span> <span class="o">+=</span> <span class="n">this_step</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)):</span>
+                    <span class="n">start</span> <span class="o">+=</span> <span class="n">this_step</span>
 
-                    <span class="k">if</span> <span class="ow">not</span> <span class="n">xi</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">yi</span><span class="p">)</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">this_step</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+                <span class="c1"># x-coordinates array to discretise one expression</span>
+                <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">this_step</span><span class="p">)</span>
 
-                    <span class="n">new</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="n">new</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x_i</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">yi</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Float</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">x_i</span><span class="p">,</span> <span class="mi">3</span><span class="p">)))))(</span><span class="n">xi</span><span class="p">)</span>
-                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">()</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">yi</span><span class="p">)</span>
-                        <span class="nb">print</span><span class="p">()</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span>
-                        <span class="n">exit</span><span class="p">()</span>
+                <span class="c1"># y-coordinates array to discretise one expression</span>
+                <span class="n">new</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+                <span class="n">new</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x_i</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">yi</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Float</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">x_i</span><span class="p">,</span> <span class="mi">3</span><span class="p">)))))(</span><span class="n">xi</span><span class="p">)</span>
 
-                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="k">except</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="o">*</span> <span class="mi">30</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="o">*</span> <span class="mi">30</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">ArithmeticError</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">df</span></div>
 
 <div class="viewcode-block" id="CrossSection.check_point_cloud"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.check_point_cloud">[docs]</a>    <span class="k">def</span> <span class="nf">check_point_cloud</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">double</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        remove errors from point cloud and create the</span>
+<span class="sd">        remove errors from point cloud</span>
 
-<span class="sd">        :param df:</span>
-<span class="sd">        :param double: für Doppelfrofile</span>
-<span class="sd">        :return:</span>
+<span class="sd">        Args:</span>
+<span class="sd">            df:</span>
+<span class="sd">            double (bool): for &quot;Doppelfrofile&quot;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_rel</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">)</span>
@@ -536,22 +552,41 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">df_rel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;relative point coordinates</span>
+
+<span class="sd">        convert the absolute values in the point coordinates to values relative to the cross section height</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pandas.DataFrame: point coordinate values relative to the cross section height</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">double</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">check_for_slopes</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">)</span>
+<div class="viewcode-block" id="CrossSection.generator"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.generator">[docs]</a>    <span class="k">def</span> <span class="nf">generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">double</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :py:attr:`~check_for_slopes` + :py:attr:`~create_point_cloud` + :py:attr:`~check_point_cloud`</span>
+
+<span class="sd">        macro function</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            double (bool): see :py:attr:`~check_point_cloud` arguments</span>
+<span class="sd">            show (bool): see :py:attr:`~check_for_slopes` ``debug`` - argument and print the created point cloud</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_for_slopes</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="n">show</span><span class="p">)</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_point_cloud</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">check_point_cloud</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_point_cloud</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CrossSection.make"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.make">[docs]</a>    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">double</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        just a macro</span>
+<span class="sd">        :py:attr:`~generator` + :py:attr:`~profile_abs_plot` + :py:attr:`~input_file`</span>
 
-<span class="sd">        :type plot: bool</span>
-<span class="sd">        :param bool double:</span>
-<span class="sd">        :param bool show:</span>
+<span class="sd">        macro function</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            double (bool): see :py:attr:`~generator` arguments</span>
+<span class="sd">            show (bool):  see :py:attr:`~generator` arguments</span>
+<span class="sd">            plot (bool): if  :py:attr:`~profile_abs_plot` should be executed</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="n">double</span><span class="o">=</span><span class="n">double</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">)</span>
 
@@ -560,19 +595,28 @@
         <span class="c1"># self.dat_file()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_file</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">add_and_show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="c1">#  for jupyter</span>
+<div class="viewcode-block" id="CrossSection.add_and_show"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.add_and_show">[docs]</a>    <span class="k">def</span> <span class="nf">add_and_show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :py:attr:`~add` + :py:attr:`~generator` + :py:attr:`~profile_abs_figure`</span>
+
+<span class="sd">        macro function for jupyter example</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            *args: see :py:attr:`~add` arguments</span>
+<span class="sd">            **kwargs: see :py:attr:`~add` keyword arguments</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="CrossSection.profile_rel_plot"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.profile_rel_plot">[docs]</a>    <span class="k">def</span> <span class="nf">profile_rel_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        create a png plot into</span>
 
-<span class="sd">        :type file_format: str</span>
-<span class="sd">        :param show: open the plot file in a viewer</span>
+<span class="sd">        Args:</span>
+<span class="sd">            show (bool): if the plot should be opened after its creation</span>
+<span class="sd">            file_format (str): file format ie: ``png``, ``pdf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_rel</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="s1">&#39;box&#39;</span><span class="p">)</span>
@@ -958,6 +1002,8 @@
                          <span class="n">number</span><span class="o">=</span><span class="mi">950</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Profil 950&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">2250</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1800</span><span class="p">,</span> <span class="n">add_dim</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">add_dn</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
+
+
 <span class="sd">        :param excel_filename:</span>
 <span class="sd">        :param number:</span>
 <span class="sd">        :param name:</span>
@@ -975,8 +1021,8 @@
         <span class="c1"># distances in meter</span>
         <span class="k">if</span> <span class="n">excel_filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.csv&#39;</span><span class="p">):</span>
             <span class="n">coordinates</span> <span class="o">=</span> \
-            <span class="n">read_csv</span><span class="p">(</span><span class="n">excel_filename</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">])</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">Y</span><span class="p">)[</span>
-                <span class="n">X</span><span class="p">]</span>
+                <span class="n">read_csv</span><span class="p">(</span><span class="n">excel_filename</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">])</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">Y</span><span class="p">)[</span>
+                    <span class="n">X</span><span class="p">]</span>
         <span class="k">elif</span> <span class="n">excel_filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.xlsx&#39;</span><span class="p">):</span>
             <span class="n">coordinates</span> <span class="o">=</span> \
                 <span class="n">read_excel</span><span class="p">(</span><span class="n">excel_filename</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">])</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span>
@@ -1010,7 +1056,8 @@
                 <span class="n">Y</span><span class="p">:</span> <span class="p">(</span><span class="n">y_df_filled</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">y_df_filled</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
             <span class="p">})</span>
 
-        <span class="n">cross_section</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="n">long_label</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">add_dim</span><span class="o">=</span><span class="n">add_dim</span><span class="p">,</span> <span class="n">add_dn</span><span class="o">=</span><span class="n">add_dn</span><span class="p">)</span>
+        <span class="n">cross_section</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="n">long_label</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">add_dim</span><span class="o">=</span><span class="n">add_dim</span><span class="p">,</span>
+                                     <span class="n">add_dn</span><span class="o">=</span><span class="n">add_dn</span><span class="p">)</span>
         <span class="n">cross_section</span><span class="o">.</span><span class="n">df_abs</span> <span class="o">=</span> <span class="n">df</span>
         <span class="n">cross_section</span><span class="o">.</span><span class="n">check_point_cloud</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">double</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">cross_section</span></div></div>

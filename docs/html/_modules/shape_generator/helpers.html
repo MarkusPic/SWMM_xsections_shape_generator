@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>shape_generator.helpers &mdash; SWMM CrossSection shape Generator 0.1 documentation</title>
+  <title>shape_generator.helpers &mdash; SWMM CrossSection shape Generator 0.1 alpha documentation</title>
   
 
   
@@ -54,6 +54,10 @@
 
           
             
+            
+              <div class="version">
+                0.1
+              </div>
             
           
 
@@ -155,9 +159,9 @@
 <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">radians</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">tan</span>
 
 <span class="c1"># these variables are used to solve symbolic mathematical equations</span>
-<span class="c1"># ie.</span>
+<span class="c1"># x is the control variable over the height ... max(x) = H_cross_section</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">real</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">positive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">d</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">real</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">real</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># interception of the linear function</span>
 
 
 <div class="viewcode-block" id="csv"><a class="viewcode-back" href="../../api.html#shape_generator.helpers.csv">[docs]</a><span class="k">def</span> <span class="nf">csv</span><span class="p">(</span><span class="n">txt</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>

@@ -24,9 +24,9 @@ copyright = '2019, Pichler'
 author = 'Pichler'
 
 # The short X.Y version
-version = ''
+version = '0.1'
 # The full version, including alpha/beta/rc tags
-release = '0.1'
+release = '0.1 alpha'
 
 # -- General configuration ---------------------------------------------------
 
@@ -49,7 +49,7 @@ extensions = [
     'sphinx.ext.extlinks',
     'sphinx.ext.napoleon',  # numpy/google docstrings
     'nbsphinx',  # jupyter notebook
-    'recommonmark'  # markdown
+    'recommonmark',  # markdown
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -180,6 +180,16 @@ epub_exclude_files = ['search.html']
 
 # -- Extension configuration -------------------------------------------------
 
+autodoc_default_options = {
+    #'members': 'var1, var2',
+    'member-order': 'bysource',
+    'special-members': '__init__',
+    #'undoc-members': None,
+    #'exclude-members': '__weakref__'
+}
+
+autosummary_generate = True
+
 # -- Options for intersphinx extension ---------------------------------------
 
 # Example configuration for intersphinx: refer to the Python standard library.
@@ -188,7 +198,7 @@ intersphinx_mapping = {'https://docs.python.org/': None,
                        'http://pandas.pydata.org/pandas-docs/stable/': None,
                        'numpy': ('http://docs.scipy.org/doc/numpy/', None),
                        #'scipy': ('http://docs.scipy.org/doc/scipy/reference/', None),
-                       #'matplotlib': ('http://matplotlib.sourceforge.net/', None),
+                       'matplotlib': ('http://matplotlib.sourceforge.net/', None),
                        #'sympy': ('https://docs.sympy.org/latest/', None),
                        'sympy': ('https://docs.sympy.org/latest/', 'https://docs.sympy.org/latest/objects.inv')
                        }

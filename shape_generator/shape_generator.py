@@ -17,7 +17,7 @@ from .helpers import deg2slope, channel_end, circle, linear, x
 ########################################################################################################################
 ########################################################################################################################
 class CrossSection(object):
-    """
+    """main class
     A Class that should help to generate custom cross section shapes for the SWMM software.
 
     Attributes:
@@ -27,18 +27,19 @@ class CrossSection(object):
         df_abs (pandas.DataFrame): maximum 100 points to describe the cross section in absolute values
     """
 
-    def __init__(self, label, long_label=None, height=None, width=None, add_dim=False, add_dn=False,
+    def __init__(self, label, long_label=None, height=None, width=None, add_dim=False, add_dn=None,
                  working_directory=''):
-        """
+        """Initialise the cross section class
 
         Args:
             label (str): main name/label/number of the cross section
-            long_label (str): optional longer name of the cross section
+            long_label (Optional[str]): optional longer name of the cross section
             height (float): absolute height of the CS
-            width (float): absolute width of the CS (optional) can be calculated
+            width (Optional[float]): absolute width of the CS (optional) can be calculated
             add_dim (bool): if the dimensions should be added to the label used for the export
-            add_dn (bool):if the channel dimension should be added to the label used for the export
-            working_directory (str):
+            add_dn (Optional[float]): if the channel dimension should be added to the label used for the export enter the diameter
+                            as float
+            working_directory (str): directory where the files get saved
         """
         if isinstance(label, (float, int)):
             self.label = '{:0.0f}'.format(label)
@@ -67,18 +68,33 @@ class CrossSection(object):
     def name(self):
         return self._name
 
+    @name.setter
+    def name(self, value):
+        self._name = value
+        print('_' * 30)
+        print(self.label, ' -> ', self._name)
+
     def get_width(self):
+        """
+        get absolute width of cross section
+
+        Returns:
+            float: width of cross section
+        """
         if self.df_abs.empty:
             return None
         else:
             return self.df_abs['y'].max() * 2
 
     @property
-    def out_filename(self, long=False):
-        if long:
-            file = path.join(self.working_directory, '{}_{}'.format(self.label, self.name))
-        else:
-            file = path.join(self.working_directory, '{}'.format(self.label))
+    def out_filename(self):
+        """
+        filename of the figure/text-file to be created
+        Returns:
+            str: filename
+
+        """
+        file = path.join(self.working_directory, '{}'.format(self.label))
         if self.add_dim:
             file += '_{:0.0f}'.format(self.height)
             if self.width:
@@ -88,29 +104,39 @@ class CrossSection(object):
             file += '_DN{:0.0f}'.format(self.add_dn)
         return file
 
-    @name.setter
-    def name(self, value):
-        self._name = value
-        print('_' * 30)
-        print(self.label, ' -> ', self._name)
-
     def add(self, x_or_expr, y=None):
         """
         add part of cross section
+
         can be a:
+
         - function/expression
-        - point (x,y)
-        - boundary condition (x or y) of a surrounding function
+        - point (x,y) coordinates
+        - boundary condition (x or y) of a surrounding function = only x or y is given and the other is :obj:`None`
         - slope (x=slope, y=unit of slope)
 
-        :param x_or_expr:
-        :type x_or_expr: float | Expr | None
-        :param y: y coordinate of unit of slope
-        :type y: float | str
+
+        Args:
+            x_or_expr (Optional[float , Expr , None , tuple]):
+
+                - :obj:`float` : x coordinate or x-axis boundary or slope if any str keyword is used in argument ``y``
+                - :obj:`Expr` : Expression/function for the cross section part
+                - :obj:`None` : if a y-axis boundary is given
+                - :obj:`tuple` : will be seen as the full input for this function
+
+            y (Optional[float,str]): y coordinate of unit of slope
+
+                - :obj:`float` : x coordinate or x-axis boundary
+                - :obj:`None` : if a x-axis boundary is given or an expression in ``x_or_expr``
+                - :obj:`str` : argument x is a slope
+
+                    - ``slope`` : ready to use slope 1 / :math:`\\Delta` y
+                    - ``°slope`` : slope as an angle in degree (°)
+                    - ``%slope`` : slope in percentage (%)
         """
         if isinstance(x_or_expr, tuple):
             self.add(*x_or_expr)
-            # self.shape.append((float(i) for i in x_or_expr))
+            return
         elif isinstance(x_or_expr, Expr):
             self.shape.append(x_or_expr)
         else:
@@ -131,18 +157,20 @@ class CrossSection(object):
 
             self.shape.append((x, y))
 
-    def check_for_slopes(self, show=False):
-        """
-        convert slopes into point coordinates
-        and specify boundary condition to (x,y) coordinates
+    def check_for_slopes(self, debug=False):
+        """convert slopes to points
 
-        :param show: for debugging
-        :type show: bool
+        Use this function after adding all the necessary descriptions of the cross section with :py:attr:`~add`.
+        This function converts slopes into point coordinates and specify boundary condition to (x,y) coordinates
+        for Expressions and slopes.
+
+        Args:
+            debug (bool): to print debug messages during the runtime
         """
         self.shape_corrected = self.shape.copy()
 
         for i in range(len(self.shape_corrected)):
-            if show:
+            if debug:
                 print(i, ': ', self.shape_corrected[i], end=' ')
 
             # ----------------------------------------------------------------------------------------------------------
@@ -182,7 +210,7 @@ class CrossSection(object):
 
                 # fi: lineare Funktion durch "p0" mit der Steigung "slope"
                 fi = linear(slope, p0)
-                if show:
+                if debug:
                     print('--> ', fi, end=' ')
 
                 # wenn es der letzte Punkt ist, ist der nachfolgende Punkt der Scheitel
@@ -205,7 +233,7 @@ class CrossSection(object):
                         except IndexError:
                             # print(solve(diff(f2) - slope, x))
                             x2 = solve(diff(f2) - slope, x)[0]
-                            if show:
+                            if debug:
                                 print('--> same slope', end=' ')
 
                     self.shape_corrected[i] = (float(x2), None)
@@ -235,7 +263,7 @@ class CrossSection(object):
                         self.shape_corrected[i] = (float(p0[0]), float(y2))
                     else:
                         self.shape_corrected[i] = (float(x2), float(y2))
-                if show:
+                if debug:
                     print('--> ', self.shape_corrected[i])
 
             # ----------------------------------------------------------------------------------------------------------
@@ -247,114 +275,98 @@ class CrossSection(object):
                     y0 = self.shape_corrected[i][1]
                     x0 = solve(fi - y0, x)[0]
                     self.shape_corrected[i] = (float(x0), y0)
-                    if show:
+                    if debug:
                         print('--> ', self.shape_corrected[i])
                 else:
-                    if show:
+                    if debug:
                         print()
 
             else:
-                if show:
+                if debug:
                     print()
 
     def create_point_cloud(self):
+        """create a :obj:`pandas.DataFrame` of point coordinates
+
+        To create a :obj:`pandas.DataFrame` of all the points to describe the cross section.
+        This function replaces the Expressions given in :py:attr:`~add` to points with x and y coordinates.
+
+        Returns:
+            pandas.DataFrame: coordinates to describe the cross section in absolute values
         """
-        create a point cloud out of the functions
+        shape = self.shape_corrected
 
-        :rtype: pd.DataFrame
-        :return:
-        """
-        # print(*self.p, sep='\n')
-        try:
-            # print('*' * 15)
-            # print(*self.p, sep='\n')
-            (shape, width, height, name, number, add_dim) = (
-                self.shape_corrected, self.width, self.height, self.name, self.label, self.add_dim)
+        # number of expressions used in shape
+        num_functions = len([i for i in shape if isinstance(i, Expr)])
 
-            num_funktions = len([i for i in shape if isinstance(i, Expr)])
+        # added first and last fix points
+        shape = [(0., 0.)] + shape + [(self.height, 0.)]
 
-            # if height is None:
-            #     height = 10000
+        # if functions are used in shape
+        if num_functions:
+            # number of fixed points in shape
+            num_points = len([i for i in shape if isinstance(i, tuple)])
 
-            shape = [(0, 0)] + shape + [(height, 0)]
+            # calculate the net height of the functions.
+            function_steps = {i: shape[i + 1][0] - shape[i - 1][0] for i, s in enumerate(shape) if
+                              isinstance(shape[i], Expr)}
+            # step size used to discretise the expressions
+            step = sum(function_steps.values()) / (100 - num_points)
 
-            if num_funktions:
-                num_points = len([i for i in shape if isinstance(i, tuple)])
-                # num_shapes = len(shape)
-                # if num_shapes == 1:
-                funktion_steps = {i: shape[i + 1][0] - shape[i - 1][0] for i, s in enumerate(shape) if
-                                  isinstance(shape[i], Expr)}
-                step = sum(funktion_steps.values()) / (100 - num_points)
+        # only used as an temporary variable
+        # only to fill point with an expression
+        is_filled = 'filled'
 
-            is_filled = 'filled'
+        # the absolute points of the final shape
+        df = pd.DataFrame(columns=['x', 'y'])
 
-            df = pd.DataFrame(columns=['x', 'y'])
-            for i in range(len(shape)):
-                if isinstance(shape[i], tuple):
-                    if isinstance(shape[i][1], type(None)):
-                        continue
-                    if shape[i][1] == is_filled:
-                        continue
-                    pi = shape[i]
-                    new = pd.Series(list(pi), index=['x', 'y'])
-                    df = df.append(new, ignore_index=True)
-                elif isinstance(shape[i], Expr):
-                    yi = shape[i]
+        # convert every expression to points and add it to the resulting DataFrame ``df``
+        for i in range(len(shape)):
+            if isinstance(shape[i], tuple):
+                if isinstance(shape[i][1], type(None)):
+                    continue
+                if shape[i][1] == is_filled:
+                    continue
+                pi = shape[i]
+                new = pd.Series(list(pi), index=['x', 'y'])
+                df = df.append(new, ignore_index=True)
+            elif isinstance(shape[i], Expr):
+                yi = shape[i]
 
-                    start = shape[i - 1][0]
-                    end = shape[i + 1][0]
+                start = shape[i - 1][0]
+                end = shape[i + 1][0]
 
-                    this_step = (end - start) / np.floor((end - start) / step)
+                this_step = (end - start) / np.floor((end - start) / step)
 
-                    if isinstance(shape[i + 1][1], type(None)):
-                        end += this_step
-                        shape[i + 1] = (shape[i + 1][0], is_filled)
+                if isinstance(shape[i + 1][1], type(None)):
+                    end += this_step
+                    shape[i + 1] = (shape[i + 1][0], is_filled)
 
-                    if start == 0:
-                        start += this_step
-                    elif not isinstance(shape[i - 1][1], type(None)):
-                        start += this_step
+                if start == 0:
+                    start += this_step
+                elif not isinstance(shape[i - 1][1], type(None)):
+                    start += this_step
 
-                    try:
-                        xi = np.arange(start, end, this_step)
-                    except ValueError:
-                        print(i, yi)
-                        print(start, end, this_step, step)
-                        raise ValueError
+                # x-coordinates array to discretise one expression
+                xi = np.arange(start, end, this_step)
 
-                    if not xi.size:
-                        print(i, yi)
-                        print(start, end, this_step, step)
+                # y-coordinates array to discretise one expression
+                new = pd.Series(xi, name='x').to_frame()
+                new['y'] = np.vectorize(lambda x_i: float(yi.subs(x, Float(round(x_i, 3)))))(xi)
 
-                    new = pd.Series(xi, name='x').to_frame()
-                    try:
-                        new['y'] = np.vectorize(lambda x_i: float(yi.subs(x, Float(round(x_i, 3)))))(xi)
-                    except ValueError:
-                        print()
-                        print(yi)
-                        print()
-                        print(xi)
-                        exit()
-
-                    df = df.append(new, ignore_index=True)
-
-        except:
-            print()
-            print('#' * 30)
-            print(*self.shape, sep='\n')
-            print('#' * 30)
-            raise ArithmeticError
+                df = df.append(new, ignore_index=True)
 
         return df
 
     def check_point_cloud(self, df, double=False):
         """
-        remove errors from point cloud and create the
+        remove errors from point cloud
 
-        :param df:
-        :param double: für Doppelfrofile
-        :return:
+        Args:
+            df:
+            double (bool): for "Doppelfrofile"
         """
+
         self.df_abs = df.astype(float).copy()
         df = self.df_rel
         df = df.round(self.accuracy)
@@ -388,10 +400,26 @@ class CrossSection(object):
 
     @property
     def df_rel(self):
+        """relative point coordinates
+
+        convert the absolute values in the point coordinates to values relative to the cross section height
+
+        Returns:
+            pandas.DataFrame: point coordinate values relative to the cross section height
+        """
         return (self.df_abs / self.height).copy()
 
     def generator(self, double=False, show=False):
-        self.check_for_slopes(show=show)
+        """
+        :py:attr:`~check_for_slopes` + :py:attr:`~create_point_cloud` + :py:attr:`~check_point_cloud`
+
+        macro function
+
+        Args:
+            double (bool): see :py:attr:`~check_point_cloud` arguments
+            show (bool): see :py:attr:`~check_for_slopes` ``debug`` - argument and print the created point cloud
+        """
+        self.check_for_slopes(debug=show)
         df = self.create_point_cloud()
         if show:
             print(df)
@@ -399,11 +427,14 @@ class CrossSection(object):
 
     def make(self, double=False, show=False, plot=True):
         """
-        just a macro
+        :py:attr:`~generator` + :py:attr:`~profile_abs_plot` + :py:attr:`~input_file`
 
-        :type plot: bool
-        :param bool double:
-        :param bool show:
+        macro function
+
+        Args:
+            double (bool): see :py:attr:`~generator` arguments
+            show (bool):  see :py:attr:`~generator` arguments
+            plot (bool): if  :py:attr:`~profile_abs_plot` should be executed
         """
         self.generator(double=double, show=show)
 
@@ -413,7 +444,15 @@ class CrossSection(object):
         self.input_file()
 
     def add_and_show(self, *args, **kwargs):
-        #  for jupyter
+        """
+        :py:attr:`~add` + :py:attr:`~generator` + :py:attr:`~profile_abs_figure`
+
+        macro function for jupyter example
+
+        Args:
+            *args: see :py:attr:`~add` arguments
+            **kwargs: see :py:attr:`~add` keyword arguments
+        """
         self.add(*args, **kwargs)
         print(self.shape)
         self.generator(show=False)
@@ -423,8 +462,9 @@ class CrossSection(object):
         """
         create a png plot into
 
-        :type file_format: str
-        :param show: open the plot file in a viewer
+        Args:
+            show (bool): if the plot should be opened after its creation
+            file_format (str): file format ie: ``png``, ``pdf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)
         """
         ax = self.df_rel.plot(x='y', y='x', legend=False)
         ax.set_aspect('equal', 'box')
@@ -829,8 +869,8 @@ class CrossSection(object):
         # distances in meter
         if excel_filename.endswith('.csv'):
             coordinates = \
-            read_csv(excel_filename, header=0, usecols=[0, 1], names=[X, Y]).mul(1000).round(0).set_index(Y)[
-                X]
+                read_csv(excel_filename, header=0, usecols=[0, 1], names=[X, Y]).mul(1000).round(0).set_index(Y)[
+                    X]
         elif excel_filename.endswith('.xlsx'):
             coordinates = \
                 read_excel(excel_filename, skiprows=3, header=None, usecols=[0, 1], names=[X, Y]).mul(1000).set_index(
@@ -864,7 +904,8 @@ class CrossSection(object):
                 Y: (y_df_filled['right'] - y_df_filled['left']) / 2
             })
 
-        cross_section = CrossSection(label=number, long_label=name, height=height, width=width, add_dim=add_dim, add_dn=add_dn)
+        cross_section = CrossSection(label=number, long_label=name, height=height, width=width, add_dim=add_dim,
+                                     add_dn=add_dn)
         cross_section.df_abs = df
         cross_section.check_point_cloud(df, double=False)
         return cross_section

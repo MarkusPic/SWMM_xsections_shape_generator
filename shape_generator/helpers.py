@@ -7,9 +7,9 @@ from os import path, listdir, remove
 from math import radians, cos, tan
 
 # these variables are used to solve symbolic mathematical equations
-# ie.
+# x is the control variable over the height ... max(x) = H_cross_section
 x = Symbol('x', real=True, positive=True)
-d = Symbol('d', real=True)
+d = Symbol('d', real=True)  # interception of the linear function
 
 
 def csv(txt, comment=None):
