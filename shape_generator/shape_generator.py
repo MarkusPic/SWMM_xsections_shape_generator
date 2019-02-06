@@ -2,14 +2,13 @@ import warnings
 from math import radians, cos, ceil, log10, floor
 from numbers import Rational
 from os import path
-from webbrowser import open as show_file
+from webbrowser import open as open_file
 
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 import pandas
 from numpy import NaN
-from pandas import isna, notna, read_excel, read_csv
+from pandas import isna, notna
 from sympy import Expr, sqrt, solve, diff, Float  # , tan, cos
 
 from .helpers import deg2slope, channel_end, circle, linear, x
@@ -28,6 +27,7 @@ class CrossSection(object):
         df_abs (pandas.DataFrame): maximum 100 points to describe the cross section in absolute values
         working_directory (str): directory where the files get saved
         unit (str): unit of entered values
+        double (bool): if the cross section two separate cross sections
     """
 
     def __init__(self, label, long_label=None, height=None, width=None, add_dim=False, add_dn=None,
@@ -65,9 +65,10 @@ class CrossSection(object):
         self.accuracy = 4
         self.working_directory = working_directory
         self.unit = unit
+        self.double = False
 
         # Profile data
-        self.df_abs = pd.DataFrame()
+        self.df_abs = pandas.DataFrame()
 
     @property
     def name(self):
@@ -322,7 +323,7 @@ class CrossSection(object):
         is_filled = 'filled'
 
         # the absolute points of the final shape
-        df = pd.DataFrame(columns=['x', 'y'])
+        df = pandas.DataFrame(columns=['x', 'y'])
 
         # convert every expression to points and add it to the resulting DataFrame ``df``
         for i in range(len(shape)):
@@ -332,7 +333,7 @@ class CrossSection(object):
                 if shape[i][1] == is_filled:
                     continue
                 pi = shape[i]
-                new = pd.Series(list(pi), index=['x', 'y'])
+                new = pandas.Series(list(pi), index=['x', 'y'])
                 df = df.append(new, ignore_index=True)
             elif isinstance(shape[i], Expr):
                 yi = shape[i]
@@ -355,23 +356,26 @@ class CrossSection(object):
                 xi = np.arange(start, end, this_step)
 
                 # y-coordinates array to discretise one expression
-                new = pd.Series(xi, name='x').to_frame()
+                new = pandas.Series(xi, name='x').to_frame()
                 new['y'] = np.vectorize(lambda x_i: float(yi.subs(x, Float(round(x_i, 3)))))(xi)
 
                 df = df.append(new, ignore_index=True)
 
         self.df_abs = df.copy()
 
-    def check_point_cloud(self, double=False):
+    def set_double_cross_section(self):
+        """
+        make the cross section as a double section
+        """
+        self.double = True
+
+    def check_point_cloud(self):
         """
         remove errors from the point cloud, ie.:
 
         - remove duplicates,
         - (if specified) remove points which overlap the overall cross section width and
         - other errors...
-
-        Args:
-            double (bool): if the cross section is a double-profile (="Doppelprofil")
         """
         df = self.df_rel
         df = df.round(self.accuracy)
@@ -384,7 +388,7 @@ class CrossSection(object):
         # print((np.arctan(df['x'].diff() / df['y'].diff())/ np.pi * 180).head(10))
         df = df.dropna()
 
-        if double:
+        if self.double:
             df['y'] *= 2
 
         # delete errors
@@ -396,7 +400,7 @@ class CrossSection(object):
             nx = df['x'][dupls]
 
             def raise_values(s):
-                return s + pd.Series(index=s.index, data=range(len(s.index))) * 10 ** (-self.accuracy)
+                return s + pandas.Series(index=s.index, data=range(len(s.index))) * 10 ** (-self.accuracy)
 
             nx = nx.groupby(nx).apply(raise_values)
             df.loc[nx.index, 'x'] = nx
@@ -414,62 +418,61 @@ class CrossSection(object):
         """
         return (self.df_abs / self.height).copy()
 
-    def generator(self, double=False, show=False):
+    def generator(self, show=False):
         """
         :py:attr:`~check_for_slopes` + :py:attr:`~create_point_cloud` + :py:attr:`~check_point_cloud`
 
         macro function
 
         Args:
-            double (bool): see :py:attr:`~check_point_cloud` arguments
             show (bool): see :py:attr:`~check_for_slopes` ``debug`` - argument and print the created point cloud
         """
         self.check_for_slopes(debug=show)
         self.create_point_cloud()
         if show:
             print(self.df_abs)
-        self.check_point_cloud(double)
+        self.check_point_cloud()
 
-    def make(self, double=False, show=False, plot=True):
+    def make(self, show=False, plot=True):
         """
         :py:attr:`~generator` + :py:attr:`~profile_abs_plot` + :py:attr:`~input_file`
 
         macro function
 
         Args:
-            double (bool): see :py:attr:`~generator` arguments
             show (bool):  see :py:attr:`~generator` arguments
             plot (bool): if  :py:attr:`~profile_abs_plot` should be executed
         """
-        self.generator(double=double, show=show)
+        self.generator(show=show)
 
         if plot:
-            self.profile_abs_plot(show, file_format='pdf')
+            self.profile_abs_plot(show, file_format='pandasf')
         self.input_file()
 
     def add_and_show(self, *args, **kwargs):
         """
         :py:attr:`~add` + :py:attr:`~generator` + :py:attr:`~profile_abs_figure`
 
+        and print the raw shape (description of the cross section)
+
         macro function for jupyter example
 
         Args:
-            unit (str): chosen unit of the values
             *args: see :py:attr:`~add` arguments
             **kwargs: see :py:attr:`~add` keyword arguments
         """
         self.add(*args, **kwargs)
-        print('-'*5, *self.shape, '-' * 5, sep='\n')
-        self.generator(show=False)
+        print('-' * 5, *self.shape, '-' * 5, sep='\n')
+        self.generator()
         self.profile_abs_figure()
 
-    def profile_rel_plot(self, show=False, file_format='png'):
+    def profile_rel_plot(self, auto_open=False, file_format='png'):
         """
         create a plot graphic into the :py:attr:`~working_directory` with relative dimensions
 
         Args:
-            show (bool): whether the plot should be opened after its creation
-            file_format (str): file format, ie: ``png``, ``pdf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)
+            auto_open (bool): whether the plot should be opened after its creation
+            file_format (str): file format, ie: ``png``, ``pandasf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)
         """
         ax = self.df_rel.plot(x='y', y='x', legend=False)
         ax.set_aspect('equal', 'box')
@@ -485,19 +488,18 @@ class CrossSection(object):
         fig.savefig(filename)
         fig.clf()
         plt.close(fig)
-        if show:
-            show_file(filename)
+        if auto_open:
+            open_file(filename)
 
-    def profile_abs_plot(self, show=False, file_format='png'):
+    def profile_abs_plot(self, auto_open=False, file_format='png'):
         """
         create a plot graphic into the :py:attr:`~working_directory` with absolute dimensions.
 
         This function uses the :py:attr:`~profile_abs_figure` -function to get a figure and saves the figure in a file.
 
         Args:
-            unit (str): chosen unit of the values
-            show (bool): whether the plot should be opened after its creation
-            file_format (str): file format, ie: ``png``, ``pdf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)
+            auto_open (bool): whether the plot should be opened after its creation
+            file_format (str): file format, ie: ``png``, ``pandasf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)
         """
         fig = self.profile_abs_figure()
 
@@ -508,15 +510,12 @@ class CrossSection(object):
         fig.savefig(filename)
         fig.clf()
         plt.close(fig)
-        if show:
-            show_file(filename)
+        if auto_open:
+            open_file(filename)
 
     def profile_abs_figure(self):
         """
         create a plot of the absolute dimensions
-
-        Args:
-            unit (str): if unit is specified, add to dimensions
 
         Returns:
             matplotlib.figure.Figure: plot of the absolute dimensions
@@ -530,7 +529,7 @@ class CrossSection(object):
             return int(base * ceil(float(x_) / base))
 
         base = int(10 ** floor(log10(w)))
-        half_base = int(base/2)
+        half_base = int(base / 2)
         xlim = custom_round(w, base)
         ylim = custom_round(h, base)
 
@@ -914,8 +913,8 @@ class CrossSection(object):
 
         # horizontal distance to lowest point (dry weather channel)
         # split to left and right part of the profile
-        y_df = pd.concat([relative_coordinates.loc[:height_pr].rename('right'),
-                          relative_coordinates.loc[height_pr:].rename('left')], axis=1)
+        y_df = pandas.concat([relative_coordinates.loc[:height_pr].rename('right'),
+                              relative_coordinates.loc[height_pr:].rename('left')], axis=1)
         y_df.loc[0] = 0
         # interpolate to an even number of points on the left and right part of the profile
         y_df_filled = y_df.interpolate()
@@ -924,7 +923,7 @@ class CrossSection(object):
         # plot of the point cloud
         # y_df_filled.plot()
 
-        df = pd.DataFrame(
+        df = pandas.DataFrame(
             {
                 X: y_df.index,
                 Y: (y_df_filled['right'] - y_df_filled['left']) / 2
