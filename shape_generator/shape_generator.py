@@ -1,5 +1,5 @@
 import warnings
-from math import radians, cos
+from math import radians, cos, ceil, log10, floor
 from numbers import Rational
 from os import path
 from webbrowser import open as show_file
@@ -7,6 +7,7 @@ from webbrowser import open as show_file
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import pandas
 from numpy import NaN
 from pandas import isna, notna, read_excel, read_csv
 from sympy import Expr, sqrt, solve, diff, Float  # , tan, cos
@@ -25,10 +26,12 @@ class CrossSection(object):
         shape (list): descriptions of the cross section as commands in a list
         shape_corrected (list): points and functions to describe the cross section
         df_abs (pandas.DataFrame): maximum 100 points to describe the cross section in absolute values
+        working_directory (str): directory where the files get saved
+        unit (str): unit of entered values
     """
 
     def __init__(self, label, long_label=None, height=None, width=None, add_dim=False, add_dn=None,
-                 working_directory=''):
+                 working_directory='', unit=None):
         """Initialise the cross section class
 
         Args:
@@ -36,10 +39,11 @@ class CrossSection(object):
             long_label (Optional[str]): optional longer name of the cross section
             height (float): absolute height of the CS
             width (Optional[float]): absolute width of the CS (optional) can be calculated
-            add_dim (bool): if the dimensions should be added to the label used for the export
-            add_dn (Optional[float]): if the channel dimension should be added to the label used for the export enter the diameter
-                            as float
+            add_dim (bool): if the dimensions should be added to :py:attr:`~out_filename` used for the export
+            add_dn (Optional[float]): if the channel dimension should be added to :py:attr:`~out_filename`
+                                    used for the export enter the diameter as float
             working_directory (str): directory where the files get saved
+            unit (Optional[str]): enter unit to add the unit in the plots
         """
         if isinstance(label, (float, int)):
             self.label = '{:0.0f}'.format(label)
@@ -60,6 +64,7 @@ class CrossSection(object):
         self.add_dn = add_dn
         self.accuracy = 4
         self.working_directory = working_directory
+        self.unit = unit
 
         # Profile data
         self.df_abs = pd.DataFrame()
@@ -90,6 +95,7 @@ class CrossSection(object):
     def out_filename(self):
         """
         filename of the figure/text-file to be created
+
         Returns:
             str: filename
 
@@ -216,7 +222,7 @@ class CrossSection(object):
                 # wenn es der letzte Punkt ist, ist der nachfolgende Punkt der Scheitel
                 # f2: nachfolgener Punkt oder nachfolgene Funktion
                 if i == len(self.shape_corrected) - 1:
-                    f2 = (self.height, 0)
+                    f2 = (float(self.height), 0.)
                 else:
                     f2 = self.shape_corrected[i + 1]
 
@@ -286,13 +292,11 @@ class CrossSection(object):
                     print()
 
     def create_point_cloud(self):
-        """create a :obj:`pandas.DataFrame` of point coordinates
+        """create absolute point coordinates and write it into :py:attr:`~df_abs`
 
         To create a :obj:`pandas.DataFrame` of all the points to describe the cross section.
-        This function replaces the Expressions given in :py:attr:`~add` to points with x and y coordinates.
-
-        Returns:
-            pandas.DataFrame: coordinates to describe the cross section in absolute values
+        This function replaces the Expressions given in :py:attr:`~add` to points with x and y coordinates
+        and writes them into the :py:attr:`~df_abs` attribute.
         """
         shape = self.shape_corrected
 
@@ -356,18 +360,19 @@ class CrossSection(object):
 
                 df = df.append(new, ignore_index=True)
 
-        return df
+        self.df_abs = df.copy()
 
-    def check_point_cloud(self, df, double=False):
+    def check_point_cloud(self, double=False):
         """
-        remove errors from point cloud
+        remove errors from the point cloud, ie.:
+
+        - remove duplicates,
+        - (if specified) remove points which overlap the overall cross section width and
+        - other errors...
 
         Args:
-            df:
-            double (bool): for "Doppelfrofile"
+            double (bool): if the cross section is a double-profile (="Doppelprofil")
         """
-
-        self.df_abs = df.astype(float).copy()
         df = self.df_rel
         df = df.round(self.accuracy)
         df = df.drop_duplicates()
@@ -420,10 +425,10 @@ class CrossSection(object):
             show (bool): see :py:attr:`~check_for_slopes` ``debug`` - argument and print the created point cloud
         """
         self.check_for_slopes(debug=show)
-        df = self.create_point_cloud()
+        self.create_point_cloud()
         if show:
-            print(df)
-        self.check_point_cloud(df, double)
+            print(self.df_abs)
+        self.check_point_cloud(double)
 
     def make(self, double=False, show=False, plot=True):
         """
@@ -440,7 +445,6 @@ class CrossSection(object):
 
         if plot:
             self.profile_abs_plot(show, file_format='pdf')
-        # self.dat_file()
         self.input_file()
 
     def add_and_show(self, *args, **kwargs):
@@ -450,47 +454,58 @@ class CrossSection(object):
         macro function for jupyter example
 
         Args:
+            unit (str): chosen unit of the values
             *args: see :py:attr:`~add` arguments
             **kwargs: see :py:attr:`~add` keyword arguments
         """
         self.add(*args, **kwargs)
-        print(self.shape)
+        print('-'*5, *self.shape, '-' * 5, sep='\n')
         self.generator(show=False)
         self.profile_abs_figure()
 
     def profile_rel_plot(self, show=False, file_format='png'):
         """
-        create a png plot into
+        create a plot graphic into the :py:attr:`~working_directory` with relative dimensions
 
         Args:
-            show (bool): if the plot should be opened after its creation
-            file_format (str): file format ie: ``png``, ``pdf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)
+            show (bool): whether the plot should be opened after its creation
+            file_format (str): file format, ie: ``png``, ``pdf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)
         """
         ax = self.df_rel.plot(x='y', y='x', legend=False)
         ax.set_aspect('equal', 'box')
         ax.set_ylabel('rel H')
         ax.set_xlabel('B/H')
         ax.set_title('{}: {}'.format(self.label, self.name))
-
-        if self.height < 10:
-            self.height = int(self.height * 1000)
-
-        filename = self.out_filename + '.' + file_format
-
         fig = ax.get_figure()
+
+        # ---------
+        filename = self.out_filename + '_rel.' + file_format
+
+        # ---------
         fig.savefig(filename)
-        # print(filename)
         fig.clf()
         plt.close(fig)
         if show:
             show_file(filename)
 
-    def profile_abs_plot(self, show=False, file_format='pdf'):
-        fig = self.profile_abs_figure()
-        filename = self.out_filename + '.' + file_format
+    def profile_abs_plot(self, show=False, file_format='png'):
+        """
+        create a plot graphic into the :py:attr:`~working_directory` with absolute dimensions.
 
+        This function uses the :py:attr:`~profile_abs_figure` -function to get a figure and saves the figure in a file.
+
+        Args:
+            unit (str): chosen unit of the values
+            show (bool): whether the plot should be opened after its creation
+            file_format (str): file format, ie: ``png``, ``pdf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)
+        """
+        fig = self.profile_abs_figure()
+
+        # ---------
+        filename = self.out_filename + '_abs.' + file_format
+
+        # ---------
         fig.savefig(filename)
-        # print(filename)
         fig.clf()
         plt.close(fig)
         if show:
@@ -498,40 +513,37 @@ class CrossSection(object):
 
     def profile_abs_figure(self):
         """
-        create a png plot into
+        create a plot of the absolute dimensions
 
-        :type file_format: str
-        :param show: open the plot file in a viewer
+        Args:
+            unit (str): if unit is specified, add to dimensions
+
+        Returns:
+            matplotlib.figure.Figure: plot of the absolute dimensions
         """
-
-        if self.label == 'Pr_18':
-            df = self.df_rel * 1950
-        elif self.label == 'Pr_66':
-            df = self.df_rel * 2100
-        else:
-            df = self.df_abs
+        df = self.df_abs
 
         w = int(df['y'].max())
         h = int(df['x'].max())
 
-        from math import ceil
-        def custom_round(x, base):
-            res = int(base * ceil(float(x) / base))
-            return res
+        def custom_round(x_, base):
+            return int(base * ceil(float(x_) / base))
 
-        xlim = custom_round(w, 100)
-        ylim = custom_round(h, 100)
+        base = int(10 ** floor(log10(w)))
+        half_base = int(base/2)
+        xlim = custom_round(w, base)
+        ylim = custom_round(h, base)
 
         other_side = df.copy().sort_values('x', ascending=False)
         other_side['y'] *= -1
         df = df.append(other_side)
         ax = df.plot(x='y', y='x', legend=False, zorder=1000000, clip_on=False)
         ax.set_aspect('equal', 'box')
-        ax.set_xticks(list(range(-xlim, xlim, 100)), minor=False)
-        ax.set_xticks(list(range(-xlim, xlim, 50)), minor=True)
+        ax.set_xticks(list(range(-xlim, xlim, base)), minor=False)
+        ax.set_xticks(list(range(-xlim, xlim, half_base)), minor=True)
 
-        ax.set_yticks(list(range(0, ylim, 100)), minor=False)
-        ax.set_yticks(list(range(0, ylim, 50)), minor=True)
+        ax.set_yticks(list(range(0, ylim, base)), minor=False)
+        ax.set_yticks(list(range(0, ylim, half_base)), minor=True)
         # ax.set_axis_off()
         # ax.set_frame_on(False)
         # ax.axis()
@@ -551,32 +563,36 @@ class CrossSection(object):
         if self.label != 'Pr_{}'.format(self.name):
             n += ': {}'.format(self.name)
 
-        ax.set_title('{}\n{:0.0f}x{:0.0f}mm'.format(n, h, custom_round(w * 2, 50)))
+        ax.set_title('{}\n{:0.0f}x{:0.0f}'.format(n, h, custom_round(w * 2, half_base)) +
+                     (self.unit if self.unit is not None else ''))
         self.cross_section_area()
 
-        if self.height < 10:
-            self.height = int(self.height * 1000)
         fig = ax.get_figure()
         fig.tight_layout()
         return fig
 
     def dat_file(self):
         """
-        create the EPASWMM Curve Data file
-        to import the file in SWMM
+        create the EPA-SWMM Curve Data  ``.dat`` -file, which can be imported into SWMM
+        The file is save into the :py:attr:`~working_directory`.
         """
-        file = self.out_filename
-
-        csv = open(file + '.dat', 'w+')
-        csv.write('EPASWMM Curve Data\n')
-        dim = 'H={}'.format(self.height)
+        file = open(self.out_filename + '.dat', 'w+')
+        file.write('EPASWMM Curve Data\n')
+        dim = 'H={} {}'.format(self.height)
         if self.width:
             dim += ', B={}'.format(self.width)
-        csv.write('{} - {}: {}\n'.format(self.label, self.name, dim))
-        self.df_rel.iloc[1:-1].to_csv(csv, sep=' ', index=False, header=False,
+        file.write('{} - {}: {}\n'.format(self.label, self.name, dim))
+        self.df_rel.iloc[1:-1].to_csv(file, sep=' ', index=False, header=False,
                                       float_format='%0.{}f'.format(self.accuracy))
 
     def inp_string(self):
+        """
+        create the curve data for cross section shapes in the ``.inp`` -file (SWMM-Input) format,
+        which can be pasted into the input file.
+
+        Returns:
+            str: formatted text of the data
+        """
         df = self.df_rel.copy()
         df = df.iloc[1:-1].copy()
 
@@ -589,20 +605,24 @@ class CrossSection(object):
 
     def input_file(self):
         """
-        create the profile table for the ".inp"-SWMM-file as a seperate txt-file
+        create the curve data for cross section shapes in the ``.inp`` -file (SWMM-Input) format
+        and save it as a separate txt-file.
+
+        This function uses the :py:attr:`~inp_string` -function to get the string and saves the string in a file.
+        The file is save into the :py:attr:`~working_directory`.
         """
         with open(self.out_filename + '_shape.txt', 'w') as f:
             f.write(self.inp_string())
 
     def cross_section_area(self):
         """
-        calculate the cross section a
+        calculate the cross section area
 
-        :rtype: float
-        :return: area in m²
+        Returns:
+            float: area, unit depend on unit of the entered values.
         """
         # area2 = (self.df_abs['x'].diff() * self.df_abs['y'] * 2).sum()
-        area = (self.df_abs['x'].diff() * (self.df_abs['y'] - self.df_abs['y'].diff() / 2) * 2).sum() * 1e-6
+        area = (self.df_abs['x'].diff() * (self.df_abs['y'] - self.df_abs['y'].diff() / 2) * 2).sum()
         return area
 
     ####################################################################################################################
@@ -610,25 +630,27 @@ class CrossSection(object):
     def standard(no, name, height, width=NaN, r_channel=NaN, r_roof=NaN, r_wall=NaN, slope_bench=NaN, r_round=NaN,
                  r_wall_bottom=NaN, h_bench=NaN, pre_bench=NaN, w_channel=NaN, add_dim=False, add_dn=False):
         """
-        Der Querschnitt des Standard Profils
+        standard cross section
 
-        :type add_dn: bool
-        :type add_dim: bool
-        :param int | str no: number
-        :param str name: label of the profile
-        :param float height:
-        :param float width:
-        :param float r_channel: radius
-        :param float r_roof: radius
-        :param float r_wall: radius
-        :param float slope_bench: slope in degree
-        :param float r_round: radius
-        :param float r_wall_bottom: radius
-        :param float h_bench: height
-        :param float pre_bench: fist bench in degree
-        :param float w_channel: width
+        Args:
+            no (str):
+            name (str):
+            height (float):
+            width (float):
+            r_channel (float):
+            r_roof (float):
+            r_wall (float):
+            slope_bench (float):
+            r_round (float):
+            r_wall_bottom (float):
+            h_bench (float):
+            pre_bench (float):
+            w_channel (float):
+            add_dim (bool):
+            add_dn (Optional[float]):
 
-        :rtype: CrossSection
+        Returns:
+            CrossSection: standard cross section
         """
 
         # ------------------------------------------------
@@ -707,26 +729,41 @@ class CrossSection(object):
 
     ####################################################################################################################
     @staticmethod
-    def box(no, height, width, channel=None, bench=None, roof=None, rounding=0.0, add_dim=True,
-            custom_label=None):
+    def box(label, height, width, channel=None, bench=None, roof=None, rounding=0.0, add_dim=True, long_label=None,
+            unit=None):
         """
-        Kasten
+        pre defined box (=Kasten) cross section
 
-        :type add_dim: bool
-        :type custom_label: str
-        :type no: profile number
-        :param float height: in [mm]
-        :param float width: in [mm]
-        :param float channel: diameter in [mm]
-        :param str bench: ''=flache Berme <|> 'R'=V-förmiges Profil <|> 'H'=Schräge Verschneidung
-        :param str roof: ''=gerade <|> 'B'= Bogen <|>  'K'=Kreis
-        :type rounding: float
+        see :ref:`Examples_for_box_shaped_profiles`
 
-        :rtype: CrossSection
-        :return:
+        Args:
+            label (str): see :py:attr:`~__init__`
+            height (float): see :py:attr:`~__init__`
+            width (float): see :py:attr:`~__init__`
+            channel (Optional[float]): diameter of the dry weather channel
+            bench (Optional[float]): bench (=Berme)
+
+                - ``''``: flache Berme
+                - ``'R'``: V-förmiges Profil
+                - ``'H'``: Schräge Verschneidung
+
+            roof (Optional[float]): roof (=Decke)
+
+                - ``''``: gerade
+                - ``'B'``: Bogen
+                - ``'K'``: Kreis
+
+            rounding (Optional[float]): rounding of the edges
+            add_dim (bool): see :py:attr:`~__init__`
+            long_label(Optional[str]): see :py:attr:`~__init__`
+            unit (Optional[str]): see :py:attr:`~__init__`
+
+        Returns:
+            CrossSection: pre defined box (=Kasten) cross section
         """
         name = 'K'
-        cross_section = CrossSection(label=no, long_label=custom_label, width=width, height=height, add_dim=add_dim)
+        cross_section = CrossSection(label=label, long_label=long_label, width=width, height=height, add_dim=add_dim,
+                                     unit=unit)
 
         if isna(channel):
             channel = None
@@ -744,7 +781,8 @@ class CrossSection(object):
             bench = str(bench).strip()
 
             if isinstance(channel, float):
-                name += '{:0.0f}'.format(channel / 10)
+                name += '{:0.0f}'.format(channel)
+                # diameter to radius
                 channel /= 2
                 cross_section.add(circle(channel, x_m=channel))
 
@@ -812,16 +850,25 @@ class CrossSection(object):
 
     ####################################################################################################################
     @staticmethod
-    def box_from_string(label, height, width, custom_label=None):
+    def box_from_string(label, height, width, custom_label=None, unit=None):
         """
+        create pre defined box (=Kasten) cross section with the string label.
+        This function takes the information from the label and pass them to the :py:attr:`~box` - function.
 
-        :type custom_label: str
-        :type width: float
-        :type height: float
-        :param label: label of box profile
+        see :ref:`Examples_for_box_shaped_profiles`
 
-        :return:
-        :rtype: CrossSection
+        Args:
+            label (str): see the :ref:`Examples_for_box_shaped_profiles`
+            height (float): see :py:attr:`~__init__`
+            width (float): see :py:attr:`~__init__`
+            custom_label (str):
+            unit (Optional[str]): see :py:attr:`~__init__`
+
+        Returns:
+            CrossSection: pre defined box (=Kasten) cross section
+
+        Examples:
+            .. image:: images/Kasten-Profile.gif
         """
 
         import re
@@ -831,14 +878,14 @@ class CrossSection(object):
             _, _, channel, bench, roof = infos
 
             if channel != '':
-                channel = float(channel) * 10  # from cm to mm
+                channel = float(channel)
             else:
                 channel = None
 
-            bench, roof = [x if x != '' else None for x in (bench, roof)]
+            bench, roof = [x_ if x_ != '' else None for x_ in (bench, roof)]
 
             cross_section = CrossSection.box(label, height=height, width=width, channel=channel, bench=bench, roof=roof,
-                                             custom_label=custom_label)
+                                             long_label=custom_label, unit=unit)
             return cross_section
 
         # --------------------------------------
@@ -846,57 +893,36 @@ class CrossSection(object):
             raise NotImplementedError('"{}" unknown !'.format(label))
 
     @staticmethod
-    def from_point_cloud(excel_filename='/home/markus/Downloads/Haltung 6560086.xlsx',
-                         number=950, name='Profil 950', height=2250, width=1800, add_dim=True, add_dn=False):
+    def from_point_cloud(relative_coordinates, *args, **kwargs):
         """
+        get the cross sections from a point cloud where every point is relative to the lowers point in the cross section
 
+        Args:
+            relative_coordinates (pandas.Series): height-variable as index and width as values
+                                                  with the origin in the lowest point of the cross section
+            *args: arguments, see :py:attr:`~__init__`
+            **kwargs: keyword arguments, see :py:attr:`~__init__`
 
-
-        :param excel_filename:
-        :param number:
-        :param name:
-        :param height:
-        :param width:
-        :param add_dim:
-        :param add_dn:
-
-        :rtype: CrossSection
-        :return:
+        Returns:
+            CrossSection: of the point cloud
         """
         X = 'x'  # horizontal distance to lowest point (dry weather channel)
         Y = 'y'  # vertical distance to lowest point (dry weather channel)
 
-        # distances in meter
-        if excel_filename.endswith('.csv'):
-            coordinates = \
-                read_csv(excel_filename, header=0, usecols=[0, 1], names=[X, Y]).mul(1000).round(0).set_index(Y)[
-                    X]
-        elif excel_filename.endswith('.xlsx'):
-            coordinates = \
-                read_excel(excel_filename, skiprows=3, header=None, usecols=[0, 1], names=[X, Y]).mul(1000).set_index(
-                    Y)[X]
-        else:
-            raise NotImplementedError
-
         # height of the profile = maximum Y coordinate
-        height_pr = coordinates.index.max()
+        height_pr = relative_coordinates.index.max()
 
         # horizontal distance to lowest point (dry weather channel)
         # split to left and right part of the profile
-        y_df = pd.concat([coordinates.loc[:height_pr].rename('right'),
-                          coordinates.loc[height_pr:].rename('left')], axis=1)
+        y_df = pd.concat([relative_coordinates.loc[:height_pr].rename('right'),
+                          relative_coordinates.loc[height_pr:].rename('left')], axis=1)
         y_df.loc[0] = 0
         # interpolate to an even number of points on the left and right part of the profile
         y_df_filled = y_df.interpolate()
 
         # for debugging
         # plot of the point cloud
-        y_df_filled.plot()
-
-        # s = (y_df_filled['right'] - y_df_filled['left']) / 2
-        # df = pd.DataFrame()
-        # df[X] = s.index.values
-        # df[Y] = s.values
+        # y_df_filled.plot()
 
         df = pd.DataFrame(
             {
@@ -904,8 +930,7 @@ class CrossSection(object):
                 Y: (y_df_filled['right'] - y_df_filled['left']) / 2
             })
 
-        cross_section = CrossSection(label=number, long_label=name, height=height, width=width, add_dim=add_dim,
-                                     add_dn=add_dn)
-        cross_section.df_abs = df
-        cross_section.check_point_cloud(df, double=False)
+        cross_section = CrossSection(*args, **kwargs)
+        cross_section.df_abs = df.copy()
+        cross_section.check_point_cloud(double=False)
         return cross_section

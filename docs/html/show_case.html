@@ -87,7 +87,11 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="main.html">General information</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples for general profile shapes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples for general profile shapes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Example-for-standard-egg-cross-section">Example for standard egg cross section</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Example-for-custom-cross-section">Example for custom cross section</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="show_case-kasten.html">Examples for box shaped profiles</a></li>
 </ul>
 
@@ -378,36 +382,39 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="Examples-for-general-profile-shapes">
 <h1>Examples for general profile shapes<a class="headerlink" href="#Examples-for-general-profile-shapes" title="Permalink to this headline">¶</a></h1>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">shape_generator</span> <span class="k">import</span> <span class="n">Profile</span><span class="p">,</span> <span class="n">circle</span><span class="p">,</span> <span class="n">csv</span>
+<span></span><span class="kn">from</span> <span class="nn">shape_generator</span> <span class="k">import</span> <span class="n">CrossSection</span><span class="p">,</span> <span class="n">circle</span><span class="p">,</span> <span class="n">csv</span>
 </pre></div>
 </div>
 </div>
+<div class="section" id="Example-for-standard-egg-cross-section">
+<h2>Example for standard egg cross section<a class="headerlink" href="#Example-for-standard-egg-cross-section" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">profile_dimensions</span> <span class="o">=</span> <span class="n">csv</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">nr,name,r</span>
-<span class="s2">P0,0,300</span>
-<span class="s2">P1,1,350</span>
-<span class="s2">P2,2,400</span>
-<span class="s2">P3,3,450</span>
-<span class="s2">P4,4,500</span>
-<span class="s2">P5,5,550</span>
-<span class="s2">P6,6,600</span>
-<span class="s2">P7,6a,650</span>
+<span class="s2">P0,0,30</span>
+<span class="s2">P1,1,35</span>
+<span class="s2">P2,2,40</span>
+<span class="s2">P3,3,45</span>
+<span class="s2">P4,4,50</span>
+<span class="s2">P5,5,55</span>
+<span class="s2">P6,6,60</span>
+<span class="s2">P7,6a,65</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="n">unit</span> <span class="o">=</span> <span class="s1">&#39;cm&#39;</span>
 <span class="n">profile_dimensions</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -442,49 +449,49 @@ div.rendered_html tbody tr:hover {
     <tr>
       <th>P0</th>
       <td>0</td>
-      <td>300</td>
+      <td>30</td>
     </tr>
     <tr>
       <th>P1</th>
       <td>1</td>
-      <td>350</td>
+      <td>35</td>
     </tr>
     <tr>
       <th>P2</th>
       <td>2</td>
-      <td>400</td>
+      <td>40</td>
     </tr>
     <tr>
       <th>P3</th>
       <td>3</td>
-      <td>450</td>
+      <td>45</td>
     </tr>
     <tr>
       <th>P4</th>
       <td>4</td>
-      <td>500</td>
+      <td>50</td>
     </tr>
     <tr>
       <th>P5</th>
       <td>5</td>
-      <td>550</td>
+      <td>55</td>
     </tr>
     <tr>
       <th>P6</th>
       <td>6</td>
-      <td>600</td>
+      <td>60</td>
     </tr>
     <tr>
       <th>P7</th>
       <td>6a</td>
-      <td>650</td>
+      <td>65</td>
     </tr>
   </tbody>
 </table>
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -495,9 +502,9 @@ div.rendered_html tbody tr:hover {
 <span class="n">height</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="mi">3</span>
 <span class="n">width</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="mi">2</span>
 <span class="c1"># h1 = roh - (r + roh) / (R - roh) * roh</span>
-<span class="n">h1</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">r</span>
+<span class="n">h1</span> <span class="o">=</span> <span class="n">r</span><span class="o">/</span> <span class="mi">5</span>
 
-<span class="n">cross_section</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="n">no</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">)</span>
+<span class="n">cross_section</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">no</span><span class="p">,</span> <span class="n">long_label</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span>
 <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">circle</span><span class="p">(</span><span class="n">roh</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="n">roh</span><span class="p">))</span>
 <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">h1</span><span class="p">)</span>
 <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">circle</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">r</span><span class="p">,</span> <span class="n">y_m</span><span class="o">=-</span><span class="p">(</span><span class="n">R</span> <span class="o">-</span> <span class="n">r</span><span class="p">)))</span>
@@ -516,7 +523,7 @@ Pr_P0  -&gt;  0
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -529,79 +536,79 @@ Pr_P0  -&gt;  0
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0 :  sqrt(-(x - 150.0)**2 + 22500.0)
-1 :  (60.0, None)
-2 :  sqrt(-(x - 600.0)**2 + 810000.0) - 600.0
-3 :  (600.0, None)
-4 :  sqrt(-(x - 600.0)**2 + 90000.0)
-          x        y
-0         0        0
-1        10  53.8516
-2        20  74.8331
-3        30       90
-4        40   101.98
-5        50  111.803
-6        60      120
-7   69.4737  127.009
-8   78.9474  133.828
-9   88.4211  140.464
-10  97.8947  146.921
-11  107.368  153.202
-12  116.842  159.314
-13  126.316   165.26
-14  135.789  171.044
-15  145.263  176.669
-16  154.737  182.139
-17  164.211  187.457
-18  173.684  192.625
-19  183.158  197.648
-20  192.632  202.528
-21  202.105  207.267
-22  211.579  211.868
-23  221.053  216.333
-24  230.526  220.664
-25      240  224.864
-26  249.474  228.934
-27  258.947  232.876
-28  268.421  236.693
-29  277.895  240.386
-..      ...      ...
-67  628.125  298.679
-68    637.5  297.647
-69  646.875  296.315
-70   656.25  294.679
-71  665.625  292.734
-72      675  290.474
-73  684.375   287.89
-74   693.75  284.975
-75  703.125  281.718
-76    712.5  278.107
-77  721.875  274.129
-78   731.25  269.766
-79  740.625  264.999
-80      750  259.808
-81  759.375  254.165
-82   768.75  248.039
-83  778.125  241.395
-84    787.5  234.187
-85  796.875  226.363
-86   806.25  217.855
-87  815.625  208.581
-88      825  198.431
-89  834.375  187.265
-90   843.75  174.888
-91  853.125  161.021
-92    862.5  145.237
-93  871.875  126.823
-94   881.25  104.396
-95  890.625  74.4118
-96      900        0
+0 :  sqrt(-(x - 15.0)**2 + 225.0)
+1 :  (6.0, None)
+2 :  sqrt(-(x - 60.0)**2 + 8100.0) - 60.0
+3 :  (60.0, None)
+4 :  sqrt(-(x - 60.0)**2 + 900.0)
+            x          y
+0    0.000000   0.000000
+1    1.000000   5.385165
+2    2.000000   7.483315
+3    3.000000   9.000000
+4    4.000000  10.198039
+5    5.000000  11.180340
+6    6.000000  12.000000
+7    6.947368  12.700613
+8    7.894737  13.383029
+9    8.842105  14.046330
+10   9.789474  14.691736
+11  10.736842  15.320361
+12  11.684211  15.931312
+13  12.631579  16.526287
+14  13.578947  17.104415
+15  14.526316  17.666694
+16  15.473684  18.214035
+17  16.421053  18.745608
+18  17.368421  19.262302
+19  18.315789  19.764931
+20  19.263158  20.252706
+21  20.210526  20.726919
+22  21.157895  21.186816
+23  22.105263  21.633137
+24  23.052632  22.066553
+25  24.000000  22.486363
+26  24.947368  22.893228
+27  25.894737  23.287748
+28  26.842105  23.669272
+29  27.789474  24.038393
+..        ...        ...
+66  62.812500  29.867920
+67  63.750000  29.764702
+68  64.687500  29.631447
+69  65.625000  29.467938
+70  66.562500  29.273540
+71  67.500000  29.047375
+72  68.437500  28.788889
+73  69.375000  28.497533
+74  70.312500  28.172019
+75  71.250000  27.810744
+76  72.187500  27.412637
+77  73.125000  26.976552
+78  74.062500  26.500192
+79  75.000000  25.980762
+80  75.937500  25.416140
+81  76.875000  24.803919
+82  77.812500  24.139856
+83  78.750000  23.418742
+84  79.687500  22.635871
+85  80.625000  21.785531
+86  81.562500  20.858575
+87  82.500000  19.843135
+88  83.437500  18.725922
+89  84.375000  17.488836
+90  85.312500  16.102877
+91  86.250000  14.523688
+92  87.187500  12.681193
+93  88.125000  10.439558
+94  89.062500   7.443128
+95  90.000000   0.000000
 
-[97 rows x 2 columns]
+[96 rows x 2 columns]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -610,7 +617,7 @@ Pr_P0  -&gt;  0
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -639,153 +646,153 @@ Pr_P0  -&gt;  0
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.00</td>
-      <td>0.00</td>
+      <td>0.000</td>
+      <td>0.000</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>9.99</td>
-      <td>53.82</td>
+      <td>0.999</td>
+      <td>5.382</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>19.98</td>
-      <td>74.79</td>
+      <td>1.998</td>
+      <td>7.479</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>29.97</td>
-      <td>90.00</td>
+      <td>2.997</td>
+      <td>9.000</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>39.96</td>
-      <td>101.97</td>
+      <td>3.996</td>
+      <td>10.197</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>50.04</td>
-      <td>111.78</td>
+      <td>5.004</td>
+      <td>11.178</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>60.03</td>
-      <td>119.97</td>
+      <td>6.003</td>
+      <td>11.997</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>69.48</td>
-      <td>126.99</td>
+      <td>6.948</td>
+      <td>12.699</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>78.93</td>
-      <td>133.83</td>
+      <td>7.893</td>
+      <td>13.383</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>88.38</td>
-      <td>140.49</td>
+      <td>8.838</td>
+      <td>14.049</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>97.92</td>
-      <td>146.88</td>
+      <td>9.792</td>
+      <td>14.688</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>107.37</td>
-      <td>153.18</td>
+      <td>10.737</td>
+      <td>15.318</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>116.82</td>
-      <td>159.30</td>
+      <td>11.682</td>
+      <td>15.930</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>126.36</td>
-      <td>165.24</td>
+      <td>12.636</td>
+      <td>16.524</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>135.81</td>
-      <td>171.00</td>
+      <td>13.581</td>
+      <td>17.100</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>145.26</td>
-      <td>176.67</td>
+      <td>14.526</td>
+      <td>17.667</td>
     </tr>
     <tr>
       <th>16</th>
-      <td>154.71</td>
-      <td>182.16</td>
+      <td>15.471</td>
+      <td>18.216</td>
     </tr>
     <tr>
       <th>17</th>
-      <td>164.25</td>
-      <td>187.47</td>
+      <td>16.425</td>
+      <td>18.747</td>
     </tr>
     <tr>
       <th>18</th>
-      <td>173.70</td>
-      <td>192.60</td>
+      <td>17.370</td>
+      <td>19.260</td>
     </tr>
     <tr>
       <th>19</th>
-      <td>183.15</td>
-      <td>197.64</td>
+      <td>18.315</td>
+      <td>19.764</td>
     </tr>
     <tr>
       <th>20</th>
-      <td>192.60</td>
-      <td>202.50</td>
+      <td>19.260</td>
+      <td>20.250</td>
     </tr>
     <tr>
       <th>21</th>
-      <td>202.14</td>
-      <td>207.27</td>
+      <td>20.214</td>
+      <td>20.727</td>
     </tr>
     <tr>
       <th>22</th>
-      <td>211.59</td>
-      <td>211.86</td>
+      <td>21.159</td>
+      <td>21.186</td>
     </tr>
     <tr>
       <th>23</th>
-      <td>221.04</td>
-      <td>216.36</td>
+      <td>22.104</td>
+      <td>21.636</td>
     </tr>
     <tr>
       <th>24</th>
-      <td>230.49</td>
-      <td>220.68</td>
+      <td>23.049</td>
+      <td>22.068</td>
     </tr>
     <tr>
       <th>25</th>
-      <td>240.03</td>
-      <td>224.82</td>
+      <td>24.003</td>
+      <td>22.482</td>
     </tr>
     <tr>
       <th>26</th>
-      <td>249.48</td>
-      <td>228.96</td>
+      <td>24.948</td>
+      <td>22.896</td>
     </tr>
     <tr>
       <th>27</th>
-      <td>258.93</td>
-      <td>232.92</td>
+      <td>25.893</td>
+      <td>23.292</td>
     </tr>
     <tr>
       <th>28</th>
-      <td>268.38</td>
-      <td>236.70</td>
+      <td>26.838</td>
+      <td>23.670</td>
     </tr>
     <tr>
       <th>29</th>
-      <td>277.92</td>
-      <td>240.39</td>
+      <td>27.792</td>
+      <td>24.039</td>
     </tr>
     <tr>
       <th>...</th>
@@ -793,154 +800,154 @@ Pr_P0  -&gt;  0
       <td>...</td>
     </tr>
     <tr>
+      <th>66</th>
+      <td>62.811</td>
+      <td>29.871</td>
+    </tr>
+    <tr>
       <th>67</th>
-      <td>628.11</td>
-      <td>298.71</td>
+      <td>63.747</td>
+      <td>29.763</td>
     </tr>
     <tr>
       <th>68</th>
-      <td>637.47</td>
-      <td>297.63</td>
+      <td>64.692</td>
+      <td>29.628</td>
     </tr>
     <tr>
       <th>69</th>
-      <td>646.92</td>
-      <td>296.28</td>
+      <td>65.628</td>
+      <td>29.466</td>
     </tr>
     <tr>
       <th>70</th>
-      <td>656.28</td>
-      <td>294.66</td>
+      <td>66.564</td>
+      <td>29.277</td>
     </tr>
     <tr>
       <th>71</th>
-      <td>665.64</td>
-      <td>292.77</td>
+      <td>67.500</td>
+      <td>29.043</td>
     </tr>
     <tr>
       <th>72</th>
-      <td>675.00</td>
-      <td>290.43</td>
+      <td>68.436</td>
+      <td>28.791</td>
     </tr>
     <tr>
       <th>73</th>
-      <td>684.36</td>
-      <td>287.91</td>
+      <td>69.372</td>
+      <td>28.494</td>
     </tr>
     <tr>
       <th>74</th>
-      <td>693.72</td>
-      <td>284.94</td>
+      <td>70.308</td>
+      <td>28.170</td>
     </tr>
     <tr>
       <th>75</th>
-      <td>703.08</td>
-      <td>281.70</td>
+      <td>71.253</td>
+      <td>27.810</td>
     </tr>
     <tr>
       <th>76</th>
-      <td>712.53</td>
-      <td>278.10</td>
+      <td>72.189</td>
+      <td>27.414</td>
     </tr>
     <tr>
       <th>77</th>
-      <td>721.89</td>
-      <td>274.14</td>
+      <td>73.125</td>
+      <td>26.973</td>
     </tr>
     <tr>
       <th>78</th>
-      <td>731.25</td>
-      <td>269.73</td>
+      <td>74.061</td>
+      <td>26.496</td>
     </tr>
     <tr>
       <th>79</th>
-      <td>740.61</td>
-      <td>264.96</td>
+      <td>74.997</td>
+      <td>25.983</td>
     </tr>
     <tr>
       <th>80</th>
-      <td>749.97</td>
-      <td>259.83</td>
+      <td>75.942</td>
+      <td>25.416</td>
     </tr>
     <tr>
       <th>81</th>
-      <td>759.42</td>
-      <td>254.16</td>
+      <td>76.878</td>
+      <td>24.804</td>
     </tr>
     <tr>
       <th>82</th>
-      <td>768.78</td>
-      <td>248.04</td>
+      <td>77.814</td>
+      <td>24.138</td>
     </tr>
     <tr>
       <th>83</th>
-      <td>778.14</td>
-      <td>241.38</td>
+      <td>78.750</td>
+      <td>23.418</td>
     </tr>
     <tr>
       <th>84</th>
-      <td>787.50</td>
-      <td>234.18</td>
+      <td>79.686</td>
+      <td>22.635</td>
     </tr>
     <tr>
       <th>85</th>
-      <td>796.86</td>
-      <td>226.35</td>
+      <td>80.622</td>
+      <td>21.789</td>
     </tr>
     <tr>
       <th>86</th>
-      <td>806.22</td>
-      <td>217.89</td>
+      <td>81.558</td>
+      <td>20.862</td>
     </tr>
     <tr>
       <th>87</th>
-      <td>815.58</td>
-      <td>208.62</td>
+      <td>82.503</td>
+      <td>19.845</td>
     </tr>
     <tr>
       <th>88</th>
-      <td>825.03</td>
-      <td>198.45</td>
+      <td>83.439</td>
+      <td>18.729</td>
     </tr>
     <tr>
       <th>89</th>
-      <td>834.39</td>
-      <td>187.29</td>
+      <td>84.375</td>
+      <td>17.487</td>
     </tr>
     <tr>
       <th>90</th>
-      <td>843.75</td>
-      <td>174.87</td>
+      <td>85.311</td>
+      <td>16.101</td>
     </tr>
     <tr>
       <th>91</th>
-      <td>853.11</td>
-      <td>161.01</td>
+      <td>86.247</td>
+      <td>14.526</td>
     </tr>
     <tr>
       <th>92</th>
-      <td>862.47</td>
-      <td>145.26</td>
+      <td>87.192</td>
+      <td>12.681</td>
     </tr>
     <tr>
       <th>93</th>
-      <td>871.92</td>
-      <td>126.81</td>
+      <td>88.128</td>
+      <td>10.440</td>
     </tr>
     <tr>
       <th>94</th>
-      <td>881.28</td>
-      <td>104.40</td>
+      <td>89.064</td>
+      <td>7.443</td>
     </tr>
     <tr>
       <th>95</th>
-      <td>890.64</td>
-      <td>74.43</td>
-    </tr>
-    <tr>
-      <th>96</th>
-      <td>900.00</td>
-      <td>0.00</td>
+      <td>90.000</td>
+      <td>0.000</td>
     </tr>
   </tbody>
 </table>
@@ -948,7 +955,7 @@ Pr_P0  -&gt;  0
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -960,19 +967,23 @@ Pr_P0  -&gt;  0
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/show_case_6_0.png" src="_images/show_case_6_0.png" />
+<img alt="_images/show_case_7_0.png" src="_images/show_case_7_0.png" />
 </div>
 </div>
+</div>
+<div class="section" id="Example-for-custom-cross-section">
+<h2>Example for custom cross section<a class="headerlink" href="#Example-for-custom-cross-section" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">no</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span>
 <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Kreis&#39;</span>
-<span class="n">r</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">r</span> <span class="o">=</span> <span class="mi">20</span>  <span class="c1"># cm</span>
+<span class="n">unit</span> <span class="o">=</span> <span class="s1">&#39;cm&#39;</span>
 
-<span class="n">kreis</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="n">no</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">r</span><span class="p">)</span>
+<span class="n">kreis</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">no</span><span class="p">,</span> <span class="n">long_label</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">r</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span>
 <span class="n">kreis</span><span class="o">.</span><span class="n">add_and_show</span><span class="p">(</span><span class="n">circle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="n">r</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -984,18 +995,20 @@ Pr_P0  -&gt;  0
 <div class="highlight"><pre>
 ______________________________
 Pr_test  -&gt;  Kreis
-[sqrt(-(x - 200.0)**2 + 40000.0)]
+-----
+sqrt(-(x - 20.0)**2 + 400.0)
+-----
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/show_case_7_1.png" src="_images/show_case_7_1.png" />
+<img alt="_images/show_case_9_1.png" src="_images/show_case_9_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1008,22 +1021,25 @@ Pr_test  -&gt;  Kreis
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[sqrt(-(x - 200.0)**2 + 40000.0), (200.0, 200.0)]
+-----
+sqrt(-(x - 20.0)**2 + 400.0)
+(20.0, 20.0)
+-----
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/show_case_8_1.png" src="_images/show_case_8_1.png" />
+<img alt="_images/show_case_10_1.png" src="_images/show_case_10_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">kreis</span><span class="o">.</span><span class="n">add_and_show</span><span class="p">(</span><span class="n">r</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
+<span></span><span class="n">kreis</span><span class="o">.</span><span class="n">add_and_show</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="s1">&#39;°slope&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1032,14 +1048,57 @@ Pr_test  -&gt;  Kreis
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[sqrt(-(x - 200.0)**2 + 40000.0), (200.0, 200.0), (400.0, 200.0)]
+-----
+sqrt(-(x - 20.0)**2 + 400.0)
+(20.0, 20.0)
+(0.57735, &#39;slope&#39;)
+-----
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/show_case_9_1.png" src="_images/show_case_9_1.png" />
+<img alt="_images/show_case_11_1.png" src="_images/show_case_11_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">kreis</span><span class="o">.</span><span class="n">add_and_show</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span><span class="mf">1.5</span><span class="o">*</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+-----
+sqrt(-(x - 20.0)**2 + 400.0)
+(20.0, 20.0)
+(0.57735, &#39;slope&#39;)
+(None, 30.0)
+-----
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/show_case_12_1.png" src="_images/show_case_12_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>
