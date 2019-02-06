@@ -1,5 +1,0 @@
-Helper Functions
---------------------
-
-.. automodule:: shape_generator.helpers
-    :members:
