@@ -87,6 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../show_case.html">Examples for general profile shapes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../show_case-kasten.html">Examples for box shaped profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../standard_cross_section.html">Standard cross section</a></li>
 </ul>
 
             
@@ -190,6 +191,13 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        float: slope</span>
+
+<span class="sd">    .. figure:: images/slope.gif</span>
+<span class="sd">        :align: center</span>
+<span class="sd">        :alt: slope</span>
+<span class="sd">        :figclass: align-center</span>
+
+<span class="sd">        Slope</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">tan</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="n">degree</span><span class="p">)),</span> <span class="mi">5</span><span class="p">)</span></div>
 
@@ -204,6 +212,13 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        float: height of the channel when the circle reaches a certain angle</span>
+
+<span class="sd">    .. figure:: images/channel_end.gif</span>
+<span class="sd">        :align: center</span>
+<span class="sd">        :alt: channel end</span>
+<span class="sd">        :figclass: align-center</span>
+
+<span class="sd">        Channel end</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">r</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">cos</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="n">end_degree</span><span class="p">)))</span></div>
 
@@ -220,6 +235,13 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        sympy.core.expr.Expr: function of the circle</span>
+
+<span class="sd">    .. figure:: images/kreis.gif</span>
+<span class="sd">        :align: center</span>
+<span class="sd">        :alt: circle</span>
+<span class="sd">        :figclass: align-center</span>
+
+<span class="sd">        Circle</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">Float</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">Float</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x_m</span><span class="p">)))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">clockwise</span> <span class="k">else</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">Float</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">y_m</span><span class="p">))</span></div>
 
@@ -234,6 +256,13 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        sympy.core.expr.Expr: linear function</span>
+
+<span class="sd">    .. figure:: images/gerade.gif</span>
+<span class="sd">        :align: center</span>
+<span class="sd">        :alt: straight line</span>
+<span class="sd">        :figclass: align-center</span>
+
+<span class="sd">        Straight line</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="n">p0</span>
     <span class="k">if</span> <span class="n">slope</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>

@@ -38,6 +38,13 @@ def deg2slope(degree):
 
     Returns:
         float: slope
+
+    .. figure:: images/slope.gif
+        :align: center
+        :alt: slope
+        :figclass: align-center
+
+        Slope
     """
     return round(tan(radians(degree)), 5)
 
@@ -52,6 +59,13 @@ def channel_end(r, end_degree):
 
     Returns:
         float: height of the channel when the circle reaches a certain angle
+
+    .. figure:: images/channel_end.gif
+        :align: center
+        :alt: channel end
+        :figclass: align-center
+
+        Channel end
     """
     return r * (1 - cos(radians(end_degree)))
 
@@ -68,6 +82,13 @@ def circle(r, x_m=0, y_m=0, clockwise=False):
 
     Returns:
         sympy.core.expr.Expr: function of the circle
+
+    .. figure:: images/kreis.gif
+        :align: center
+        :alt: circle
+        :figclass: align-center
+
+        Circle
     """
     return sqrt(Float(float(r)) ** 2 - (x - Float(float(x_m))) ** 2) * (-1 if clockwise else 1) + Float(float(y_m))
 
@@ -82,6 +103,13 @@ def linear(slope, p0):
 
     Returns:
         sympy.core.expr.Expr: linear function
+
+    .. figure:: images/gerade.gif
+        :align: center
+        :alt: straight line
+        :figclass: align-center
+
+        Straight line
     """
     x0, y0 = p0
     if slope == 0:

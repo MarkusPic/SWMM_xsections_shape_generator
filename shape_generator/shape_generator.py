@@ -1,5 +1,5 @@
 import warnings
-from math import radians, cos, ceil, log10, floor
+from math import radians, cos, ceil, log10, floor, sqrt
 from numbers import Rational
 from os import path
 from webbrowser import open as open_file
@@ -9,7 +9,7 @@ import numpy as np
 import pandas
 from numpy import NaN
 from pandas import isna, notna
-from sympy import Expr, sqrt, solve, diff, Float  # , tan, cos
+from sympy import Expr, solve, diff, Float  # , tan, cos
 
 from .helpers import deg2slope, channel_end, circle, linear, x
 
@@ -341,6 +341,10 @@ class CrossSection(object):
                 start = shape[i - 1][0]
                 end = shape[i + 1][0]
 
+                if start == end:
+                    print('Warning: unused part of the shape detected. Ignoring this part.')
+                    continue
+
                 this_step = (end - start) / np.floor((end - start) / step)
 
                 if isinstance(shape[i + 1][1], type(None)):
@@ -365,7 +369,7 @@ class CrossSection(object):
 
     def set_double_cross_section(self):
         """
-        make the cross section as a double section
+        make the cross section as a double section (=Doppelprofil)
         """
         self.double = True
 
@@ -626,35 +630,64 @@ class CrossSection(object):
 
     ####################################################################################################################
     @staticmethod
-    def standard(no, name, height, width=NaN, r_channel=NaN, r_roof=NaN, r_wall=NaN, slope_bench=NaN, r_round=NaN,
-                 r_wall_bottom=NaN, h_bench=NaN, pre_bench=NaN, w_channel=NaN, add_dim=False, add_dn=False):
+    def standard(label, long_label, height, width=NaN, r_channel=NaN, r_roof=NaN, r_wall=NaN, slope_bench=NaN, r_round=NaN,
+                 r_wall_bottom=NaN, h_bench=NaN, pre_bench=NaN, w_channel=NaN, add_dim=False, add_dn=False, unit=None):
         """
         standard cross section
 
         Args:
-            no (str):
-            name (str):
-            height (float):
-            width (float):
-            r_channel (float):
-            r_roof (float):
-            r_wall (float):
-            slope_bench (float):
-            r_round (float):
-            r_wall_bottom (float):
-            h_bench (float):
-            pre_bench (float):
-            w_channel (float):
-            add_dim (bool):
-            add_dn (Optional[float]):
+            label (str): see :py:attr:`~__init__`
+            long_label (str): see :py:attr:`~__init__`
+            height (float): see :py:attr:`~__init__`
+            width (float): see :py:attr:`~__init__`
+
+            r_channel (float): radius of the dry-weather channel (=Trockenwetter Rinne)
+
+            w_channel (float): half width of the channel, only in combination with ``r_channel`` active
+            pre_bench (float): slope of the upper end of the channel in degree, only in combination with ``r_channel`` active
+            r_round (float): radius of the rounding of the edges, only in combination with ``r_channel`` active
+            h_bench (float): height where the bench begins, only in combination with ``r_channel`` active
+            slope_bench (float): slope of the bench (=Berme) in degree, or slope of the rainwater-floor (=Regenwetterrinne)
+
+            r_roof (float): radius of the roof (=Decke)
+
+            r_wall (float): radius of the sidewall (=Seitenwand), only in combination with ``r_roof`` active
+            r_wall_bottom (float): radius of the bottom sidewall (=untere Seitenwand), only in combination with ``r_wall`` active
+
+            add_dim (bool): see :py:attr:`~__init__`
+            add_dn (Optional[float]): see :py:attr:`~__init__`
 
         Returns:
             CrossSection: standard cross section
+
+        Examples:
+            see :ref:`Examples_for_standard_profiles`
+
+
+        .. figure:: images/standard.gif
+            :align: center
+            :alt: standard cross section
+            :figclass: align-center
+
+            Standard cross section
+
+        +---------+---------------------+
+        | english | deutsch             |
+        +=========+=====================+
+        | channel | Trockenwetter-Rinne |
+        +---------+---------------------+
+        | roof    | Firste/Decke        |
+        +---------+---------------------+
+        | wall    | Seitenwand          |
+        +---------+---------------------+
+        | bench   | Berme               |
+        +---------+---------------------+
+
         """
 
         # ------------------------------------------------
-        cross_section = CrossSection(label=no, long_label=name, height=height, width=(width if notna(width) else None),
-                                     add_dim=add_dim, add_dn=add_dn)
+        cross_section = CrossSection(label=label, long_label=long_label, height=height, width=(width if notna(width) else None),
+                                     add_dim=add_dim, add_dn=add_dn, unit=unit)
 
         # ------------------------------------------------
         # TW-Rinne
@@ -867,7 +900,12 @@ class CrossSection(object):
             CrossSection: pre defined box (=Kasten) cross section
 
         Examples:
-            .. image:: images/Kasten-Profile.gif
+            .. figure:: images/Kasten-Profile.gif
+                :align: center
+                :alt: Kasten-Profile
+                :figclass: align-center
+
+                Kasten-Profile
         """
 
         import re
@@ -904,6 +942,13 @@ class CrossSection(object):
 
         Returns:
             CrossSection: of the point cloud
+
+        .. figure:: images/point_cloud.gif
+            :align: center
+            :alt: point cloud
+            :figclass: align-center
+
+            Point cloud
         """
         X = 'x'  # horizontal distance to lowest point (dry weather channel)
         Y = 'y'  # vertical distance to lowest point (dry weather channel)

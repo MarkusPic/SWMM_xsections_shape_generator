@@ -20,6 +20,7 @@ Welcome to SWMM CrossSection shape Generator's documentation!
    api
    show_case
    show_case-kasten
+   standard_cross_section
 
 
 Indices and tables

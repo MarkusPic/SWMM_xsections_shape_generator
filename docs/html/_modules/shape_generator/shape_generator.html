@@ -87,6 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../show_case.html">Examples for general profile shapes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../show_case-kasten.html">Examples for box shaped profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../standard_cross_section.html">Standard cross section</a></li>
 </ul>
 
             
@@ -151,18 +152,17 @@
             
   <h1>Source code for shape_generator.shape_generator</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">radians</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">ceil</span><span class="p">,</span> <span class="n">log10</span><span class="p">,</span> <span class="n">floor</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">radians</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">ceil</span><span class="p">,</span> <span class="n">log10</span><span class="p">,</span> <span class="n">floor</span><span class="p">,</span> <span class="n">sqrt</span>
 <span class="kn">from</span> <span class="nn">numbers</span> <span class="k">import</span> <span class="n">Rational</span>
 <span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">path</span>
-<span class="kn">from</span> <span class="nn">webbrowser</span> <span class="k">import</span> <span class="nb">open</span> <span class="k">as</span> <span class="n">show_file</span>
+<span class="kn">from</span> <span class="nn">webbrowser</span> <span class="k">import</span> <span class="nb">open</span> <span class="k">as</span> <span class="n">open_file</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">pandas</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">NaN</span>
-<span class="kn">from</span> <span class="nn">pandas</span> <span class="k">import</span> <span class="n">isna</span><span class="p">,</span> <span class="n">notna</span><span class="p">,</span> <span class="n">read_excel</span><span class="p">,</span> <span class="n">read_csv</span>
-<span class="kn">from</span> <span class="nn">sympy</span> <span class="k">import</span> <span class="n">Expr</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">solve</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="n">Float</span>  <span class="c1"># , tan, cos</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="k">import</span> <span class="n">isna</span><span class="p">,</span> <span class="n">notna</span>
+<span class="kn">from</span> <span class="nn">sympy</span> <span class="k">import</span> <span class="n">Expr</span><span class="p">,</span> <span class="n">solve</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="n">Float</span>  <span class="c1"># , tan, cos</span>
 
 <span class="kn">from</span> <span class="nn">.helpers</span> <span class="k">import</span> <span class="n">deg2slope</span><span class="p">,</span> <span class="n">channel_end</span><span class="p">,</span> <span class="n">circle</span><span class="p">,</span> <span class="n">linear</span><span class="p">,</span> <span class="n">x</span>
 
@@ -180,6 +180,7 @@
 <span class="sd">        df_abs (pandas.DataFrame): maximum 100 points to describe the cross section in absolute values</span>
 <span class="sd">        working_directory (str): directory where the files get saved</span>
 <span class="sd">        unit (str): unit of entered values</span>
+<span class="sd">        double (bool): if the cross section two separate cross sections</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="CrossSection.__init__"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">long_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">add_dim</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_dn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -217,9 +218,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="mi">4</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">=</span> <span class="n">working_directory</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="o">=</span> <span class="n">unit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">double</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="c1"># Profile data</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -474,7 +476,7 @@
         <span class="n">is_filled</span> <span class="o">=</span> <span class="s1">&#39;filled&#39;</span>
 
         <span class="c1"># the absolute points of the final shape</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
 
         <span class="c1"># convert every expression to points and add it to the resulting DataFrame ``df``</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)):</span>
@@ -484,13 +486,17 @@
                 <span class="k">if</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">is_filled</span><span class="p">:</span>
                     <span class="k">continue</span>
                 <span class="n">pi</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-                <span class="n">new</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pi</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
+                <span class="n">new</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pi</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
                 <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Expr</span><span class="p">):</span>
                 <span class="n">yi</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
                 <span class="n">start</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">end</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="n">start</span> <span class="o">==</span> <span class="n">end</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: unused part of the shape detected. Ignoring this part.&#39;</span><span class="p">)</span>
+                    <span class="k">continue</span>
 
                 <span class="n">this_step</span> <span class="o">=</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="n">step</span><span class="p">)</span>
 
@@ -507,23 +513,26 @@
                 <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">this_step</span><span class="p">)</span>
 
                 <span class="c1"># y-coordinates array to discretise one expression</span>
-                <span class="n">new</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+                <span class="n">new</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
                 <span class="n">new</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x_i</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">yi</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Float</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">x_i</span><span class="p">,</span> <span class="mi">3</span><span class="p">)))))(</span><span class="n">xi</span><span class="p">)</span>
 
                 <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="CrossSection.check_point_cloud"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.check_point_cloud">[docs]</a>    <span class="k">def</span> <span class="nf">check_point_cloud</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">double</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="CrossSection.set_double_cross_section"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.set_double_cross_section">[docs]</a>    <span class="k">def</span> <span class="nf">set_double_cross_section</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        make the cross section as a double section (=Doppelprofil)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">double</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="CrossSection.check_point_cloud"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.check_point_cloud">[docs]</a>    <span class="k">def</span> <span class="nf">check_point_cloud</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        remove errors from the point cloud, ie.:</span>
 
 <span class="sd">        - remove duplicates,</span>
 <span class="sd">        - (if specified) remove points which overlap the overall cross section width and</span>
 <span class="sd">        - other errors...</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            double (bool): if the cross section is a double-profile (=&quot;Doppelprofil&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_rel</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">)</span>
@@ -536,7 +545,7 @@
         <span class="c1"># print((np.arctan(df[&#39;x&#39;].diff() / df[&#39;y&#39;].diff())/ np.pi * 180).head(10))</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">double</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">double</span><span class="p">:</span>
             <span class="n">df</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">2</span>
 
         <span class="c1"># delete errors</span>
@@ -548,7 +557,7 @@
             <span class="n">nx</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][</span><span class="n">dupls</span><span class="p">]</span>
 
             <span class="k">def</span> <span class="nf">raise_values</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">s</span> <span class="o">+</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">index</span><span class="p">)))</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">s</span> <span class="o">+</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">index</span><span class="p">)))</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">)</span>
 
             <span class="n">nx</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">raise_values</span><span class="p">)</span>
             <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nx</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span>
@@ -566,62 +575,61 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-<div class="viewcode-block" id="CrossSection.generator"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.generator">[docs]</a>    <span class="k">def</span> <span class="nf">generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">double</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="CrossSection.generator"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.generator">[docs]</a>    <span class="k">def</span> <span class="nf">generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :py:attr:`~check_for_slopes` + :py:attr:`~create_point_cloud` + :py:attr:`~check_point_cloud`</span>
 
 <span class="sd">        macro function</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            double (bool): see :py:attr:`~check_point_cloud` arguments</span>
 <span class="sd">            show (bool): see :py:attr:`~check_for_slopes` ``debug`` - argument and print the created point cloud</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">check_for_slopes</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="n">show</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">create_point_cloud</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">check_point_cloud</span><span class="p">(</span><span class="n">double</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_point_cloud</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="CrossSection.make"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.make">[docs]</a>    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">double</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="CrossSection.make"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.make">[docs]</a>    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :py:attr:`~generator` + :py:attr:`~profile_abs_plot` + :py:attr:`~input_file`</span>
 
 <span class="sd">        macro function</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            double (bool): see :py:attr:`~generator` arguments</span>
 <span class="sd">            show (bool):  see :py:attr:`~generator` arguments</span>
 <span class="sd">            plot (bool): if  :py:attr:`~profile_abs_plot` should be executed</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="n">double</span><span class="o">=</span><span class="n">double</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">plot</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">profile_abs_plot</span><span class="p">(</span><span class="n">show</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">profile_abs_plot</span><span class="p">(</span><span class="n">show</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="s1">&#39;pandasf&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_file</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="CrossSection.add_and_show"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.add_and_show">[docs]</a>    <span class="k">def</span> <span class="nf">add_and_show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :py:attr:`~add` + :py:attr:`~generator` + :py:attr:`~profile_abs_figure`</span>
 
+<span class="sd">        and print the raw shape (description of the cross section)</span>
+
 <span class="sd">        macro function for jupyter example</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            unit (str): chosen unit of the values</span>
 <span class="sd">            *args: see :py:attr:`~add` arguments</span>
 <span class="sd">            **kwargs: see :py:attr:`~add` keyword arguments</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="CrossSection.profile_rel_plot"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.profile_rel_plot">[docs]</a>    <span class="k">def</span> <span class="nf">profile_rel_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="CrossSection.profile_rel_plot"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.profile_rel_plot">[docs]</a>    <span class="k">def</span> <span class="nf">profile_rel_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auto_open</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        create a plot graphic into the :py:attr:`~working_directory` with relative dimensions</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            show (bool): whether the plot should be opened after its creation</span>
-<span class="sd">            file_format (str): file format, ie: ``png``, ``pdf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)</span>
+<span class="sd">            auto_open (bool): whether the plot should be opened after its creation</span>
+<span class="sd">            file_format (str): file format, ie: ``png``, ``pandasf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_rel</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="s1">&#39;box&#39;</span><span class="p">)</span>
@@ -637,19 +645,18 @@
         <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
-            <span class="n">show_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">auto_open</span><span class="p">:</span>
+            <span class="n">open_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CrossSection.profile_abs_plot"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.profile_abs_plot">[docs]</a>    <span class="k">def</span> <span class="nf">profile_abs_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="CrossSection.profile_abs_plot"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.profile_abs_plot">[docs]</a>    <span class="k">def</span> <span class="nf">profile_abs_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auto_open</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        create a plot graphic into the :py:attr:`~working_directory` with absolute dimensions.</span>
 
 <span class="sd">        This function uses the :py:attr:`~profile_abs_figure` -function to get a figure and saves the figure in a file.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            unit (str): chosen unit of the values</span>
-<span class="sd">            show (bool): whether the plot should be opened after its creation</span>
-<span class="sd">            file_format (str): file format, ie: ``png``, ``pdf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)</span>
+<span class="sd">            auto_open (bool): whether the plot should be opened after its creation</span>
+<span class="sd">            file_format (str): file format, ie: ``png``, ``pandasf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
 
@@ -660,15 +667,12 @@
         <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
-            <span class="n">show_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">auto_open</span><span class="p">:</span>
+            <span class="n">open_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CrossSection.profile_abs_figure"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.profile_abs_figure">[docs]</a>    <span class="k">def</span> <span class="nf">profile_abs_figure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        create a plot of the absolute dimensions</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            unit (str): if unit is specified, add to dimensions</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            matplotlib.figure.Figure: plot of the absolute dimensions</span>
@@ -682,7 +686,7 @@
             <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">base</span> <span class="o">*</span> <span class="n">ceil</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x_</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="p">))</span>
 
         <span class="n">base</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="n">floor</span><span class="p">(</span><span class="n">log10</span><span class="p">(</span><span class="n">w</span><span class="p">)))</span>
-        <span class="n">half_base</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">base</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">half_base</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">base</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
         <span class="n">xlim</span> <span class="o">=</span> <span class="n">custom_round</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
         <span class="n">ylim</span> <span class="o">=</span> <span class="n">custom_round</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 
@@ -779,35 +783,64 @@
 
     <span class="c1">####################################################################################################################</span>
 <div class="viewcode-block" id="CrossSection.standard"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.standard">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">standard</span><span class="p">(</span><span class="n">no</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">r_channel</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">r_roof</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">r_wall</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">slope_bench</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">r_round</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span>
-                 <span class="n">r_wall_bottom</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">h_bench</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">pre_bench</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">w_channel</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">add_dim</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_dn</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">standard</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">long_label</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">r_channel</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">r_roof</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">r_wall</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">slope_bench</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">r_round</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span>
+                 <span class="n">r_wall_bottom</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">h_bench</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">pre_bench</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">w_channel</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">add_dim</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_dn</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        standard cross section</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            no (str):</span>
-<span class="sd">            name (str):</span>
-<span class="sd">            height (float):</span>
-<span class="sd">            width (float):</span>
-<span class="sd">            r_channel (float):</span>
-<span class="sd">            r_roof (float):</span>
-<span class="sd">            r_wall (float):</span>
-<span class="sd">            slope_bench (float):</span>
-<span class="sd">            r_round (float):</span>
-<span class="sd">            r_wall_bottom (float):</span>
-<span class="sd">            h_bench (float):</span>
-<span class="sd">            pre_bench (float):</span>
-<span class="sd">            w_channel (float):</span>
-<span class="sd">            add_dim (bool):</span>
-<span class="sd">            add_dn (Optional[float]):</span>
+<span class="sd">            label (str): see :py:attr:`~__init__`</span>
+<span class="sd">            long_label (str): see :py:attr:`~__init__`</span>
+<span class="sd">            height (float): see :py:attr:`~__init__`</span>
+<span class="sd">            width (float): see :py:attr:`~__init__`</span>
+
+<span class="sd">            r_channel (float): radius of the dry-weather channel (=Trockenwetter Rinne)</span>
+
+<span class="sd">            w_channel (float): half width of the channel, only in combination with ``r_channel`` active</span>
+<span class="sd">            pre_bench (float): slope of the upper end of the channel in degree, only in combination with ``r_channel`` active</span>
+<span class="sd">            r_round (float): radius of the rounding of the edges, only in combination with ``r_channel`` active</span>
+<span class="sd">            h_bench (float): height where the bench begins, only in combination with ``r_channel`` active</span>
+<span class="sd">            slope_bench (float): slope of the bench (=Berme) in degree, or slope of the rainwater-floor (=Regenwetterrinne)</span>
+
+<span class="sd">            r_roof (float): radius of the roof (=Decke)</span>
+
+<span class="sd">            r_wall (float): radius of the sidewall (=Seitenwand), only in combination with ``r_roof`` active</span>
+<span class="sd">            r_wall_bottom (float): radius of the bottom sidewall (=untere Seitenwand), only in combination with ``r_wall`` active</span>
+
+<span class="sd">            add_dim (bool): see :py:attr:`~__init__`</span>
+<span class="sd">            add_dn (Optional[float]): see :py:attr:`~__init__`</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            CrossSection: standard cross section</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            see :ref:`Examples_for_standard_profiles`</span>
+
+
+<span class="sd">        .. figure:: images/standard.gif</span>
+<span class="sd">            :align: center</span>
+<span class="sd">            :alt: standard cross section</span>
+<span class="sd">            :figclass: align-center</span>
+
+<span class="sd">            Standard cross section</span>
+
+<span class="sd">        +---------+---------------------+</span>
+<span class="sd">        | english | deutsch             |</span>
+<span class="sd">        +=========+=====================+</span>
+<span class="sd">        | channel | Trockenwetter-Rinne |</span>
+<span class="sd">        +---------+---------------------+</span>
+<span class="sd">        | roof    | Firste/Decke        |</span>
+<span class="sd">        +---------+---------------------+</span>
+<span class="sd">        | wall    | Seitenwand          |</span>
+<span class="sd">        +---------+---------------------+</span>
+<span class="sd">        | bench   | Berme               |</span>
+<span class="sd">        +---------+---------------------+</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># ------------------------------------------------</span>
-        <span class="n">cross_section</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">no</span><span class="p">,</span> <span class="n">long_label</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="p">(</span><span class="n">width</span> <span class="k">if</span> <span class="n">notna</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
-                                     <span class="n">add_dim</span><span class="o">=</span><span class="n">add_dim</span><span class="p">,</span> <span class="n">add_dn</span><span class="o">=</span><span class="n">add_dn</span><span class="p">)</span>
+        <span class="n">cross_section</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">long_label</span><span class="o">=</span><span class="n">long_label</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="p">(</span><span class="n">width</span> <span class="k">if</span> <span class="n">notna</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
+                                     <span class="n">add_dim</span><span class="o">=</span><span class="n">add_dim</span><span class="p">,</span> <span class="n">add_dn</span><span class="o">=</span><span class="n">add_dn</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span>
 
         <span class="c1"># ------------------------------------------------</span>
         <span class="c1"># TW-Rinne</span>
@@ -1020,7 +1053,12 @@
 <span class="sd">            CrossSection: pre defined box (=Kasten) cross section</span>
 
 <span class="sd">        Examples:</span>
-<span class="sd">            .. image:: images/Kasten-Profile.gif</span>
+<span class="sd">            .. figure:: images/Kasten-Profile.gif</span>
+<span class="sd">                :align: center</span>
+<span class="sd">                :alt: Kasten-Profile</span>
+<span class="sd">                :figclass: align-center</span>
+
+<span class="sd">                Kasten-Profile</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="kn">import</span> <span class="nn">re</span>
@@ -1057,6 +1095,13 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            CrossSection: of the point cloud</span>
+
+<span class="sd">        .. figure:: images/point_cloud.gif</span>
+<span class="sd">            :align: center</span>
+<span class="sd">            :alt: point cloud</span>
+<span class="sd">            :figclass: align-center</span>
+
+<span class="sd">            Point cloud</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">X</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span>  <span class="c1"># horizontal distance to lowest point (dry weather channel)</span>
         <span class="n">Y</span> <span class="o">=</span> <span class="s1">&#39;y&#39;</span>  <span class="c1"># vertical distance to lowest point (dry weather channel)</span>
@@ -1066,8 +1111,8 @@
 
         <span class="c1"># horizontal distance to lowest point (dry weather channel)</span>
         <span class="c1"># split to left and right part of the profile</span>
-        <span class="n">y_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">relative_coordinates</span><span class="o">.</span><span class="n">loc</span><span class="p">[:</span><span class="n">height_pr</span><span class="p">]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">),</span>
-                          <span class="n">relative_coordinates</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">height_pr</span><span class="p">:]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">y_df</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">relative_coordinates</span><span class="o">.</span><span class="n">loc</span><span class="p">[:</span><span class="n">height_pr</span><span class="p">]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">),</span>
+                              <span class="n">relative_coordinates</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">height_pr</span><span class="p">:]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">y_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="c1"># interpolate to an even number of points on the left and right part of the profile</span>
         <span class="n">y_df_filled</span> <span class="o">=</span> <span class="n">y_df</span><span class="o">.</span><span class="n">interpolate</span><span class="p">()</span>
@@ -1076,7 +1121,7 @@
         <span class="c1"># plot of the point cloud</span>
         <span class="c1"># y_df_filled.plot()</span>
 
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
             <span class="p">{</span>
                 <span class="n">X</span><span class="p">:</span> <span class="n">y_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
                 <span class="n">Y</span><span class="p">:</span> <span class="p">(</span><span class="n">y_df_filled</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">y_df_filled</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
