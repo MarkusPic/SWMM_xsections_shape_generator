@@ -34,15 +34,6 @@ Indices and tables
 Sponsors and Partners
 """""""""""""""""""""
 
-
-.. figure:: images/logo_HGW.png
-    :align: center
-    :alt: Holding Graz Wasserwirschaft
-    :figclass: align-center
-    :width: 300
-
-    Holding Graz Wasserwirschaft
-
 .. figure:: images/TU_Graz_Logo.gif
     :align: center
     :alt: TU Graz Logo
