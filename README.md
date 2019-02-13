@@ -5,4 +5,4 @@ Generate cross-section shapes for SWMM using fundamental shapes (like straight l
 
 [![license](https://img.shields.io/github/license/markuspic/SWMM_xsections_shape_generator.svg?style=flat)](https://github.com/MarkusPic/SWMM_xsections_shape_generator/blob/master/LICENSE)
 
-[![docs ](https://img.shields.io/badge/docs-good-brightgreen.svg?style=flat)](https://markuspic.github.io/SWMM_xsections_shape_generator/html/index.html)
+[![docs ](https://img.shields.io/badge/docs-good-brightgreen.svg?style=flat)](https://tugraz-sww.github.io/SWMM_xsections_shape_generator/html/index.html)

@@ -11,10 +11,10 @@ setup(
     name='SWMM_xsections_shape_generator',
     version='0.1',
     packages=['shape_generator'],
-    url='https://github.com/MarkusPic/SWMM_xsections_shape_generator',
+    url='https://github.com/tugraz-sww/SWMM_xsections_shape_generator',
     license='MIT',
     author='Markus Pichler',
     author_email='markus.pichler@tugraz.at',
-    description='Diverse tools to export and analyse the >10a rain series from the ehyd.gv.at platform',
+    description='US-EPA SWMM Cross-Section cureve shape generator',  # TODO
     install_requires=['numpy', 'pandas', 'matplotlib', 'sympy'],
 )
