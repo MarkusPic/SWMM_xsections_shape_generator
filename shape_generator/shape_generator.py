@@ -450,7 +450,7 @@ class CrossSection(object):
         self.generator(show=show)
 
         if plot:
-            self.profile_abs_plot(show, file_format='pandasf')
+            self.profile_abs_plot(show, file_format='pdf')
         self.input_file()
 
     def add_and_show(self, *args, **kwargs):
@@ -476,7 +476,7 @@ class CrossSection(object):
 
         Args:
             auto_open (bool): whether the plot should be opened after its creation
-            file_format (str): file format, ie: ``png``, ``pandasf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)
+            file_format (str): file format, ie: ``png``, ``pdf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)
         """
         ax = self.df_rel.plot(x='y', y='x', legend=False)
         ax.set_aspect('equal', 'box')
@@ -503,7 +503,7 @@ class CrossSection(object):
 
         Args:
             auto_open (bool): whether the plot should be opened after its creation
-            file_format (str): file format, ie: ``png``, ``pandasf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)
+            file_format (str): file format, ie: ``png``, ``pdf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)
         """
         fig = self.profile_abs_figure()
 
