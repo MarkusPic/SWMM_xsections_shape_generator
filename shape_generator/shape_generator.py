@@ -320,26 +320,31 @@ class CrossSection(object):
 
         # only used as an temporary variable
         # only to fill point with an expression
-        is_filled = 'filled'
+        filled = 'filled'
+
+        def is_filled(shape_i):
+            return shape_i[1] == filled
 
         # the absolute points of the final shape
         df = pandas.DataFrame(columns=['x', 'y'])
 
         # convert every expression to points and add it to the resulting DataFrame ``df``
-        for i in range(len(shape)):
-            if isinstance(shape[i], tuple):
-                if isinstance(shape[i][1], type(None)):
+        for i, shape_i in enumerate(shape):
+            if isinstance(shape_i, tuple):
+                if isinstance(shape_i[1], type(None)):
                     continue
-                if shape[i][1] == is_filled:
+                if is_filled(shape_i):
                     continue
-                pi = shape[i]
+                pi = shape_i
                 new = pandas.Series(list(pi), index=['x', 'y'])
                 df = df.append(new, ignore_index=True)
-            elif isinstance(shape[i], Expr):
-                yi = shape[i]
+            elif isinstance(shape_i, Expr):
+                yi = shape_i
+                shape_next = shape[i + 1]
+                shape_prev = shape[i - 1]
 
-                start = shape[i - 1][0]
-                end = shape[i + 1][0]
+                start = shape_prev[0]
+                end = shape_next[0]
 
                 if start == end:
                     print('Warning: unused part of the shape detected. Ignoring this part.')
@@ -347,13 +352,13 @@ class CrossSection(object):
 
                 this_step = (end - start) / np.floor((end - start) / step)
 
-                if isinstance(shape[i + 1][1], type(None)):
+                if isinstance(shape_next[1], type(None)):
                     end += this_step
-                    shape[i + 1] = (shape[i + 1][0], is_filled)
+                    shape[i + 1] = (shape_next[0], filled)
 
                 if start == 0:
                     start += this_step
-                elif not isinstance(shape[i - 1][1], type(None)):
+                elif not isinstance(shape_prev[1], type(None)):
                     start += this_step
 
                 # x-coordinates array to discretise one expression
@@ -630,7 +635,8 @@ class CrossSection(object):
 
     ####################################################################################################################
     @staticmethod
-    def standard(label, long_label, height, width=NaN, r_channel=NaN, r_roof=NaN, r_wall=NaN, slope_bench=NaN, r_round=NaN,
+    def standard(label, long_label, height, width=NaN, r_channel=NaN, r_roof=NaN, r_wall=NaN, slope_bench=NaN,
+                 r_round=NaN,
                  r_wall_bottom=NaN, h_bench=NaN, pre_bench=NaN, w_channel=NaN, add_dim=False, add_dn=False, unit=None):
         """
         standard cross section
@@ -686,7 +692,8 @@ class CrossSection(object):
         """
 
         # ------------------------------------------------
-        cross_section = CrossSection(label=label, long_label=long_label, height=height, width=(width if notna(width) else None),
+        cross_section = CrossSection(label=label, long_label=long_label, height=height,
+                                     width=(width if notna(width) else None),
                                      add_dim=add_dim, add_dn=add_dn, unit=unit)
 
         # ------------------------------------------------
