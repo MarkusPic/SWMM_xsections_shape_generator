@@ -9,9 +9,9 @@ import numpy as np
 import pandas
 from numpy import NaN
 from pandas import isna, notna
-from sympy import Expr, solve, diff, Float  # , tan, cos
+from sympy import Expr, solve, diff, Float, Piecewise  # , tan, cos
 
-from .helpers import deg2slope, channel_end, circle, linear, x
+from .helpers import deg2slope, channel_end, circle, linear, x, solve_equation, interp
 
 
 ########################################################################################################################
@@ -69,6 +69,10 @@ class CrossSection(object):
 
         # Profile data
         self.df_abs = pandas.DataFrame()
+
+        # ___________________
+        # testing new functionality
+        self.b_t_function = None
 
     @property
     def name(self):
@@ -985,3 +989,91 @@ class CrossSection(object):
         cross_section.df_abs = df.copy()
         cross_section.check_point_cloud(double=False)
         return cross_section
+
+    ####################################################################################################################
+    # testing new functions
+    ####################################################################################################################
+    def b_t(self, hi):
+        if not self.b_t_function:
+            self.create_bt_function()
+
+        return float(self.b_t_function.subs(x, hi))
+        #
+        # for lower, upper, f in self.b_t_function:
+        #     if lower <= hi <= upper:
+        #         return solve_equation(f, hi)
+
+    def create_bt_function(self):
+        height = self.height
+        shape = self.shape
+
+        filled = 'filled'
+
+        def is_filled(shape_i):
+            return shape_i[1] == filled
+
+        function = list()
+        last_point = (0,0)
+        # convert every expression to points and add it to the resulting DataFrame ``df``
+        for i, shape_i in enumerate(shape):
+
+            # _________________________________
+            if i == 0:
+                shape_prev = last_point
+            else:
+                shape_prev = last_point
+                # if isinstance(shape_prev, tuple) and shape_prev[1] is None:
+                #     shape_prev = shape[i - 2]
+
+            if (i + 1) == len(shape):
+                shape_next = (height, 0)
+            else:
+                shape_next = shape[i + 1]
+
+            # _________________________________
+            if isinstance(shape_i, tuple):
+
+                if shape_i[1] == 'slope':
+                    start = shape_prev[0]
+                    end = shape_next[0]
+                    yi = x * 1/shape_i[0] + shape_prev[1]
+
+                elif shape_i[1] is None:
+                    continue
+
+                elif is_filled(shape_i):
+                    continue
+
+                elif isinstance(shape_prev, tuple) and shape_prev[1] is not None:
+                    start = shape_prev[0]
+                    end = shape_i[0]
+
+                    if (abs(shape_prev[1]- shape_i[1]) / shape_i[1]) < 0.001:
+                        yi = shape_i[1] + x * 0
+                    else:
+                        yi = interp(x, shape_prev[1], shape_i[1], shape_prev[0], shape_i[0])
+
+                    # function.append((shape_prev[0],
+                    #                  shape_i[0],
+                    #                  lambda x_i: np.interp(x_i,
+                    #                                        [shape_prev[0], shape_i[0]],
+                    #                                        [shape_prev[1], shape_i[1]])))
+
+            # _________________________________
+            elif isinstance(shape_i, Expr):
+                yi = shape_i.copy()
+
+                start = shape_prev[0]
+                end = shape_next[0]
+
+                if start == end:
+                    print('Warning: unused part of the shape detected. Ignoring this part.')
+                    continue
+
+                # function.append((shape_prev[0], shape_next[0], lambda x_i: float(yi.subs(x, Float(round(x_i, 3))))))
+
+            function.append((start, end, yi))
+            last_point = (end, solve_equation(yi, end))
+
+        self.b_t_function = Piecewise(*((f, x <= x1) for x0, x1, f in function))
+        # self.b_t_function = function

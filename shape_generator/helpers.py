@@ -142,3 +142,34 @@ def combine_input_files(shape_path, delete_original=False):
             if delete_original:
                 remove(in_fn)
     print('Files are combined and originals {}deleted.'.format('' if delete_original else 'NOT '))
+
+
+def interp(var_x, x0, x1, f0, f1):
+    """
+    create sympy function for linear interpolation between two points
+
+    Args:
+        var_x (sympy.Symbol): x
+        x0 (float):
+        x1 (float):
+        f0 (float):
+        f1 (float):
+
+    Returns:
+        sympy.Expr: linear interpolation between two points
+    """
+    return f0 + (f1 - f0) / (x1 - x0) * (var_x - x0)
+
+
+def solve_equation(f, xi):
+    """
+    solve a given equation
+
+    Args:
+        f (sympy.Expr):
+        xi (float):
+
+    Returns:
+        float: result
+    """
+    return float(f.subs(x, Float(round(xi, 3))))
