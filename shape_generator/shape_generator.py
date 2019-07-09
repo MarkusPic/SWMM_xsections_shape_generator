@@ -1,17 +1,20 @@
 import warnings
+import matplotlib.pyplot as plt
+import numpy as np
+import sympy as sy
+import pandas as pd
+
 from math import radians, cos, ceil, log10, floor, sqrt
 from numbers import Rational
 from os import path
 from webbrowser import open as open_file
-
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas
 from numpy import NaN
 from pandas import isna, notna
-from sympy import Expr, solve, diff, Float, Piecewise  # , tan, cos
+from scipy.integrate import quad as integrate
 
 from .helpers import deg2slope, channel_end, circle, linear, x, solve_equation, interp
+
+from my_helpers import class_timeit
 
 
 ########################################################################################################################
@@ -68,11 +71,14 @@ class CrossSection(object):
         self.double = False
 
         # Profile data
-        self.df_abs = pandas.DataFrame()
+        self.df_abs = pd.DataFrame()
 
         # ___________________
         # testing new functionality
         self.b_t_function = None
+        self.b_t_function_raw = None
+        self.l_u_t_function = None
+        self.area_t_function = None
 
     @property
     def name(self):
@@ -128,7 +134,7 @@ class CrossSection(object):
 
 
         Args:
-            x_or_expr (Optional[float , Expr , None , tuple]):
+            x_or_expr (Optional[float , sympy.Expr , None , tuple]):
 
                 - :obj:`float` : x coordinate or x-axis boundary or slope if any str keyword is used in argument ``y``
                 - :obj:`Expr` : Expression/function for the cross section part
@@ -148,7 +154,7 @@ class CrossSection(object):
         if isinstance(x_or_expr, tuple):
             self.add(*x_or_expr)
             return
-        elif isinstance(x_or_expr, Expr):
+        elif isinstance(x_or_expr, sy.Expr):
             self.shape.append(x_or_expr)
         else:
             x = x_or_expr
@@ -200,7 +206,7 @@ class CrossSection(object):
                     p0_ = self.shape_corrected[i - 1]
                     x0 = p0_[0]
 
-                    if isinstance(p_2, Expr) and isinstance(x0, float):
+                    if isinstance(p_2, sy.Expr) and isinstance(x0, float):
                         y0 = p_2.subs(x, x0)
                     elif isinstance(p_2, tuple) and isinstance(p_2[1], float):
                         y0 = p_2[1]
@@ -232,18 +238,18 @@ class CrossSection(object):
                     f2 = self.shape_corrected[i + 1]
 
                 # f2: nachfolgene Funktion
-                if isinstance(f2, Expr):
+                if isinstance(f2, sy.Expr):
                     # print(type(fi))
                     if isinstance(fi, float):
                         x2 = fi
                     else:
                         try:
                             # print(f2, fi)
-                            # print(solve(f2 - fi, x))
-                            x2 = solve(f2 - fi, x)[0]
+                            # print(sy.solve(f2 - fi, x))
+                            x2 = sy.solve(f2 - fi, x)[0]
                         except IndexError:
-                            # print(solve(diff(f2) - slope, x))
-                            x2 = solve(diff(f2) - slope, x)[0]
+                            # print(sy.solve(sy.diff(f2) - slope, x))
+                            x2 = sy.solve(sy.diff(f2) - slope, x)[0]
                             if debug:
                                 print('--> same slope', end=' ')
 
@@ -265,7 +271,7 @@ class CrossSection(object):
                         y2 = f2[1]
 
                         if slope != 0:
-                            x2 = solve(fi - y2, x)[0]
+                            x2 = sy.solve(fi - y2, x)[0]
                             self.shape_corrected[i + 1] = (float(x2), float(y2))
                         else:
                             self.shape_corrected[i + 1] = (float(p0[0]), float(y2))
@@ -281,10 +287,10 @@ class CrossSection(object):
             # Y ist gegeben und X wird ergänzt
             elif isinstance(self.shape_corrected[i], tuple) and \
                     self.shape_corrected[i][0] is None and isinstance(self.shape_corrected[i][1], float):
-                if i > 0 and isinstance(self.shape_corrected[i - 1], Expr):
+                if i > 0 and isinstance(self.shape_corrected[i - 1], sy.Expr):
                     fi = self.shape_corrected[i - 1]
                     y0 = self.shape_corrected[i][1]
-                    x0 = solve(fi - y0, x)[0]
+                    x0 = sy.solve(fi - y0, x)[0]
                     self.shape_corrected[i] = (float(x0), y0)
                     if debug:
                         print('--> ', self.shape_corrected[i])
@@ -306,7 +312,7 @@ class CrossSection(object):
         shape = self.shape_corrected
 
         # number of expressions used in shape
-        num_functions = len([i for i in shape if isinstance(i, Expr)])
+        num_functions = len([i for i in shape if isinstance(i, sy.Expr)])
 
         # added first and last fix points
         shape = [(0., 0.)] + shape + [(self.height, 0.)]
@@ -318,7 +324,7 @@ class CrossSection(object):
 
             # calculate the net height of the functions.
             function_steps = {i: shape[i + 1][0] - shape[i - 1][0] for i, s in enumerate(shape) if
-                              isinstance(shape[i], Expr)}
+                              isinstance(shape[i], sy.Expr)}
             # step size used to discretise the expressions
             step = sum(function_steps.values()) / (100 - num_points)
 
@@ -330,7 +336,7 @@ class CrossSection(object):
             return shape_i[1] == filled
 
         # the absolute points of the final shape
-        df = pandas.DataFrame(columns=['x', 'y'])
+        df = pd.DataFrame(columns=['x', 'y'])
 
         # convert every expression to points and add it to the resulting DataFrame ``df``
         for i, shape_i in enumerate(shape):
@@ -340,9 +346,9 @@ class CrossSection(object):
                 if is_filled(shape_i):
                     continue
                 pi = shape_i
-                new = pandas.Series(list(pi), index=['x', 'y'])
+                new = pd.Series(list(pi), index=['x', 'y'])
                 df = df.append(new, ignore_index=True)
-            elif isinstance(shape_i, Expr):
+            elif isinstance(shape_i, sy.Expr):
                 yi = shape_i
                 shape_next = shape[i + 1]
                 shape_prev = shape[i - 1]
@@ -369,8 +375,8 @@ class CrossSection(object):
                 xi = np.arange(start, end, this_step)
 
                 # y-coordinates array to discretise one expression
-                new = pandas.Series(xi, name='x').to_frame()
-                new['y'] = np.vectorize(lambda x_i: float(yi.subs(x, Float(round(x_i, 3)))))(xi)
+                new = pd.Series(xi, name='x').to_frame()
+                new['y'] = np.vectorize(lambda x_i: float(yi.subs(x, sy.Float(round(x_i, 3)))))(xi)
 
                 df = df.append(new, ignore_index=True)
 
@@ -413,7 +419,7 @@ class CrossSection(object):
             nx = df['x'][dupls]
 
             def raise_values(s):
-                return s + pandas.Series(index=s.index, data=range(len(s.index))) * 10 ** (-self.accuracy)
+                return s + pd.Series(index=s.index, data=range(len(s.index))) * 10 ** (-self.accuracy)
 
             nx = nx.groupby(nx).apply(raise_values)
             df.loc[nx.index, 'x'] = nx
@@ -969,7 +975,7 @@ class CrossSection(object):
 
         # horizontal distance to lowest point (dry weather channel)
         # split to left and right part of the profile
-        y_df = pandas.concat([relative_coordinates.loc[:height_pr].rename('right'),
+        y_df = pd.concat([relative_coordinates.loc[:height_pr].rename('right'),
                               relative_coordinates.loc[height_pr:].rename('left')], axis=1)
         y_df.loc[0] = 0
         # interpolate to an even number of points on the left and right part of the profile
@@ -979,7 +985,7 @@ class CrossSection(object):
         # plot of the point cloud
         # y_df_filled.plot()
 
-        df = pandas.DataFrame(
+        df = pd.DataFrame(
             {
                 X: y_df.index,
                 Y: (y_df_filled['right'] - y_df_filled['left']) / 2
@@ -993,8 +999,9 @@ class CrossSection(object):
     ####################################################################################################################
     # testing new functions
     ####################################################################################################################
-    def b_t(self, hi):
-        if not self.b_t_function:
+    @class_timeit
+    def b_w_t(self, hi):
+        if self.b_t_function is None:
             self.create_bt_function()
 
         return float(self.b_t_function.subs(x, hi))
@@ -1003,6 +1010,36 @@ class CrossSection(object):
         #     if lower <= hi <= upper:
         #         return solve_equation(f, hi)
 
+    @class_timeit
+    def l_u_t(self, hi):
+        if self.l_u_t_function is None:
+            if self.b_t_function is None:
+                self.create_bt_function()
+
+            # self.b_t_function_raw
+            # self.b_t_function = Piecewise(*((f, x <= x1) for x0, x1, f in function))
+
+            self.l_u_t_function = sy.integrate(sy.sqrt(1 + sy.diff(self.b_t_function, x) ** 2), x)# * 2
+            # self.l_u_t_function = sy.integrate(self.l_u_t_function, x) * 2
+            # self.l_u_t_function = sy.integrate(sy.sqrt(1 + sy.diff(self.b_t_function, x) ** 2), x)
+
+        return float(self.l_u_t_function.subs(x, hi))
+        # return integrate(lambda i: float(self.l_u_t_function.subs(x, i)), 0, hi)[0] * 2
+
+        # return self.l_u_t_function.subs(hi)
+
+    @class_timeit
+    def area_t(self, hi):
+        if self.area_t_function is None:
+            if self.b_t_function is None:
+                self.create_bt_function()
+            self.area_t_function = sy.integrate(self.b_t_function, x)
+
+        return float(self.area_t_function.subs(x, hi) * 2)
+        # sy.integrate(self.b_t_function, x)
+        # return integrate(self.b_w_t, 0, hi)[0] * 2
+
+    @class_timeit
     def create_bt_function(self):
         height = self.height
         shape = self.shape
@@ -1013,7 +1050,7 @@ class CrossSection(object):
             return shape_i[1] == filled
 
         function = list()
-        last_point = (0,0)
+        last_point = (0, 0)
         # convert every expression to points and add it to the resulting DataFrame ``df``
         for i, shape_i in enumerate(shape):
 
@@ -1036,7 +1073,7 @@ class CrossSection(object):
                 if shape_i[1] == 'slope':
                     start = shape_prev[0]
                     end = shape_next[0]
-                    yi = x * 1/shape_i[0] + shape_prev[1]
+                    yi = x * 1 / shape_i[0] + shape_prev[1]
 
                 elif shape_i[1] is None:
                     continue
@@ -1048,7 +1085,7 @@ class CrossSection(object):
                     start = shape_prev[0]
                     end = shape_i[0]
 
-                    if (abs(shape_prev[1]- shape_i[1]) / shape_i[1]) < 0.001:
+                    if (abs(shape_prev[1] - shape_i[1]) / shape_i[1]) < 0.001:
                         yi = shape_i[1] + x * 0
                     else:
                         yi = interp(x, shape_prev[1], shape_i[1], shape_prev[0], shape_i[0])
@@ -1060,7 +1097,7 @@ class CrossSection(object):
                     #                                        [shape_prev[1], shape_i[1]])))
 
             # _________________________________
-            elif isinstance(shape_i, Expr):
+            elif isinstance(shape_i, sy.Expr):
                 yi = shape_i.copy()
 
                 start = shape_prev[0]
@@ -1070,10 +1107,10 @@ class CrossSection(object):
                     print('Warning: unused part of the shape detected. Ignoring this part.')
                     continue
 
-                # function.append((shape_prev[0], shape_next[0], lambda x_i: float(yi.subs(x, Float(round(x_i, 3))))))
+                # function.append((shape_prev[0], shape_next[0], lambda x_i: float(yi.subs(x, sy.Float(round(x_i, 3))))))
 
             function.append((start, end, yi))
             last_point = (end, solve_equation(yi, end))
 
-        self.b_t_function = Piecewise(*((f, x <= x1) for x0, x1, f in function))
-        # self.b_t_function = function
+        self.b_t_function = sy.Piecewise(*((f, x <= x1) for x0, x1, f in function))
+        self.b_t_function_raw = function
