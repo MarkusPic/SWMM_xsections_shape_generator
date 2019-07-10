@@ -596,7 +596,7 @@ class CrossSection(object):
         """
         file = open(self.out_filename + '.dat', 'w+')
         file.write('EPASWMM Curve Data\n')
-        dim = 'H={} {}'.format(self.height)
+        dim = 'H={} {}'.format(self.height, self.unit)
         if self.width:
             dim += ', B={}'.format(self.width)
         file.write('{} - {}: {}\n'.format(self.label, self.name, dim))
