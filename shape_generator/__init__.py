@@ -1,2 +1,2 @@
-from .helpers import channel_end, circle, combine_input_files, csv, deg2slope, linear
+from .helpers import channel_end, combine_input_files, csv, deg2slope, Circle, Slope, Vertical
 from .shape_generator import CrossSection
