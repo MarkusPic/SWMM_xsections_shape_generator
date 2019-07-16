@@ -4,15 +4,16 @@ import numpy as np
 import sympy as sy
 import pandas as pd
 
-from math import radians, cos, ceil, log10, floor, sqrt
+from math import radians, cos, ceil, log10, floor
 from os import path
 from webbrowser import open as open_file
 from numpy import NaN
 from pandas import isna, notna
 
-from .helpers import deg2slope, channel_end, Circle, x, CustomExpr, Slope, Vertical
+from .helpers import deg2slope, channel_end, Circle, x, CustomExpr, Slope, Vertical, Horizontal, sqrt
 
-from my_helpers import class_timeit
+g = 9.81  # m/s^2 Erdbeschleunigung
+ny = 1.31e-6  # m^2/s bei 10°C von Wasser
 
 
 ########################################################################################################################
@@ -24,74 +25,61 @@ class CrossSection:
     Attributes:
         accuracy (int): number of decimal points to use for the export
         shape (list): descriptions of the cross section as commands in a list
-        shape_corrected (list): points and functions to describe the cross section
+        _shape_description (list): points and functions to describe the cross section
         df_abs (pandas.DataFrame): maximum 100 points to describe the cross section in absolute values
         working_directory (str): directory where the files get saved
         unit (str): unit of entered values
         double (bool): if the cross section two separate cross sections
     """
 
-    def __init__(self, label, long_label=None, height=None, width=None, add_dim=False, add_dn=None,
-                 working_directory='', unit=None):
+    def __init__(self, label, description=None, height=None, width=None, working_directory='', unit=None):
         """Initialise the cross section class
 
         Args:
             label (str): main name/label/number of the cross section
-            long_label (Optional[str]): optional longer name of the cross section
+            description (Optional[str]): optional longer name of the cross section
             height (float): absolute height of the CS
             width (Optional[float]): absolute width of the CS (optional) can be calculated
-            add_dim (bool): if the dimensions should be added to :py:attr:`~out_filename` used for the export
-            add_dn (Optional[float]): if the channel dimension should be added to :py:attr:`~out_filename`
-                                    used for the export enter the diameter as float
             working_directory (str): directory where the files get saved
             unit (Optional[str]): enter unit to add the unit in the plots
         """
-        if isinstance(label, (float, int)):
-            self.label = '{:0.0f}'.format(label)
-        else:
-            self.label = label
+        self.label = label
+        self.description = ''
+        if description is not None:
+            self.description = str(description).strip()
 
-        if not self.label.startswith('Pr_'):
-            self.label = 'Pr_' + self.label
-
-        self._name = ''
-        if long_label is not None:
-            self.name = str(long_label).strip()
-        self.height = height
-        self.width = width
+        self._height = height
+        self._width = width
         self.shape = list()
-        self.shape_description = None  # NEW
-        self.add_dim = add_dim
-        self.add_dn = add_dn
+        self._shape_description = None  # NEW
         self.accuracy = 4
         self.working_directory = working_directory
         self.unit = unit
         self.double = False
 
+        print('_' * 30)
+        print(self.label, ':  ', self.description)
+
         # Profile data
         self.df_abs = pd.DataFrame()
 
+        # calculate stationary flow
+        self._area_v = None
+        self._r_hyd_v = None
+        self._l_u_v = None
+        self._r_hyd_v = None
+        self._Q_v = None
+        self._Q_v_params = dict(slope=None, k=None)
+        self._v_v = None
+        self._v_v_params = dict(slope=None, k=None)
+
     @property
-    def name(self):
-        return self._name
+    def height(self):
+        return self._height
 
-    @name.setter
-    def name(self, value):
-        self._name = value
-        print('_' * 30)
-        print(self.label, ' -> ', self._name)
-
-    def get_width(self):
-        """
-        get absolute width of cross section
-
-        Returns:
-            float: width of cross section
-        """
-        if self.df_abs.empty:
-            return None
-        else:
-            return self.df_abs['y'].max() * 2
+    @property
+    def width(self):
+        return self._width
 
     @property
     def out_filename(self):
@@ -102,15 +90,7 @@ class CrossSection:
             str: filename
 
         """
-        file = path.join(self.working_directory, '{}'.format(self.label))
-        if self.add_dim:
-            file += '_{:0.0f}'.format(self.height)
-            if self.width:
-                file += 'x{:0.0f}'.format(self.width)
-
-        if self.add_dn:
-            file += '_DN{:0.0f}'.format(self.add_dn)
-        return file
+        return path.join(self.working_directory, str(self.label))
 
     def add(self, x_or_expr, y=None):
         """
@@ -158,137 +138,13 @@ class CrossSection:
                 elif y == '%slope':
                     x = x / 100
 
-                self.shape.append(Slope(x))
+                if x == 0:
+                    self.shape.append(Horizontal())
+                else:
+                    self.shape.append(Slope(x))
+
             else:
                 self.shape.append((x, y))
-
-    # def check_for_slopes(self, debug=False):
-    #     """convert slopes to points
-    # 
-    #     Use this function after adding all the necessary descriptions of the cross section with :py:attr:`~add`.
-    #     This function converts slopes into point coordinates and specify boundary condition to (x,y) coordinates
-    #     for Expressions and slopes.
-    # 
-    #     Args:
-    #         debug (bool): to print debug messages during the runtime
-    #     """
-    #     self.shape_corrected = self.shape.copy()
-    #
-    #     for i in range(len(self.shape_corrected)):
-    #         if debug:
-    #             print(i, ': ', self.shape_corrected[i], end=' ')
-    #
-    #         # ----------------------------------------------------------------------------------------------------------
-    #         # eine Steigung ist gegeben und wird mit End X und Y ersetzt
-    #         if isinstance(self.shape_corrected[i], tuple) and self.shape_corrected[i][1] == 'slope':
-    #             slope = self.shape_corrected[i][0]
-    #
-    #             # p0: ist der letzte bekannte Punkt
-    #             # der erste schritt ist 0,0
-    #             if i == 0:
-    #                 p0 = (0, 0)
-    #             elif i == 1 and isinstance(self.shape_corrected[i - 1], tuple):
-    #                 p0 = self.shape_corrected[i - 1]
-    #             else:
-    #                 p_2 = self.shape_corrected[i - 2]
-    #                 p0_ = self.shape_corrected[i - 1]
-    #                 x0 = p0_[0]
-    #
-    #                 if isinstance(p_2, sy.Expr) and isinstance(x0, float):
-    #                     y0 = p_2.subs(x, x0)
-    #                 elif isinstance(p_2, tuple) and isinstance(p_2[1], float):
-    #                     y0 = p_2[1]
-    #                 elif isinstance(p0_, tuple) and all(isinstance(i, float) for i in p0_):
-    #                     x0, y0 = self.shape_corrected[i - 1]
-    #                 else:
-    #                     raise NotImplementedError
-    #
-    #                 p0 = (x0, y0)
-    #
-    #             # eine horizontale line
-    #             if slope == 0:
-    #                 pass  # do nothing
-    #                 # self.shape_corrected[i] = p0
-    #                 # print('--> ', fi, end=' ')
-    #                 # print()
-    #                 # continue
-    #
-    #             # fi: lineare Funktion durch "p0" mit der Steigung "slope"
-    #             fi = linear(slope, p0)
-    #             if debug:
-    #                 print('--> ', fi, end=' ')
-    #
-    #             # wenn es der letzte Punkt ist, ist der nachfolgende Punkt der Scheitel
-    #             # f2: nachfolgener Punkt oder nachfolgene Funktion
-    #             if i == len(self.shape_corrected) - 1:
-    #                 f2 = (float(self.height), 0.)
-    #             else:
-    #                 f2 = self.shape_corrected[i + 1]
-    #
-    #             # f2: nachfolgene Funktion
-    #             if isinstance(f2, sy.Expr):
-    #                 # print(type(fi))
-    #                 if isinstance(fi, float):
-    #                     x2 = fi
-    #                 else:
-    #                     try:
-    #                         # print(f2, fi)
-    #                         # print(sy.solve(f2 - fi, x))
-    #                         x2 = sy.solve(f2 - fi, x)[0]
-    #                     except IndexError:
-    #                         # print(sy.solve(sy.diff(f2) - slope, x))
-    #                         x2 = sy.solve(sy.diff(f2) - slope, x)[0]
-    #                         if debug:
-    #                             print('--> same slope', end=' ')
-    #
-    #                 self.shape_corrected[i] = (float(x2), None)
-    #
-    #             # f2: nachfolgener Punkt oder Steigung
-    #             elif isinstance(f2, tuple):
-    #                 # print('\n', '-'*100)
-    #                 # print(f2)
-    #                 # print(type(f2[0]), type(f2[1]))
-    #                 # print()
-    #                 if isinstance(f2[0], float):
-    #                     if f2[1] == 'slope':
-    #                         pass  # do nothing
-    #                     x2 = f2[0]
-    #                     y2 = fi.subs(x, x2)
-    #
-    #                 elif isinstance(f2[1], float):
-    #                     y2 = f2[1]
-    #
-    #                     if slope != 0:
-    #                         x2 = sy.solve(fi - y2, x)[0]
-    #                         self.shape_corrected[i + 1] = (float(x2), float(y2))
-    #                     else:
-    #                         self.shape_corrected[i + 1] = (float(p0[0]), float(y2))
-    #
-    #                 if slope == 0:
-    #                     self.shape_corrected[i] = (float(p0[0]), float(y2))
-    #                 else:
-    #                     self.shape_corrected[i] = (float(x2), float(y2))
-    #             if debug:
-    #                 print('--> ', self.shape_corrected[i])
-    #
-    #         # ----------------------------------------------------------------------------------------------------------
-    #         # Y ist gegeben und X wird ergänzt
-    #         elif isinstance(self.shape_corrected[i], tuple) and \
-    #                 self.shape_corrected[i][0] is None and isinstance(self.shape_corrected[i][1], float):
-    #             if i > 0 and isinstance(self.shape_corrected[i - 1], sy.Expr):
-    #                 fi = self.shape_corrected[i - 1]
-    #                 y0 = self.shape_corrected[i][1]
-    #                 x0 = sy.solve(fi - y0, x)[0]
-    #                 self.shape_corrected[i] = (float(x0), y0)
-    #                 if debug:
-    #                     print('--> ', self.shape_corrected[i])
-    #             else:
-    #                 if debug:
-    #                     print()
-    #
-    #         else:
-    #             if debug:
-    #                 print()
 
     def create_point_cloud(self, max_number_points=100):
         """create absolute point coordinates and write it into :py:attr:`~df_abs`
@@ -297,9 +153,6 @@ class CrossSection:
         This function replaces the Expressions given in :py:attr:`~add` to points with x and y coordinates
         and writes them into the :py:attr:`~df_abs` attribute.
         """
-        if self.shape_description is None:
-            self.create_shape_description()
-
         # number of expressions used in shape
         num_functions = sum([isinstance(i[2], Circle) for i in self.shape_description])
 
@@ -322,10 +175,11 @@ class CrossSection:
             if isinstance(f, Circle):
                 this_step = (end - start) / np.floor((end - start) / step)
                 nx = np.arange(start, end + this_step, this_step).clip(max=end)
-                ny = f.solve(nx) #np.vectorize(lambda i: f.solve(i))(nx)
+                ny = f.solve(nx)  # np.vectorize(lambda i: f.solve(i))(nx)
                 x += list(nx)
                 y += list(ny)
-
+            elif isinstance(f, Horizontal):
+                continue
             else:
                 nx = np.array([start, end])
                 x += list(nx)
@@ -338,85 +192,17 @@ class CrossSection:
 
         self.df_abs = df.astype(float).copy()
 
-    # def create_point_cloud0(self, max_number_points=100):
-    #     """create absolute point coordinates and write it into :py:attr:`~df_abs`
-    #
-    #     To create a :obj:`pandas.DataFrame` of all the points to describe the cross section.
-    #     This function replaces the Expressions given in :py:attr:`~add` to points with x and y coordinates
-    #     and writes them into the :py:attr:`~df_abs` attribute.
-    #     """
-    #     # shape = self.shape_corrected
-    #
-    #     # number of expressions used in shape
-    #     num_functions = len([i for i in shape if isinstance(i, sy.Expr)])
-    #
-    #     # added first and last fix points
-    #     shape = [(0., 0.)] + shape + [(self.height, 0.)]
-    #
-    #     # if functions are used in shape
-    #     if num_functions:
-    #         # number of fixed points in shape
-    #         num_points = len([i for i in shape if isinstance(i, tuple)])
-    #
-    #         # calculate the net height of the functions.
-    #         function_steps = {i: shape[i + 1][0] - shape[i - 1][0] for i, s in enumerate(shape) if
-    #                           isinstance(shape[i], sy.Expr)}
-    #         # step size used to discretise the expressions
-    #         step = sum(function_steps.values()) / (max_number_points - num_points)
-    #
-    #     # only used as an temporary variable
-    #     # only to fill point with an expression
-    #     filled = 'filled'
-    #
-    #     def is_filled(shape_i):
-    #         return shape_i[1] == filled
-    #
-    #     # the absolute points of the final shape
-    #     df = pd.DataFrame(columns=['x', 'y'])
-    #
-    #     # convert every expression to points and add it to the resulting DataFrame ``df``
-    #     for i, shape_i in enumerate(shape):
-    #         if isinstance(shape_i, tuple):
-    #             if isinstance(shape_i[1], type(None)):
-    #                 continue
-    #             if is_filled(shape_i):
-    #                 continue
-    #             pi = shape_i
-    #             new = pd.Series(list(pi), index=['x', 'y'])
-    #             df = df.append(new, ignore_index=True)
-    #         elif isinstance(shape_i, sy.Expr):
-    #             yi = shape_i
-    #             shape_next = shape[i + 1]
-    #             shape_prev = shape[i - 1]
-    #
-    #             start = shape_prev[0]
-    #             end = shape_next[0]
-    #
-    #             if start == end:
-    #                 print('Warning: unused part of the shape detected. Ignoring this part.')
-    #                 continue
-    #
-    #             this_step = (end - start) / np.floor((end - start) / step)
-    #
-    #             if isinstance(shape_next[1], type(None)):
-    #                 end += this_step
-    #                 shape[i + 1] = (shape_next[0], filled)
-    #
-    #             if start == 0:
-    #                 start += this_step
-    #             elif not isinstance(shape_prev[1], type(None)):
-    #                 start += this_step
-    #
-    #             # x-coordinates array to discretise one expression
-    #             xi = np.arange(start, end, this_step)
-    #
-    #             # y-coordinates array to discretise one expression
-    #             new = pd.Series(xi, name='x').to_frame()
-    #             new['y'] = np.vectorize(lambda x_i: float(yi.subs(x, sy.Float(round(x_i, 3)))))(xi)
-    #
-    #             df = df.append(new, ignore_index=True)
-    #
-    #     self.df_abs = df.copy()
+    def get_width(self):
+        """
+        get absolute width of cross section
+
+        Returns:
+            float: width of cross section
+        """
+        if self.df_abs.empty:
+            return None
+        else:
+            return self.df_abs['y'].max() * 2
 
     def set_double_cross_section(self):
         """
@@ -533,7 +319,7 @@ class CrossSection:
         ax.set_aspect('equal', 'box')
         ax.set_ylabel('rel H')
         ax.set_xlabel('B/H')
-        ax.set_title('{}: {}'.format(self.label, self.name))
+        ax.set_title('{}: {}'.format(self.label, self.description))
         fig = ax.get_figure()
 
         # ---------
@@ -614,8 +400,8 @@ class CrossSection:
         # ax.set_xlabel('B/H')
 
         n = self.label
-        if self.label != 'Pr_{}'.format(self.name):
-            n += ': {}'.format(self.name)
+        if self.label != self.description:
+            n += ': {}'.format(self.description)
 
         ax.set_title('{}\n{:0.0f}x{:0.0f}'.format(n, h, custom_round(w * 2, half_base)) +
                      (self.unit if self.unit is not None else ''))
@@ -635,7 +421,7 @@ class CrossSection:
         dim = 'H={} {}'.format(self.height, self.unit)
         if self.width:
             dim += ', B={}'.format(self.width)
-        file.write('{} - {}: {}\n'.format(self.label, self.name, dim))
+        file.write('{} - {}: {}\n'.format(self.label, self.description, dim))
         self.df_rel.iloc[1:-1].to_csv(file, sep=' ', index=False, header=False,
                                       float_format='%0.{}f'.format(self.accuracy))
 
@@ -738,7 +524,7 @@ class CrossSection:
         """
 
         # ------------------------------------------------
-        cross_section = CrossSection(label=label, long_label=long_label, height=height,
+        cross_section = CrossSection(label=label, description=long_label, height=height,
                                      width=(width if notna(width) else None),
                                      add_dim=add_dim, add_dn=add_dn, unit=unit)
 
@@ -847,7 +633,7 @@ class CrossSection:
             CrossSection: pre defined box (=Kasten) cross section
         """
         name = 'K'
-        cross_section = CrossSection(label=label, long_label=long_label, width=width, height=height, add_dim=add_dim,
+        cross_section = CrossSection(label=label, description=long_label, width=width, height=height, add_dim=add_dim,
                                      unit=unit)
 
         if isna(channel):
@@ -1035,158 +821,330 @@ class CrossSection:
     ####################################################################################################################
     # testing new functions
     ####################################################################################################################
-    @class_timeit
-    def create_shape_description(self):
-        height = self.height
-        shape = self.shape
+    @property
+    def shape_description(self):
+        if self._shape_description is None:
+            height = self.height
+            shape = self.shape
 
-        filled = 'filled'
+            filled = 'filled'
 
-        def is_filled(shape_i):
-            return shape_i[1] == filled
+            def is_filled(shape_i):
+                return shape_i[1] == filled
 
-        function = list()
-        last_point = (0, 0)
-        final_point = (height, 0)
-        # self.shape.append((self.height, 0))
-        # convert every expression to points and add it to the resulting DataFrame ``df``
-        for i, shape_i in enumerate(shape):
+            function = list()
+            last_point = (0, 0)
+            final_point = (height, 0)
+            # self.shape.append((self.height, 0))
+            # convert every expression to points and add it to the resulting DataFrame ``df``
+            for i, shape_i in enumerate(shape):
 
-            # _________________________________
-            if i == 0:
-                shape_prev = last_point
-            else:
-                shape_prev = last_point
+                # _________________________________
+                if i == 0:
+                    shape_prev = last_point
+                else:
+                    shape_prev = last_point
 
-            if (i + 1) == len(shape):
-                shape_next = final_point
-            else:
-                shape_next = shape[i + 1]
+                if (i + 1) == len(shape):
+                    shape_next = final_point
+                else:
+                    shape_next = shape[i + 1]
 
-            # _________________________________
-            if isinstance(shape_i, tuple) and shape_i[1] == 'slope':
-                shape_i = Slope(shape_i[0])
-                shape_i.set_start_point(*shape_prev)
+                # _________________________________
+                if isinstance(shape_i, tuple) and shape_i[1] == 'slope':
+                    shape_i = Slope(shape_i[0])
+                    shape_i.set_start_point(*shape_prev)
 
-            # _________________________________
-            if isinstance(shape_i, tuple):
+                # _________________________________
+                if isinstance(shape_i, tuple):
 
-                # if shape_i[1] == 'slope':
-                #     start = shape_prev[0]
-                #     end = shape_next[0]
-                #     yi = Slope(shape_i[0])
-                #     yi.set_start_point(*shape_prev)
-                #
-                #     if end is None and shape_next[1] is not None:
-                #         sy.solve(yi.expr() - shape_next[1], x)
+                    # if shape_i[1] == 'slope':
+                    #     start = shape_prev[0]
+                    #     end = shape_next[0]
+                    #     yi = Slope(shape_i[0])
+                    #     yi.set_start_point(*shape_prev)
+                    #
+                    #     if end is None and shape_next[1] is not None:
+                    #         sy.solve(yi.expr() - shape_next[1], x)
 
-                # yi = Slope.from_points(shape_prev, shape_next)
+                    # yi = Slope.from_points(shape_prev, shape_next)
 
-                if shape_i[1] is None:
-                    DeprecationWarning('shape_i[1] is None', shape_i)
-                    continue
+                    if shape_i[1] is None:
+                        DeprecationWarning('shape_i[1] is None', shape_i)
+                        continue
 
-                elif shape_i[0] is None:
-                    DeprecationWarning('shape_i[0] is None', shape_i)
-                    continue
+                    elif shape_i[0] is None:
+                        DeprecationWarning('shape_i[0] is None', shape_i)
+                        continue
 
-                elif is_filled(shape_i):
-                    DeprecationWarning('shape_i is filled', shape_i,)
-                    continue
+                    elif is_filled(shape_i):
+                        DeprecationWarning('shape_i is filled', shape_i, )
+                        continue
 
-                elif isinstance(shape_prev, tuple) and shape_prev[1] is not None:
-                    start = shape_prev[0]
-                    end = shape_i[0]
+                    elif isinstance(shape_prev, tuple) and shape_prev[1] is not None:
+                        start = shape_prev[0]
+                        end = shape_i[0]
 
-                    if (abs(shape_prev[1] - shape_i[1]) / shape_i[1]) < 0.001:
-                        yi = Vertical(shape_i[1])
+                        if (abs(shape_prev[1] - shape_i[1]) / shape_i[1]) < 0.001:
+                            yi = Vertical(shape_i[1])
 
-                    else:
-                        yi = Slope.from_points(shape_prev, shape_i)
-
-                function.append((start, end, yi))
-
-                if shape_next == final_point:
-                    start = shape_i[0]
-                    end = shape_next[0]
-
-                    yi = Slope.from_points(shape_i, shape_next)
+                        else:
+                            yi = Slope.from_points(shape_prev, shape_i)
 
                     function.append((start, end, yi))
 
-            # _________________________________
-            elif isinstance(shape_i, sy.Expr):
-                yi = shape_i.copy()
+                    if shape_next == final_point:
+                        start = shape_i[0]
+                        end = shape_next[0]
 
-                start = shape_prev[0]
-                end = shape_next[0]
+                        yi = Slope.from_points(shape_i, shape_next)
 
-                if start == end:
-                    print('Warning: unused part of the shape detected. Ignoring this part.')
-                    continue
-                function.append((start, end, yi))
+                        function.append((start, end, yi))
 
-            # _________________________________
-            elif isinstance(shape_i, CustomExpr):
-                yi = shape_i
+                # _________________________________
+                elif isinstance(shape_i, sy.Expr):
+                    yi = shape_i.copy()
 
-                start = shape_prev[0]
-                end = shape_next[0]
+                    start = shape_prev[0]
+                    end = shape_next[0]
 
-                if isinstance(yi, Slope) and yi.x0 is None:
-                    yi.set_start_point(*shape_prev)
+                    if start == end:
+                        print('Warning: unused part of the shape detected. Ignoring this part.')
+                        continue
+                    function.append((start, end, yi))
 
-                if end is None and shape_next[1] is not None:
-                    end = sy.solve(yi.expr() - shape_next[1], x)[0]
+                # _________________________________
+                elif isinstance(shape_i, CustomExpr):
+                    yi = shape_i
 
-                if start == end:
-                    print('Warning: unused part of the shape detected. Ignoring this part.')
-                    continue
-                function.append((start, end, yi))
+                    start = shape_prev[0]
+                    end = shape_next[0]
 
-            last_point = (end, yi.solve(end))
+                    if isinstance(yi, Slope) and yi.x0 is None:
+                        yi.set_start_point(*shape_prev)
 
-        self.shape_description = function
+                    if isinstance(yi, Horizontal):
+                        yi.set_points(shape_prev, shape_next)
+                        if end is None and start is not None:
+                            end = start
+                            yi.set_x(start)
 
-    @class_timeit
+                    elif end is None and shape_next[1] is not None:
+                        end = float(sy.solve(yi.expr() - shape_next[1], x)[0])
+
+                    if not isinstance(yi, Horizontal) and start == end:
+                        print('Warning: unused part of the shape detected. Ignoring this part.')
+                        continue
+                    function.append((start, end, yi))
+
+                last_point = (end, yi.solve(end))
+
+            self._shape_description = function
+
+        return self._shape_description
+
     def b_w_t(self, hi):
-        if self.shape_description is None:
-            self.create_shape_description()
+        if isinstance(hi, np.ndarray):
+            w = np.array([np.NaN] * hi.size)
+            # w = hi.copy()
 
-        for lower, upper, f in self.shape_description:
-            if lower <= hi <= upper:
-                return f.solve(hi) * 2
+            for i, (lower, upper, f) in enumerate(self.shape_description):
+                b = (hi >= lower) & (hi <= upper)
+                w[b] = f.solve(hi[b])
 
-    @class_timeit
+            return w * 2
+        else:
+            for lower, upper, f in self.shape_description:
+                if lower <= hi <= upper:
+                    return f.solve(hi) * 2
+
     def l_u_t(self, hi):
-        if self.shape_description is None:
-            self.create_shape_description()
+        if isinstance(hi, np.ndarray):
+            l = np.array([0.] * hi.size)
 
-        l = 0
-        for lower, upper, f in self.shape_description:
-            if hi > upper:
-                l += f.length(lower, upper)
-            elif lower <= hi <= upper:
-                l += f.length(lower, hi)
-                break
-            else:
-                break
+            for i, (lower, upper, f) in enumerate(self.shape_description):
+                b = hi > upper
+                l[b] += f.length(lower, upper)
+
+                b = (hi >= lower) & (hi <= upper)
+                l[b] += f.length(lower, hi[b])
+
+        else:
+            l = 0
+            for lower, upper, f in self.shape_description:
+                if hi > upper:
+                    l += f.length(lower, upper)
+                elif lower <= hi <= upper:
+                    l += f.length(lower, hi)
+                    break
+                else:
+                    break
 
         return l * 2
 
-    @class_timeit
     def area_t(self, hi):
-        if self.shape_description is None:
-            self.create_shape_description()
+        if isinstance(hi, np.ndarray):
+            a = np.array([0.] * hi.size)
 
-        a = 0
-        for lower, upper, f in self.shape_description:
-            if hi > upper:
-                a += f.area(lower, upper)
-            elif lower <= hi <= upper:
-                a += f.area(lower, hi)
-                break
-            else:
-                break
+            for i, (lower, upper, f) in enumerate(self.shape_description):
+                b = hi > upper
+                a[b] += f.area(lower, upper)
+
+                b = (hi >= lower) & (hi <= upper)
+                a[b] += f.area(lower, hi[b])
+
+        else:
+            a = 0
+            for lower, upper, f in self.shape_description:
+                if hi > upper:
+                    a += f.area(lower, upper)
+                elif lower <= hi <= upper:
+                    a += f.area(lower, hi)
+                    break
+                else:
+                    break
 
         return a * 2
+
+    def r_hyd_t(self, hi):
+        return self.area_t(hi) / self.l_u_t(hi)
+
+    @property
+    def area_v(self):
+        if self._area_v is None:
+            self._area_v = self.area_t(self.height)
+        return self._area_v
+
+    @property
+    def r_hyd_v(self):
+        if self._r_hyd_v is None:
+            self._r_hyd_v = self.area_v / self.l_u_v
+        return self._r_hyd_v
+
+    @property
+    def l_u_v(self):
+        if self._l_u_v is None:
+            self._l_u_v = self.l_u_t(self.height)
+        return self._l_u_v
+
+    ####################################################################################################################
+    @staticmethod
+    def _velocity(slope, k, r_hyd):
+        """
+        calculate velocity in partially filled sewer channel
+
+        Args:
+            slope (float): ablosute slope in m/m
+            k (float): Betriebliche Rauhigkeit in mm
+            r_hyd (float): hydraulic radius in mm
+
+        Returns:
+            float: velocity in m/s
+        """
+        r_hyd /= 1000
+        J = slope  # / 1000
+        k = k / 1000
+        return (-2 * np.log10(2.51 * ny / (4 * r_hyd * sqrt(2 * g * J)) + k / (14.84 * r_hyd)) * sqrt(
+            2 * g * 4 * r_hyd * J))
+
+    def velocity_t(self, hi, slope, k):
+        """
+        calculate velocity in partially filled sewer channel
+
+        Args:
+            hi (float): water level = height
+            slope (float): ablosute slope in m/m
+            k (float): Betriebliche Rauhigkeit in mm
+
+        Returns:
+            float: velocity in m/s
+        """
+        return self._velocity(slope, k, self.r_hyd_t(hi))
+
+    def velocity_v(self, slope, k):
+        new_v_v_params = dict(slope=slope, k=k)
+        if self._v_v is None or self._v_v_params != new_v_v_params:
+            self._v_v_params = new_v_v_params
+            self._v_v = self.velocity_t(self.height, slope, k)
+
+        return self._v_v
+
+    def flow_t(self, hi, slope, k):
+        """
+
+        :param hi: water level in mm
+        :param k: Betriebliche Rauhigkeit in mm
+        :param slope: slope in m/m
+        :return: full filling flow rate in L/s
+        """
+        return self.velocity_t(hi, slope, k) * self.area_t(hi) * 1.0e-6 * 1000
+
+    def flow_v(self, slope, k):
+        """
+
+        :param k: Betriebliche Rauhigkeit in mm
+        :param slope: slope in m/m
+        :return: full filling flow rate in L/s
+        """
+        return self.velocity_v(slope, k) * self.area_v * 1.0e-6 * 1000
+
+    ####################################################################################################################
+    def h_t(self, Q_t, slope, k):
+        # hi = '?'
+        # self.flow_t(hi, slope, k)
+        # self.flow_v(slope, k)
+        from scipy.optimize import minimize_scalar
+        res = minimize_scalar(lambda hi: abs(Q_t - self.flow_t(hi, slope, k)), bounds=(0, self.height),
+                              method='bounded')
+        return res.x
+
+
+########################################################################################################################
+########################################################################################################################
+class CrossSectionHolding(CrossSection):
+    def __init__(self, label, description=None, height=None, width=None, add_dim=False, add_dn=None,
+                 working_directory='', unit=None):
+        """Initialise the cross section class
+
+        Args:
+            label (str): main name/label/number of the cross section
+            description (Optional[str]): optional longer name of the cross section
+            height (float): absolute height of the CS
+            width (Optional[float]): absolute width of the CS (optional) can be calculated
+            add_dim (bool): if the dimensions should be added to :py:attr:`~out_filename` used for the export
+            add_dn (Optional[float]): if the channel dimension should be added to :py:attr:`~out_filename`
+                                    used for the export enter the diameter as float
+            working_directory (str): directory where the files get saved
+            unit (Optional[str]): enter unit to add the unit in the plots
+        """
+        if isinstance(label, (float, int)):
+            label = '{:0.0f}'.format(label)
+        else:
+            label = label
+
+        if not label.startswith('Pr_'):
+            label = 'Pr_' + label
+
+        CrossSection.__init__(self, label, description=description, height=height, width=width,
+                              working_directory=working_directory, unit=unit)
+        self.add_dim = add_dim
+        self.add_dn = add_dn
+
+    @property
+    def out_filename(self):
+        """
+        filename of the figure/text-file to be created
+
+        Returns:
+            str: filename
+
+        """
+        file = path.join(self.working_directory, '{}'.format(self.label))
+        if self.add_dim:
+            file += '_{:0.0f}'.format(self.height)
+            if self.width:
+                file += 'x{:0.0f}'.format(self.width)
+
+        if self.add_dn:
+            file += '_DN{:0.0f}'.format(self.add_dn)
+        return file
