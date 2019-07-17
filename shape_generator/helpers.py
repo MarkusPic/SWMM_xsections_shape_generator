@@ -302,20 +302,17 @@ class Circle(CustomExpr):
         Returns:
             float: angle in rad
         """
-        # return (((self.solve(i) - self.y_m) == 0) * pi/2) * (((i - self.x_m) < 0) * -1) + ((self.solve(i) - self.y_m) != 0) * np.arctan((i - self.x_m) / (self.solve(i) - self.y_m))
-        # -------------------------------------
-        # diff_null = (self.solve(i) - self.y_m) == 0
-        # # if (self.solve(i) - self.y_m) == 0:
-        # #     a = pi / 2
-        # a = diff_null * pi/2
-        # #     if (i - self.x_m) < 0:
-        # #         a *= -1
-        # a *= ((i - self.x_m) < 0) * -1
-        # # else:
-        # #     a = np.arctan((i - self.x_m) / (self.solve(i) - self.y_m))
-        # a += ~diff_null * np.arctan((i - self.x_m) / (self.solve(i) - self.y_m))
-        # return a
-        return np.arctan((i - self.x_m) / (self.solve(i) - self.y_m))
+        if isinstance(i, np.ndarray):
+            return np.arctan((i - self.x_m) / (self.solve(i) - self.y_m))
+
+        else:
+            if (self.solve(i) - self.y_m) == 0:
+                a = pi / 2
+                if (i - self.x_m) < 0:
+                    a *= -1
+            else:
+                a = np.arctan((i - self.x_m) / (self.solve(i) - self.y_m))
+            return a
 
     def _d_alpha(self, i0, i1):
         """

@@ -61,7 +61,7 @@ class CrossSection:
         print(self.label, ':  ', self.description)
 
         # Profile data
-        self.df_abs = pd.DataFrame()
+        self._df_abs = None
 
         # calculate stationary flow
         self._area_v = None
@@ -146,51 +146,59 @@ class CrossSection:
             else:
                 self.shape.append((x, y))
 
-    def create_point_cloud(self, max_number_points=100):
+    @property
+    def df_abs(self, max_number_points=100):
         """create absolute point coordinates and write it into :py:attr:`~df_abs`
 
         To create a :obj:`pandas.DataFrame` of all the points to describe the cross section.
         This function replaces the Expressions given in :py:attr:`~add` to points with x and y coordinates
         and writes them into the :py:attr:`~df_abs` attribute.
+
+        Args:
+            max_number_points (int): number of points to describe the shape of the cross section
+                                     100 is the limit of points which can be used as a SWMM shape
         """
-        # number of expressions used in shape
-        num_functions = sum([isinstance(i[2], Circle) for i in self.shape_description])
+        if self._df_abs is None:
+            # number of expressions used in shape
+            num_functions = sum([isinstance(i[2], Circle) for i in self.shape_description])
 
-        step = None
-        # if functions are used in shape
-        if num_functions:
-            # number of fixed points in shape
-            num_points = (len(self.shape_description) - num_functions) * 2
+            step = None
+            # if functions are used in shape
+            if num_functions:
+                # number of fixed points in shape
+                num_points = (len(self.shape_description) - num_functions) * 2
 
-            # calculate the net height of the functions.
-            function_steps = {i: s[1] - s[0] for i, s in enumerate(self.shape_description) if
-                              isinstance(self.shape_description[i][2], Circle)}
-            # step size used to discretise the expressions
-            step = sum(function_steps.values()) / (max_number_points - num_points)
+                # calculate the net height of the circle functions.
+                function_steps = {i: s[1] - s[0] for i, s in enumerate(self.shape_description) if
+                                  isinstance(self.shape_description[i][2], Circle)}
+                # step size used to discretise the expressions
+                step = sum(function_steps.values()) / (max_number_points - num_points)
 
-        x = list()
-        y = list()
+            x = list()
+            y = list()
 
-        for start, end, f in self.shape_description:
-            if isinstance(f, Circle):
-                this_step = (end - start) / np.floor((end - start) / step)
-                nx = np.arange(start, end + this_step, this_step).clip(max=end)
-                ny = f.solve(nx)  # np.vectorize(lambda i: f.solve(i))(nx)
-                x += list(nx)
-                y += list(ny)
-            elif isinstance(f, Horizontal):
-                continue
-            else:
-                nx = np.array([start, end])
-                x += list(nx)
-                y += list(f.solve(nx))
+            for start, end, f in self.shape_description:
+                if isinstance(f, Circle):
+                    this_step = (end - start) / np.floor((end - start) / step)
+                    nx = np.arange(start, end + this_step, this_step).clip(max=end)
+                    ny = f.solve(nx)
+                    x += list(nx)
+                    y += list(ny)
+                elif isinstance(f, Horizontal):
+                    continue
+                else:
+                    nx = np.array([start, end])
+                    x += list(nx)
+                    y += list(f.solve(nx))
 
-        # the absolute points of the final shape
-        df = pd.DataFrame()
-        df['x'] = x
-        df['y'] = y
+            # the absolute points of the final shape
+            df = pd.DataFrame()
+            df['x'] = x
+            df['y'] = y
 
-        self.df_abs = df.astype(float).copy()
+            self._df_abs = df.astype(float).copy()
+
+        return self._df_abs
 
     def get_width(self):
         """
@@ -246,7 +254,7 @@ class CrossSection:
             nx = nx.groupby(nx).apply(raise_values)
             df.loc[nx.index, 'x'] = nx
 
-        self.df_abs = (df * self.height).copy()
+        self._df_abs = (df * self.height).copy()
 
     @property
     def df_rel(self):
@@ -259,21 +267,6 @@ class CrossSection:
         """
         return (self.df_abs / self.height).copy()
 
-    def generator(self, show=False):
-        """
-        :py:attr:`~check_for_slopes` + :py:attr:`~create_point_cloud` + :py:attr:`~check_point_cloud`
-
-        macro function
-
-        Args:
-            show (bool): see :py:attr:`~check_for_slopes` ``debug`` - argument and print the created point cloud
-        """
-        # self.check_for_slopes(debug=show)
-        self.create_point_cloud()
-        if show:
-            print(self.df_abs)
-        self.check_point_cloud()
-
     def make(self, show=False, plot=True):
         """
         :py:attr:`~generator` + :py:attr:`~profile_abs_plot` + :py:attr:`~input_file`
@@ -284,8 +277,9 @@ class CrossSection:
             show (bool):  see :py:attr:`~generator` arguments
             plot (bool): if  :py:attr:`~profile_abs_plot` should be executed
         """
-        self.generator(show=show)
-
+        if show:
+            print(self.df_abs)
+        self.check_point_cloud()
         if plot:
             self.profile_abs_plot(show, file_format='pdf')
         self.input_file()
@@ -304,7 +298,7 @@ class CrossSection:
         """
         self.add(*args, **kwargs)
         print('-' * 5, *self.shape, '-' * 5, sep='\n')
-        self.generator()
+        self.check_point_cloud()
         self.profile_abs_figure()
 
     def profile_rel_plot(self, auto_open=False, file_format='png'):
@@ -405,7 +399,6 @@ class CrossSection:
 
         ax.set_title('{}\n{:0.0f}x{:0.0f}'.format(n, h, custom_round(w * 2, half_base)) +
                      (self.unit if self.unit is not None else ''))
-        self.cross_section_area()
 
         fig = ax.get_figure()
         fig.tight_layout()
@@ -453,370 +446,6 @@ class CrossSection:
         """
         with open(self.out_filename + '_shape.txt', 'w') as f:
             f.write(self.inp_string())
-
-    def cross_section_area(self):
-        """
-        calculate the cross section area
-
-        Returns:
-            float: area, unit depend on unit of the entered values.
-        """
-        # area2 = (self.df_abs['x'].diff() * self.df_abs['y'] * 2).sum()
-        area = (self.df_abs['x'].diff() * (self.df_abs['y'] - self.df_abs['y'].diff() / 2) * 2).sum()
-        return area
-
-    ####################################################################################################################
-    @staticmethod
-    def standard(label, long_label, height, width=NaN, r_channel=NaN, r_roof=NaN, r_wall=NaN, slope_bench=NaN,
-                 r_round=NaN,
-                 r_wall_bottom=NaN, h_bench=NaN, pre_bench=NaN, w_channel=NaN, add_dim=False, add_dn=False, unit=None):
-        """
-        standard cross section
-
-        Args:
-            label (str): see :py:attr:`~__init__`
-            long_label (str): see :py:attr:`~__init__`
-            height (float): see :py:attr:`~__init__`
-            width (float): see :py:attr:`~__init__`
-
-            r_channel (float): radius of the dry-weather channel (=Trockenwetter Rinne)
-
-            w_channel (float): half width of the channel, only in combination with ``r_channel`` active
-            pre_bench (float): slope of the upper end of the channel in degree, only in combination with ``r_channel`` active
-            r_round (float): radius of the rounding of the edges, only in combination with ``r_channel`` active
-            h_bench (float): height where the bench begins, only in combination with ``r_channel`` active
-            slope_bench (float): slope of the bench (=Berme) in degree, or slope of the rainwater-floor (=Regenwetterrinne)
-
-            r_roof (float): radius of the roof (=Decke)
-
-            r_wall (float): radius of the sidewall (=Seitenwand), only in combination with ``r_roof`` active
-            r_wall_bottom (float): radius of the bottom sidewall (=untere Seitenwand), only in combination with ``r_wall`` active
-
-            add_dim (bool): see :py:attr:`~__init__`
-            add_dn (Optional[float]): see :py:attr:`~__init__`
-
-        Returns:
-            CrossSection: standard cross section
-
-        Examples:
-            see :ref:`Examples_for_standard_profiles`
-
-
-        .. figure:: images/standard.gif
-            :align: center
-            :alt: standard cross section
-            :figclass: align-center
-
-            Standard cross section
-
-        +---------+---------------------+
-        | english | deutsch             |
-        +=========+=====================+
-        | channel | Trockenwetter-Rinne |
-        +---------+---------------------+
-        | roof    | Firste/Decke        |
-        +---------+---------------------+
-        | wall    | Seitenwand          |
-        +---------+---------------------+
-        | bench   | Berme               |
-        +---------+---------------------+
-
-        """
-
-        # ------------------------------------------------
-        cross_section = CrossSection(label=label, description=long_label, height=height,
-                                     width=(width if notna(width) else None),
-                                     add_dim=add_dim, add_dn=add_dn, unit=unit)
-
-        # ------------------------------------------------
-        # TW-Rinne
-        if notna(r_channel):
-            cross_section.add(Circle(r_channel, x_m=r_channel))
-
-            # ------------------------------------------------
-            if notna(pre_bench):
-                cross_section.add(channel_end(r_channel, pre_bench))
-
-                if notna(h_bench) or isna(slope_bench):
-                    cross_section.add(pre_bench, '°slope')
-
-                if notna(h_bench):
-                    cross_section.add(h_bench)
-
-            elif notna(w_channel):
-                cross_section.add(None, w_channel)
-
-            else:
-                if notna(h_bench):
-                    cross_section.add(h_bench)
-                else:
-                    cross_section.add(r_channel)
-                    if isna(r_round):
-                        r_round = 0
-                    cross_section.add(r_channel + r_round, r_channel)
-
-        # ------------------------------------------------
-        if notna(slope_bench):
-            # Berme winkel in °
-            cross_section.add(slope_bench, '°slope')
-
-        # ------------------------------------------------
-        if isna(r_channel) and isna(slope_bench):
-            cross_section.add(0, width / 2)
-
-        # ------------------------------------------------
-        if isna(r_roof):
-            # eckige Decke
-            cross_section.add(None, width / 2)
-            cross_section.add(height, width / 2)
-
-        else:
-            if isna(r_wall):
-                cross_section.add(None, width / 2)
-                cross_section.add(height - r_roof, width / 2)
-            else:
-                # ------------------------------------------------
-                h1 = sqrt((r_wall - r_roof) ** 2 - (r_wall - width / 2) ** 2)
-                h_middle = round(height - r_roof - h1, 8)
-
-                # ------------------------------------------------
-                if isna(r_wall_bottom):
-                    cross_section.add(None, width / 2)
-                    cross_section.add(h_middle, width / 2)
-
-                else:
-                    cross_section.add(Circle(r_wall_bottom, x_m=h_middle, y_m=width / 2 - r_wall_bottom))
-                    cross_section.add(h_middle)
-
-                # ------------------------------------------------
-                cross_section.add(Circle(r_wall, x_m=h_middle, y_m=width / 2 - r_wall))
-                cross_section.add(h_middle + h1 / (r_wall - r_roof) * r_wall)
-
-            # ------------------------------------------------
-            cross_section.add(Circle(r_roof, x_m=height - r_roof))
-
-        # ------------------------------------------------
-        return cross_section
-
-    ####################################################################################################################
-    @staticmethod
-    def box(label, height, width, channel=None, bench=None, roof=None, rounding=0.0, add_dim=True, long_label=None,
-            unit=None):
-        """
-        pre defined box (=Kasten) cross section
-
-        see :ref:`Examples_for_box_shaped_profiles`
-
-        Args:
-            label (str): see :py:attr:`~__init__`
-            height (float): see :py:attr:`~__init__`
-            width (float): see :py:attr:`~__init__`
-            channel (Optional[float]): diameter of the dry weather channel
-            bench (Optional[float]): bench (=Berme)
-
-                - ``''``: flache Berme
-                - ``'R'``: V-förmiges Profil
-                - ``'H'``: Schräge Verschneidung
-
-            roof (Optional[float]): roof (=Decke)
-
-                - ``''``: gerade
-                - ``'B'``: Bogen
-                - ``'K'``: Kreis
-
-            rounding (Optional[float]): rounding of the edges
-            add_dim (bool): see :py:attr:`~__init__`
-            long_label(Optional[str]): see :py:attr:`~__init__`
-            unit (Optional[str]): see :py:attr:`~__init__`
-
-        Returns:
-            CrossSection: pre defined box (=Kasten) cross section
-        """
-        name = 'K'
-        cross_section = CrossSection(label=label, description=long_label, width=width, height=height, add_dim=add_dim,
-                                     unit=unit)
-
-        if isna(channel):
-            channel = None
-        else:
-            channel = float(channel)
-
-        if isna(bench):
-            bench = ''
-
-        if isna(roof):
-            roof = ''
-
-        if channel or bench:
-            name += '.'
-            bench = str(bench).strip()
-
-            if isinstance(channel, float):
-                name += '{:0.0f}'.format(channel)
-                # diameter to radius
-                channel /= 2
-                cross_section.add(Circle(channel, x_m=channel))
-
-            if isinstance(bench, str):
-                if bench != '45':
-                    name += str(bench)
-
-                if bench == 'R':
-                    cross_section.add(30, '%slope')
-                    cross_section.add(None, width / 2)
-
-                elif bench == 'H':
-                    cross_section.add(channel_end(channel, 45))
-                    cross_section.add(45, '°slope')
-                    cross_section.add(None, width / 2)
-
-                elif bench == '45':
-                    cross_section.add(channel_end(channel, 45))
-                    cross_section.add(45, '°slope')
-                    cross_section.add(channel + rounding)
-                    cross_section.add(channel + rounding, width / 2)
-
-                else:
-                    # Berme
-                    # cross_section.add(channel, width / 2)
-                    # cross_section.add(channel + rounding, width / 2)
-
-                    if 1:
-                        cross_section.add(channel_end(channel, 45))
-                        cross_section.add(45, '°slope')
-                    else:
-                        cross_section.add(channel, channel)
-                    cross_section.add(channel + rounding, None)
-                    cross_section.add(5, '°slope')
-                    cross_section.add(None, width / 2)
-
-        else:
-            # ebene Sohle
-            cross_section.add(0, width / 2)
-
-        if roof:
-            name += '_' + str(roof)
-
-            if roof == '':
-                # gerade Decke
-                cross_section.add(height, width / 2)
-
-            elif roof == 'B':
-                # Bogen-Decke
-                cross_section.add(height - width * (1 - cos(radians(30))), width / 2)
-                cross_section.add(Circle(width, x_m=height - width))
-
-            elif roof == 'K':
-                # Kreis Decke
-                cross_section.add(height - width / 2, width / 2)
-                cross_section.add(Circle(width / 2, x_m=height - width / 2))
-        else:
-            # gerade Decke
-            cross_section.add(height, width / 2)
-
-        if cross_section.name is None or cross_section.name == '':
-            cross_section.name = name
-        cross_section.generator(show=False)
-        return cross_section
-
-    ####################################################################################################################
-    @staticmethod
-    def box_from_string(label, height, width, custom_label=None, unit=None):
-        """
-        create pre defined box (=Kasten) cross section with the string label.
-        This function takes the information from the label and pass them to the :py:attr:`~box` - function.
-
-        see :ref:`Examples_for_box_shaped_profiles`
-
-        Args:
-            label (str): see the :ref:`Examples_for_box_shaped_profiles`
-            height (float): see :py:attr:`~__init__`
-            width (float): see :py:attr:`~__init__`
-            custom_label (str):
-            unit (Optional[str]): see :py:attr:`~__init__`
-
-        Returns:
-            CrossSection: pre defined box (=Kasten) cross section
-
-        Examples:
-            .. figure:: images/Kasten-Profile.gif
-                :align: center
-                :alt: Kasten-Profile
-                :figclass: align-center
-
-                Kasten-Profile
-        """
-
-        import re
-        infos = re.findall(r'(K)(\.?)(\d*)([RH]?)_?([BK]?)', label)  # _(\d+)x(\d+)
-        if len(infos) == 1:
-            infos = infos[0]
-            _, _, channel, bench, roof = infos
-
-            if channel != '':
-                channel = float(channel)
-            else:
-                channel = None
-
-            bench, roof = [x_ if x_ != '' else None for x_ in (bench, roof)]
-
-            cross_section = CrossSection.box(label, height=height, width=width, channel=channel, bench=bench, roof=roof,
-                                             long_label=custom_label, unit=unit)
-            return cross_section
-
-        # --------------------------------------
-        else:
-            raise NotImplementedError('"{}" unknown !'.format(label))
-
-    @staticmethod
-    def from_point_cloud(relative_coordinates, *args, **kwargs):
-        """
-        get the cross sections from a point cloud where every point is relative to the lowers point in the cross section
-
-        Args:
-            relative_coordinates (pandas.Series): height-variable as index and width as values
-                                                  with the origin in the lowest point of the cross section
-            *args: arguments, see :py:attr:`~__init__`
-            **kwargs: keyword arguments, see :py:attr:`~__init__`
-
-        Returns:
-            CrossSection: of the point cloud
-
-        .. figure:: images/point_cloud.gif
-            :align: center
-            :alt: point cloud
-            :figclass: align-center
-
-            Point cloud
-        """
-        X = 'x'  # horizontal distance to lowest point (dry weather channel)
-        Y = 'y'  # vertical distance to lowest point (dry weather channel)
-
-        # height of the profile = maximum Y coordinate
-        height_pr = relative_coordinates.index.max()
-
-        # horizontal distance to lowest point (dry weather channel)
-        # split to left and right part of the profile
-        y_df = pd.concat([relative_coordinates.loc[:height_pr].rename('right'),
-                          relative_coordinates.loc[height_pr:].rename('left')], axis=1)
-        y_df.loc[0] = 0
-        # interpolate to an even number of points on the left and right part of the profile
-        y_df_filled = y_df.interpolate()
-
-        # for debugging
-        # plot of the point cloud
-        # y_df_filled.plot()
-
-        df = pd.DataFrame(
-            {
-                X: y_df.index,
-                Y: (y_df_filled['right'] - y_df_filled['left']) / 2
-            })
-
-        cross_section = CrossSection(*args, **kwargs)
-        cross_section.df_abs = df.copy()
-        cross_section.check_point_cloud(double=False)
-        return cross_section
 
     ####################################################################################################################
     # testing new functions
@@ -909,7 +538,7 @@ class CrossSection:
                     end = shape_next[0]
 
                     if start == end:
-                        print('Warning: unused part of the shape detected. Ignoring this part.')
+                        warnings.warn('unused part of the shape detected. Ignoring this part.')
                         continue
                     function.append((start, end, yi))
 
@@ -933,7 +562,7 @@ class CrossSection:
                         end = float(sy.solve(yi.expr() - shape_next[1], x)[0])
 
                     if not isinstance(yi, Horizontal) and start == end:
-                        print('Warning: unused part of the shape detected. Ignoring this part.')
+                        warnings.warn('unused part of the shape detected. Ignoring this part.')
                         continue
                     function.append((start, end, yi))
 
@@ -1052,7 +681,7 @@ class CrossSection:
         calculate velocity in partially filled sewer channel
 
         Args:
-            hi (float): water level = height
+            hi (float): water level = height in mm
             slope (float): ablosute slope in m/m
             k (float): Betriebliche Rauhigkeit in mm
 
@@ -1062,6 +691,16 @@ class CrossSection:
         return self._velocity(slope, k, self.r_hyd_t(hi))
 
     def velocity_v(self, slope, k):
+        """
+        calculate velocity in partially filled sewer channel
+
+        Args:
+            slope (float): ablosute slope in m/m
+            k (float): Betriebliche Rauhigkeit in mm
+
+        Returns:
+            float: full filling velocity in m/s
+        """
         new_v_v_params = dict(slope=slope, k=k)
         if self._v_v is None or self._v_v_params != new_v_v_params:
             self._v_v_params = new_v_v_params
@@ -1072,19 +711,25 @@ class CrossSection:
     def flow_t(self, hi, slope, k):
         """
 
-        :param hi: water level in mm
-        :param k: Betriebliche Rauhigkeit in mm
-        :param slope: slope in m/m
-        :return: full filling flow rate in L/s
+        Args:
+            hi (float): water level = height in mm
+            slope (float): ablosute slope in m/m
+            k (float): Betriebliche Rauhigkeit in mm
+
+        Returns:
+            float: flow rate in L/s
         """
         return self.velocity_t(hi, slope, k) * self.area_t(hi) * 1.0e-6 * 1000
 
     def flow_v(self, slope, k):
         """
 
-        :param k: Betriebliche Rauhigkeit in mm
-        :param slope: slope in m/m
-        :return: full filling flow rate in L/s
+        Args:
+            slope (float): ablosute slope in m/m
+            k (float): Betriebliche Rauhigkeit in mm
+
+        Returns:
+            float: full filling flow rate in L/s
         """
         return self.velocity_v(slope, k) * self.area_v * 1.0e-6 * 1000
 
@@ -1148,3 +793,360 @@ class CrossSectionHolding(CrossSection):
         if self.add_dn:
             file += '_DN{:0.0f}'.format(self.add_dn)
         return file
+
+    ####################################################################################################################
+    @classmethod
+    def standard(cls, label, long_label, height, width=NaN, r_channel=NaN, r_roof=NaN, r_wall=NaN, slope_bench=NaN,
+                 r_round=NaN,
+                 r_wall_bottom=NaN, h_bench=NaN, pre_bench=NaN, w_channel=NaN, add_dim=False, add_dn=False,
+                 unit=None):
+        """
+        standard cross section
+
+        Args:
+            label (str): see :py:attr:`~__init__`
+            long_label (str): see :py:attr:`~__init__`
+            height (float): see :py:attr:`~__init__`
+            width (float): see :py:attr:`~__init__`
+
+            r_channel (float): radius of the dry-weather channel (=Trockenwetter Rinne)
+
+            w_channel (float): half width of the channel, only in combination with ``r_channel`` active
+            pre_bench (float): slope of the upper end of the channel in degree, only in combination with ``r_channel`` active
+            r_round (float): radius of the rounding of the edges, only in combination with ``r_channel`` active
+            h_bench (float): height where the bench begins, only in combination with ``r_channel`` active
+            slope_bench (float): slope of the bench (=Berme) in degree, or slope of the rainwater-floor (=Regenwetterrinne)
+
+            r_roof (float): radius of the roof (=Decke)
+
+            r_wall (float): radius of the sidewall (=Seitenwand), only in combination with ``r_roof`` active
+            r_wall_bottom (float): radius of the bottom sidewall (=untere Seitenwand), only in combination with ``r_wall`` active
+
+            add_dim (bool): see :py:attr:`~__init__`
+            add_dn (Optional[float]): see :py:attr:`~__init__`
+
+        Returns:
+            CrossSection: standard cross section
+
+        Examples:
+            see :ref:`Examples_for_standard_profiles`
+
+
+        .. figure:: images/standard.gif
+            :align: center
+            :alt: standard cross section
+            :figclass: align-center
+
+            Standard cross section
+
+        +---------+---------------------+
+        | english | deutsch             |
+        +=========+=====================+
+        | channel | Trockenwetter-Rinne |
+        +---------+---------------------+
+        | roof    | Firste/Decke        |
+        +---------+---------------------+
+        | wall    | Seitenwand          |
+        +---------+---------------------+
+        | bench   | Berme               |
+        +---------+---------------------+
+
+        """
+
+        # ------------------------------------------------
+        cross_section = cls(label=label, description=long_label, height=height,
+                                     width=(width if notna(width) else None),
+                                     add_dim=add_dim, add_dn=add_dn, unit=unit)
+
+        # ------------------------------------------------
+        # TW-Rinne
+        if notna(r_channel):
+            cross_section.add(Circle(r_channel, x_m=r_channel))
+
+            # ------------------------------------------------
+            if notna(pre_bench):
+                cross_section.add(channel_end(r_channel, pre_bench))
+
+                if notna(h_bench) or isna(slope_bench):
+                    cross_section.add(pre_bench, '°slope')
+
+                if notna(h_bench):
+                    cross_section.add(h_bench)
+
+            elif notna(w_channel):
+                cross_section.add(None, w_channel)
+
+            else:
+                if notna(h_bench):
+                    cross_section.add(h_bench)
+                else:
+                    cross_section.add(r_channel)
+                    if isna(r_round):
+                        r_round = 0
+                    cross_section.add(r_channel + r_round, r_channel)
+
+        # ------------------------------------------------
+        if notna(slope_bench):
+            # Berme winkel in °
+            cross_section.add(slope_bench, '°slope')
+
+        # ------------------------------------------------
+        if isna(r_channel) and isna(slope_bench):
+            cross_section.add(0, width / 2)
+
+        # ------------------------------------------------
+        if isna(r_roof):
+            # eckige Decke
+            cross_section.add(None, width / 2)
+            cross_section.add(height, width / 2)
+
+        else:
+            if isna(r_wall):
+                cross_section.add(None, width / 2)
+                cross_section.add(height - r_roof, width / 2)
+            else:
+                # ------------------------------------------------
+                h1 = sqrt((r_wall - r_roof) ** 2 - (r_wall - width / 2) ** 2)
+                h_middle = round(height - r_roof - h1, 8)
+
+                # ------------------------------------------------
+                if isna(r_wall_bottom):
+                    cross_section.add(None, width / 2)
+                    cross_section.add(h_middle, width / 2)
+
+                else:
+                    cross_section.add(Circle(r_wall_bottom, x_m=h_middle, y_m=width / 2 - r_wall_bottom))
+                    cross_section.add(h_middle)
+
+                # ------------------------------------------------
+                cross_section.add(Circle(r_wall, x_m=h_middle, y_m=width / 2 - r_wall))
+                cross_section.add(h_middle + h1 / (r_wall - r_roof) * r_wall)
+
+            # ------------------------------------------------
+            cross_section.add(Circle(r_roof, x_m=height - r_roof))
+
+        # ------------------------------------------------
+        return cross_section
+
+    ####################################################################################################################
+    @staticmethod
+    def box(label, height, width, channel=None, bench=None, roof=None, rounding=0.0, add_dim=True, long_label=None,
+            unit=None):
+        """
+        pre defined box (=Kasten) cross section
+
+        see :ref:`Examples_for_box_shaped_profiles`
+
+        Args:
+            label (str): see :py:attr:`~__init__`
+            height (float): see :py:attr:`~__init__`
+            width (float): see :py:attr:`~__init__`
+            channel (Optional[float]): diameter of the dry weather channel
+            bench (Optional[float]): bench (=Berme)
+
+                - ``''``: flache Berme
+                - ``'R'``: V-förmiges Profil
+                - ``'H'``: Schräge Verschneidung
+
+            roof (Optional[float]): roof (=Decke)
+
+                - ``''``: gerade
+                - ``'B'``: Bogen
+                - ``'K'``: Kreis
+
+            rounding (Optional[float]): rounding of the edges
+            add_dim (bool): see :py:attr:`~__init__`
+            long_label(Optional[str]): see :py:attr:`~__init__`
+            unit (Optional[str]): see :py:attr:`~__init__`
+
+        Returns:
+            CrossSection: pre defined box (=Kasten) cross section
+        """
+        name = 'K'
+        cross_section = CrossSection(label=label, description=long_label, width=width, height=height,
+                                     add_dim=add_dim,
+                                     unit=unit)
+
+        if isna(channel):
+            channel = None
+        else:
+            channel = float(channel)
+
+        if isna(bench):
+            bench = ''
+
+        if isna(roof):
+            roof = ''
+
+        if channel or bench:
+            name += '.'
+            bench = str(bench).strip()
+
+            if isinstance(channel, float):
+                name += '{:0.0f}'.format(channel)
+                # diameter to radius
+                channel /= 2
+                cross_section.add(Circle(channel, x_m=channel))
+
+            if isinstance(bench, str):
+                if bench != '45':
+                    name += str(bench)
+
+                if bench == 'R':
+                    cross_section.add(30, '%slope')
+                    cross_section.add(None, width / 2)
+
+                elif bench == 'H':
+                    cross_section.add(channel_end(channel, 45))
+                    cross_section.add(45, '°slope')
+                    cross_section.add(None, width / 2)
+
+                elif bench == '45':
+                    cross_section.add(channel_end(channel, 45))
+                    cross_section.add(45, '°slope')
+                    cross_section.add(channel + rounding)
+                    cross_section.add(channel + rounding, width / 2)
+
+                else:
+                    # Berme
+                    # cross_section.add(channel, width / 2)
+                    # cross_section.add(channel + rounding, width / 2)
+
+                    if 1:
+                        cross_section.add(channel_end(channel, 45))
+                        cross_section.add(45, '°slope')
+                    else:
+                        cross_section.add(channel, channel)
+                    cross_section.add(channel + rounding, None)
+                    cross_section.add(5, '°slope')
+                    cross_section.add(None, width / 2)
+
+        else:
+            # ebene Sohle
+            cross_section.add(0, width / 2)
+
+        if roof:
+            name += '_' + str(roof)
+
+            if roof == '':
+                # gerade Decke
+                cross_section.add(height, width / 2)
+
+            elif roof == 'B':
+                # Bogen-Decke
+                cross_section.add(height - width * (1 - cos(radians(30))), width / 2)
+                cross_section.add(Circle(width, x_m=height - width))
+
+            elif roof == 'K':
+                # Kreis Decke
+                cross_section.add(height - width / 2, width / 2)
+                cross_section.add(Circle(width / 2, x_m=height - width / 2))
+        else:
+            # gerade Decke
+            cross_section.add(height, width / 2)
+
+        if cross_section.name is None or cross_section.name == '':
+            cross_section.name = name
+        cross_section.check_point_cloud()
+        return cross_section
+
+    ####################################################################################################################
+    @staticmethod
+    def box_from_string(label, height, width, custom_label=None, unit=None):
+        """
+        create pre defined box (=Kasten) cross section with the string label.
+        This function takes the information from the label and pass them to the :py:attr:`~box` - function.
+
+        see :ref:`Examples_for_box_shaped_profiles`
+
+        Args:
+            label (str): see the :ref:`Examples_for_box_shaped_profiles`
+            height (float): see :py:attr:`~__init__`
+            width (float): see :py:attr:`~__init__`
+            custom_label (str):
+            unit (Optional[str]): see :py:attr:`~__init__`
+
+        Returns:
+            CrossSection: pre defined box (=Kasten) cross section
+
+        Examples:
+            .. figure:: images/Kasten-Profile.gif
+                :align: center
+                :alt: Kasten-Profile
+                :figclass: align-center
+
+                Kasten-Profile
+        """
+
+        import re
+        infos = re.findall(r'(K)(\.?)(\d*)([RH]?)_?([BK]?)', label)  # _(\d+)x(\d+)
+        if len(infos) == 1:
+            infos = infos[0]
+            _, _, channel, bench, roof = infos
+
+            if channel != '':
+                channel = float(channel)
+            else:
+                channel = None
+
+            bench, roof = [x_ if x_ != '' else None for x_ in (bench, roof)]
+
+            cross_section = CrossSection.box(label, height=height, width=width, channel=channel, bench=bench,
+                                             roof=roof,
+                                             long_label=custom_label, unit=unit)
+            return cross_section
+
+        # --------------------------------------
+        else:
+            raise NotImplementedError('"{}" unknown !'.format(label))
+
+    @staticmethod
+    def from_point_cloud(relative_coordinates, *args, **kwargs):
+        """
+        get the cross sections from a point cloud where every point is relative to the lowers point in the cross section
+
+        Args:
+            relative_coordinates (pandas.Series): height-variable as index and width as values
+                                                  with the origin in the lowest point of the cross section
+            *args: arguments, see :py:attr:`~__init__`
+            **kwargs: keyword arguments, see :py:attr:`~__init__`
+
+        Returns:
+            CrossSection: of the point cloud
+
+        .. figure:: images/point_cloud.gif
+            :align: center
+            :alt: point cloud
+            :figclass: align-center
+
+            Point cloud
+        """
+        X = 'x'  # horizontal distance to lowest point (dry weather channel)
+        Y = 'y'  # vertical distance to lowest point (dry weather channel)
+
+        # height of the profile = maximum Y coordinate
+        height_pr = relative_coordinates.index.max()
+
+        # horizontal distance to lowest point (dry weather channel)
+        # split to left and right part of the profile
+        y_df = pd.concat([relative_coordinates.loc[:height_pr].rename('right'),
+                          relative_coordinates.loc[height_pr:].rename('left')], axis=1)
+        y_df.loc[0] = 0
+        # interpolate to an even number of points on the left and right part of the profile
+        y_df_filled = y_df.interpolate()
+
+        # for debugging
+        # plot of the point cloud
+        # y_df_filled.plot()
+
+        df = pd.DataFrame(
+            {
+                X: y_df.index,
+                Y: (y_df_filled['right'] - y_df_filled['left']) / 2
+            })
+
+        cross_section = CrossSection(*args, **kwargs)
+        cross_section.df_abs = df.copy()
+        cross_section.check_point_cloud(double=False)
+        return cross_section
+
