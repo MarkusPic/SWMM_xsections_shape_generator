@@ -10,7 +10,7 @@ from webbrowser import open as open_file
 from numpy import NaN
 from pandas import isna, notna
 
-from .helpers import deg2slope, channel_end, Circle, x, CustomExpr, Slope, Vertical, Horizontal, sqrt
+from .helpers import deg2slope, channel_end, Circle, x, CustomExpr, Slope, Vertical, Horizontal, sqrt, fix
 
 g = 9.81  # m/s^2 Erdbeschleunigung
 ny = 1.31e-6  # m^2/s bei 10°C von Wasser
@@ -58,7 +58,8 @@ class CrossSection:
         self.double = False
 
         print('_' * 30)
-        print(self.label, ':  ', self.description)
+
+        print(self)
 
         # Profile data
         self._df_abs = None
@@ -74,6 +75,9 @@ class CrossSection:
         self._v_v_params = dict(slope=None, k=None)
 
     def __repr__(self):
+        return str(self)
+
+    def __str__(self):
         return '{}:  {}'.format(self.label, self.description)
 
     @property
@@ -111,7 +115,6 @@ class CrossSection:
             x_or_expr (Optional[float , sympy.Expr , None, CustomExpr]):
 
                 - :obj:`float` : x coordinate or x-axis boundary or slope if any str keyword is used in argument ``y``
-                - :obj:`Expr` : Expression/function for the cross section part
                 - :obj:`CustomExpr` : Expression/function for the cross section part
                 - :obj:`None` : if a y-axis boundary is given
 
@@ -129,7 +132,10 @@ class CrossSection:
             self.shape.append(x_or_expr)
 
         else:
-            x = x_or_expr
+            if x_or_expr is not None:
+                x = float(x_or_expr)
+            else:
+                x = x_or_expr
 
             if isinstance(y, str) and 'slope' in y:
                 if x == 0:
@@ -139,6 +145,9 @@ class CrossSection:
                     self.shape.append(Slope(x, unit=unit))
 
             else:
+                if y is not None:
+                    y = float(y)
+
                 self.shape.append((x, y))
 
     @property
@@ -174,13 +183,17 @@ class CrossSection:
 
             for start, end, f in self.shape_description:
                 if isinstance(f, Circle):
-                    this_step = (end - start) / np.floor((end - start) / step)
-                    nx = np.arange(start, end + this_step, this_step).clip(max=end)
+                    # this_step = (end - start) / np.floor((end - start) / step)
+                    # print(step, ' vs ', this_step)
+                    nx = np.arange(start, end + step, step).clip(max=end)
                     ny = f.solve(nx)
                     x += list(nx)
                     y += list(ny)
                 elif isinstance(f, Horizontal):
-                    continue
+                    x0, y0 = f.start_point()
+                    x1, y1 = f.end_point()
+                    x += [x0, x1]
+                    y += [y0, y1]
                 else:
                     nx = np.array([start, end])
                     x += list(nx)
@@ -190,6 +203,8 @@ class CrossSection:
             df = pd.DataFrame()
             df['x'] = x
             df['y'] = y
+
+            df = df.drop_duplicates().reset_index(drop=True)
 
             self._df_abs = df.astype(float).copy()
 
@@ -518,13 +533,14 @@ class CrossSection:
                             end = shape_next[0]
 
                             if end is None and shape_next[1] is not None:
-                                end = float(sy.solve(yi.expr() - shape_next[1], x)[0])
+                                end = sy.solve(yi.expr() - shape_next[1], x)[0]
 
                         elif isinstance(shape_next, CustomExpr):
                             res = sy.solve(yi.expr() - shape_next.expr(), x)
                             if len(res) == 0:
                                 from scipy.optimize import minimize_scalar
-                                end = minimize_scalar(lambda j: float((yi.expr() - shape_next.expr()).subs(x, j)), bounds=(start, self.height), method='bounded').x
+                                end = minimize_scalar(lambda j: float((yi.expr() - shape_next.expr()).subs(x, j)),
+                                                      bounds=(start, self.height), method='bounded').x
 
                             elif len(res) == 1:
                                 end = float(res[0])
@@ -536,6 +552,8 @@ class CrossSection:
                         else:
                             raise NotImplementedError('Unknown Input in shape')
 
+                        end = fix(end)
+
                         if start == end:
                             warnings.warn('unused part of the shape detected. Ignoring this part.')
                             continue
@@ -543,7 +561,10 @@ class CrossSection:
                     function.append((start, end, yi))
 
                 # ____________________________________________________________
-                last_point = (end, yi.solve(end))
+                if isinstance(shape_next, tuple) and shape_next[1] is not None:
+                    last_point = (end, shape_next[1])
+                else:
+                    last_point = (end, fix(yi.solve(end)))
 
             # ____________________________________________________________
             self._shape_description = function
@@ -751,9 +772,21 @@ class CrossSectionHolding(CrossSection):
         if not label.startswith('Pr_'):
             label = 'Pr_' + label
 
-        CrossSection.__init__(self, label, **kwargs)
         self.add_dim = add_dim
         self.add_dn = add_dn
+
+        CrossSection.__init__(self, label, **kwargs)
+
+    def __str__(self):
+        s = CrossSection.__str__(self)
+        if self.add_dim:
+            s += '  |  {:0.0f}'.format(self.height)
+            if self.width:
+                s += 'x{:0.0f}'.format(self.width)
+
+        if self.add_dn:
+            s += '  |  DN{:0.0f}'.format(self.add_dn)
+        return s
 
     @property
     def out_filename(self):
@@ -887,7 +920,8 @@ class CrossSectionHolding(CrossSection):
             else:
                 # ------------------------------------------------
                 h1 = sqrt((r_wall - r_roof) ** 2 - (r_wall - width / 2) ** 2)
-                h_middle = round(height - r_roof - h1, 8)
+                # h_middle = round(height - r_roof - h1, 8)
+                h_middle = height - r_roof - h1
 
                 # ------------------------------------------------
                 if isna(r_wall_bottom):
@@ -1137,7 +1171,7 @@ class CrossSectionHolding(CrossSection):
             {
                 X: y_df.index,
                 Y: (y_df_filled['right'] - y_df_filled['left']) / 2
-            })
+            }).reset_index(drop=True)
 
         cross_section = cls(*args, **kwargs)
         cross_section._df_abs = df.copy()

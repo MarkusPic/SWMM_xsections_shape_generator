@@ -10,6 +10,8 @@ import numpy as np
 # x is the control variable over the height ... max(x) = H_cross_section
 x = sy.Symbol('x', real=True, positive=True)
 
+accuracy = 10
+
 
 def csv(txt, comment=None):
     """
@@ -45,7 +47,7 @@ def deg2slope(degree):
 
         Slope
     """
-    return np.round(tan(radians(degree)), 5)
+    return tan(radians(degree))
 
 
 def channel_end(r, end_degree):
@@ -95,6 +97,11 @@ def combine_input_files(shape_path, delete_original=False):
             if delete_original:
                 remove(in_fn)
     print('Files are combined and originals {}deleted.'.format('' if delete_original else 'NOT '))
+
+
+def fix(x):
+    return float(x)
+    # return round(x, accuracy)
 
 
 ####################################################################################################################
@@ -183,12 +190,12 @@ class Slope(CustomExpr):
     def from_points(cls, start, end):
         x0, f0 = start
         x1, f1 = end
-        if f0 == f1:
+        if abs(f0 - f1) < 1.0e-6:
             return Vertical(f0)
-        elif x0 == x1:
+        elif abs(x0 - x1) < 1.0e-6:
             return Horizontal.from_points(start, end)
 
-        slope = (f1 - f0) / (x1 - x0)
+        slope = (x1 - x0) / (f1 - f0)
         new_slope = cls(slope)
         new_slope.set_start_point(start)
         new_slope.set_end_point(end)
@@ -253,7 +260,7 @@ class Horizontal(CustomExpr):
         self.y1 = y1
 
     def __repr__(self):
-        return f'Horizontal Function'
+        return 'Horizontal Function'
 
     def expr(self):
         return self.y1
@@ -272,6 +279,12 @@ class Horizontal(CustomExpr):
         h = cls()
         h.set_points(start, end)
         return h
+
+    def start_point(self):
+        return self.x, self.y0
+
+    def end_point(self):
+        return self.x, self.y1
 
 
 ####################################################################################################################
