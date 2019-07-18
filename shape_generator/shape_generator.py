@@ -512,6 +512,10 @@ class CrossSection:
                         yi = Slope.from_points(shape_i, shape_next)
                         function.append((start, end, yi))
 
+                    # ________________________________
+
+                    last_point = (end, shape_i[1])
+
                 # ____________________________________________________________
                 elif isinstance(shape_i, CustomExpr):
                     yi = shape_i
@@ -560,11 +564,11 @@ class CrossSection:
 
                     function.append((start, end, yi))
 
-                # ____________________________________________________________
-                if isinstance(shape_next, tuple) and shape_next[1] is not None:
-                    last_point = (end, shape_next[1])
-                else:
-                    last_point = (end, fix(yi.solve(end)))
+                    # ____________________________
+                    if isinstance(shape_next, tuple) and shape_next[1] is not None:
+                        last_point = (end, shape_next[1])
+                    else:
+                        last_point = (end, fix(yi.solve(end)))
 
             # ____________________________________________________________
             self._shape_description = function
@@ -1167,14 +1171,26 @@ class CrossSectionHolding(CrossSection):
         # plot of the point cloud
         # y_df_filled.plot()
 
-        df = pd.DataFrame(
-            {
-                X: y_df.index,
-                Y: (y_df_filled['right'] - y_df_filled['left']) / 2
-            }).reset_index(drop=True)
-
         cross_section = cls(*args, **kwargs)
-        cross_section._df_abs = df.copy()
-        cross_section.double = False
-        cross_section.check_point_cloud()
+
+        if 0:
+            df = pd.DataFrame(
+                {
+                    X: y_df.index,
+                    Y: (y_df_filled['right'] - y_df_filled['left']) / 2
+                }).reset_index(drop=True)
+
+            cross_section._df_abs = df.copy()
+            cross_section.double = False
+            cross_section.check_point_cloud()
+
+        else:
+            xi = y_df.index.tolist()
+            yi = ((y_df_filled['right'] - y_df_filled['left']) / 2).round(10).tolist()
+
+            for x, y in zip(xi, yi):
+                if y == 0 and x in (0, height_pr):
+                    continue
+                cross_section.add(x, y)
+
         return cross_section
