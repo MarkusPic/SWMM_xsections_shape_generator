@@ -143,12 +143,14 @@ class Slope(CustomExpr):
     """
 
     def __init__(self, slope, unit=None):
-        if unit is None:
+        if unit is None or unit == '':
             self.slope = slope
         elif unit == '°':
             self.slope = deg2slope(slope)
         elif unit == '%':
             self.slope = slope / 100
+        else:
+            raise NotImplementedError('Unknown Unit for slope function')
 
         self.x0 = None
         self.y0 = None
@@ -161,11 +163,13 @@ class Slope(CustomExpr):
     def __repr__(self):
         return f'Slope Function (k={self.slope:0.2f}, zero=[{self.x0:0.2f}, {self.y0:0.2f}])'
 
-    def set_start_point(self, x0, y0):
+    def set_start_point(self, point):
+        x0, y0 = point
         self.x0 = x0
         self.y0 = y0
 
-    def set_end_point(self, x1, y1):
+    def set_end_point(self, point):
+        x1, y1 = point
         self.x1 = x1
         self.y1 = y1
 
@@ -175,23 +179,23 @@ class Slope(CustomExpr):
     def solve(self, i):
         return self.y0 + (i - self.x0) / self.slope
 
-    @staticmethod
-    def from_points(start, end):
+    @classmethod
+    def from_points(cls, start, end):
         x0, f0 = start
         x1, f1 = end
         if f0 == f1:
             return Vertical(f0)
         elif x0 == x1:
-            return Horizontal()
+            return Horizontal.from_points(start, end)
 
         slope = (f1 - f0) / (x1 - x0)
-        new_slope = Slope(slope)
-        new_slope.set_start_point(x0, f0)
-        new_slope.set_start_point(x1, f1)
+        new_slope = cls(slope)
+        new_slope.set_start_point(start)
+        new_slope.set_end_point(end)
         return new_slope
 
     def end_point(self):
-        pass
+        return self.x1, self.y1
 
     def length(self, i0, i1):
         return sqrt((self.solve(i0) - self.solve(i1)) ** 2 + (i0 - i1) ** 2)
@@ -236,7 +240,15 @@ class Horizontal(CustomExpr):
     def set_points(self, start, end):
         x0, y0 = start
         x1, y1 = end
-        # self.x = xi
+
+        if x0 == x1:
+            self.x = x0
+        else:
+            if x0 is not None:
+                self.x = x0
+            elif x1 is not None:
+                self.x = x1
+
         self.y0 = y0
         self.y1 = y1
 
@@ -254,6 +266,12 @@ class Horizontal(CustomExpr):
 
     def area(self, i0, i1):
         return 0
+
+    @classmethod
+    def from_points(cls, start, end):
+        h = cls()
+        h.set_points(start, end)
+        return h
 
 
 ####################################################################################################################

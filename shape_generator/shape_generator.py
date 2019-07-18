@@ -26,7 +26,7 @@ class CrossSection:
         accuracy (int): number of decimal points to use for the export
         shape (list): descriptions of the cross section as commands in a list
         _shape_description (list): points and functions to describe the cross section
-        df_abs (pandas.DataFrame): maximum 100 points to describe the cross section in absolute values
+        _df_abs (pandas.DataFrame): maximum 100 points to describe the cross section in absolute values
         working_directory (str): directory where the files get saved
         unit (str): unit of entered values
         double (bool): if the cross section two separate cross sections
@@ -72,6 +72,9 @@ class CrossSection:
         self._Q_v_params = dict(slope=None, k=None)
         self._v_v = None
         self._v_v_params = dict(slope=None, k=None)
+
+    def __repr__(self):
+        return '{}:  {}'.format(self.label, self.description)
 
     @property
     def height(self):
@@ -125,23 +128,15 @@ class CrossSection:
         if isinstance(x_or_expr, CustomExpr):
             self.shape.append(x_or_expr)
 
-        elif isinstance(x_or_expr, sy.Expr):
-            DeprecationWarning('Delete')
-            self.shape.append(x_or_expr)
-
         else:
             x = x_or_expr
 
             if isinstance(y, str) and 'slope' in y:
-                if y == '°slope':
-                    x = deg2slope(x)
-                elif y == '%slope':
-                    x = x / 100
-
                 if x == 0:
                     self.shape.append(Horizontal())
                 else:
-                    self.shape.append(Slope(x))
+                    unit = y.replace('slope', '')
+                    self.shape.append(Slope(x, unit=unit))
 
             else:
                 self.shape.append((x, y))
@@ -462,112 +457,63 @@ class CrossSection:
     @property
     def shape_description(self):
         if self._shape_description is None:
-            height = self.height
-            shape = self.shape
-
+            # result list
             function = list()
+
+            # boundary condition
             last_point = (0, 0)
-            final_point = (height, 0)
-            # self.shape.append((self.height, 0))
-            # convert every expression to points and add it to the resulting DataFrame ``df``
-            for i, shape_i in enumerate(shape):
+            final_point = (self.height, 0)
+
+            for i, shape_i in enumerate(self.shape):
 
                 # _________________________________
-                if i == 0:
-                    shape_prev = last_point
-                else:
-                    shape_prev = last_point
-
-                if (i + 1) == len(shape):
+                # boundary condition
+                if (i + 1) == len(self.shape):
                     shape_next = final_point
                 else:
-                    shape_next = shape[i + 1]
+                    shape_next = self.shape[i + 1]
 
                 # _________________________________
-                if isinstance(shape_i, tuple) and shape_i[1] == 'slope':
-                    shape_i = Slope(shape_i[0])
-                    shape_i.set_start_point(*shape_prev)
+                # if isinstance(shape_i, tuple) and shape_i[1] == 'slope':
+                #     shape_i = Slope(shape_i[0])
+                #     shape_i.set_start_point(last_point)
 
-                # _________________________________
+                # ____________________________________________________________
                 if isinstance(shape_i, tuple):
 
-                    # if shape_i[1] == 'slope':
-                    #     start = shape_prev[0]
-                    #     end = shape_next[0]
-                    #     yi = Slope(shape_i[0])
-                    #     yi.set_start_point(*shape_prev)
-                    #
-                    #     if end is None and shape_next[1] is not None:
-                    #         sy.solve(yi.expr() - shape_next[1], x)
-
-                    # yi = Slope.from_points(shape_prev, shape_next)
-
-                    if shape_i[1] is None:
+                    if (shape_i[0] is None) or (shape_i[1] is None):
                         # this part is only used as boundary condition
-                        # warnings.warn('shape_i[1] is None {}'.format(shape_i))
                         continue
 
-                    elif shape_i[0] is None:
-                        # this part is only used as boundary condition
-                        # warnings.warn('shape_i[0] is None {}'.format(shape_i))
-                        continue
-
-                    elif isinstance(shape_prev, tuple) and shape_prev[1] is not None:
-                        start = shape_prev[0]
+                    if last_point[1] is not None:
+                        start = last_point[0]
                         end = shape_i[0]
-
-                        if (abs(shape_prev[1] - shape_i[1]) / shape_i[1]) < 0.001:
-                            yi = Vertical(shape_i[1])
-
-                        else:
-                            yi = Slope.from_points(shape_prev, shape_i)
-
-                    function.append((start, end, yi))
+                        yi = Slope.from_points(last_point, shape_i)
+                        function.append((start, end, yi))
 
                     if shape_next == final_point:
                         start = shape_i[0]
                         end = shape_next[0]
-
                         yi = Slope.from_points(shape_i, shape_next)
-
                         function.append((start, end, yi))
 
-                # _________________________________
-                elif isinstance(shape_i, sy.Expr):
-                    warnings.warn('sympy Expressions will be removed in future', DeprecationWarning)
-                    yi = shape_i.copy()
-
-                    start = shape_prev[0]
-                    end = shape_next[0]
-
-                    if start == end:
-                        warnings.warn('unused part of the shape detected. Ignoring this part.')
-                        continue
-                    function.append((start, end, yi))
-
-                # _________________________________
+                # ____________________________________________________________
                 elif isinstance(shape_i, CustomExpr):
                     yi = shape_i
 
                     if isinstance(yi, Slope) and yi.x0 is None:
-                        yi.set_start_point(*shape_prev)
+                        yi.set_start_point(last_point)
 
-                    start = shape_prev[0]
+                    start = last_point[0]
 
                     if isinstance(yi, Horizontal):
-                        yi.set_points(shape_prev, shape_next)
-
                         if isinstance(shape_next, tuple):
-                            end = shape_next[0]
-                        elif isinstance(shape_next, CustomExpr):
-                            pass
+                            yi.set_points(last_point, shape_next)
 
-                        if end is None and start is not None:
-                            end = start
-                            yi.set_x(start)
+                        elif isinstance(shape_next, CustomExpr):
+                            warnings.warn('must be implemented', FutureWarning)
 
                     else:
-
                         if isinstance(shape_next, tuple):
                             end = shape_next[0]
 
@@ -575,7 +521,20 @@ class CrossSection:
                                 end = float(sy.solve(yi.expr() - shape_next[1], x)[0])
 
                         elif isinstance(shape_next, CustomExpr):
-                            end = float(sy.solve(yi.expr() - shape_next.expr(), x)[0])
+                            res = sy.solve(yi.expr() - shape_next.expr(), x)
+                            if len(res) == 0:
+                                from scipy.optimize import minimize_scalar
+                                end = minimize_scalar(lambda j: float((yi.expr() - shape_next.expr()).subs(x, j)), bounds=(start, self.height), method='bounded').x
+
+                            elif len(res) == 1:
+                                end = float(res[0])
+                            else:
+                                # multiple results
+                                # TODO: how to handly it
+                                end = float(res[0])
+
+                        else:
+                            raise NotImplementedError('Unknown Input in shape')
 
                         if start == end:
                             warnings.warn('unused part of the shape detected. Ignoring this part.')
@@ -583,8 +542,10 @@ class CrossSection:
 
                     function.append((start, end, yi))
 
+                # ____________________________________________________________
                 last_point = (end, yi.solve(end))
 
+            # ____________________________________________________________
             self._shape_description = function
 
         return self._shape_description
@@ -764,20 +725,23 @@ class CrossSection:
 ########################################################################################################################
 ########################################################################################################################
 class CrossSectionHolding(CrossSection):
-    def __init__(self, label, description=None, height=None, width=None, add_dim=False, add_dn=None,
-                 working_directory='', unit=None):
+    def __init__(self, label, add_dim=False, add_dn=None, **kwargs):
         """Initialise the cross section class
 
         Args:
             label (str): main name/label/number of the cross section
-            description (Optional[str]): optional longer name of the cross section
-            height (float): absolute height of the CS
-            width (Optional[float]): absolute width of the CS (optional) can be calculated
             add_dim (bool): if the dimensions should be added to :py:attr:`~out_filename` used for the export
             add_dn (Optional[float]): if the channel dimension should be added to :py:attr:`~out_filename`
                                     used for the export enter the diameter as float
+            **kwargs (object): see :py:attr:`~__init__`
+
+        Keyword Args:
+            description (Optional[str]): optional longer name of the cross section
+            height (float): absolute height of the CS
+            width (Optional[float]): absolute width of the CS (optional) can be calculated
             working_directory (str): directory where the files get saved
             unit (Optional[str]): enter unit to add the unit in the plots
+
         """
         if isinstance(label, (float, int)):
             label = '{:0.0f}'.format(label)
@@ -787,8 +751,7 @@ class CrossSectionHolding(CrossSection):
         if not label.startswith('Pr_'):
             label = 'Pr_' + label
 
-        CrossSection.__init__(self, label, description=description, height=height, width=width,
-                              working_directory=working_directory, unit=unit)
+        CrossSection.__init__(self, label, **kwargs)
         self.add_dim = add_dim
         self.add_dn = add_dn
 
@@ -813,16 +776,14 @@ class CrossSectionHolding(CrossSection):
 
     ####################################################################################################################
     @classmethod
-    def standard(cls, label, long_label, height, width=NaN, r_channel=NaN, r_roof=NaN, r_wall=NaN, slope_bench=NaN,
-                 r_round=NaN,
-                 r_wall_bottom=NaN, h_bench=NaN, pre_bench=NaN, w_channel=NaN, add_dim=False, add_dn=False,
-                 unit=None):
+    def standard(cls, label, description, height, width=NaN, r_channel=NaN, r_roof=NaN, r_wall=NaN, slope_bench=NaN,
+                 r_round=NaN, r_wall_bottom=NaN, h_bench=NaN, pre_bench=NaN, w_channel=NaN, **kwargs):
         """
         standard cross section
 
         Args:
             label (str): see :py:attr:`~__init__`
-            long_label (str): see :py:attr:`~__init__`
+            description (str): see :py:attr:`~__init__`
             height (float): see :py:attr:`~__init__`
             width (float): see :py:attr:`~__init__`
 
@@ -839,11 +800,14 @@ class CrossSectionHolding(CrossSection):
             r_wall (float): radius of the sidewall (=Seitenwand), only in combination with ``r_roof`` active
             r_wall_bottom (float): radius of the bottom sidewall (=untere Seitenwand), only in combination with ``r_wall`` active
 
-            add_dim (bool): see :py:attr:`~__init__`
-            add_dn (Optional[float]): see :py:attr:`~__init__`
+            **kwargs (object): see :py:attr:`~__init__`
+
+        Keyword Args:
+            working_directory (str): directory where the files get saved
+            unit (Optional[str]): enter unit to add the unit in the plots
 
         Returns:
-            CrossSection: standard cross section
+            CrossSectionHolding: standard cross section
 
         Examples:
             see :ref:`Examples_for_standard_profiles`
@@ -871,9 +835,8 @@ class CrossSectionHolding(CrossSection):
         """
 
         # ------------------------------------------------
-        cross_section = cls(label=label, description=long_label, height=height,
-                            width=(width if notna(width) else None),
-                            add_dim=add_dim, add_dn=add_dn, unit=unit)
+        cross_section = cls(label=label, description=description, height=height,
+                            width=(width if notna(width) else None), **kwargs)
 
         # ------------------------------------------------
         # TW-Rinne
@@ -946,9 +909,8 @@ class CrossSectionHolding(CrossSection):
         return cross_section
 
     ####################################################################################################################
-    @staticmethod
-    def box(label, height, width, channel=None, bench=None, roof=None, rounding=0.0, add_dim=True, long_label=None,
-            unit=None):
+    @classmethod
+    def box(cls, label, height, width, channel=None, bench=None, roof=None, rounding=0.0, **kwargs):
         """
         pre defined box (=Kasten) cross section
 
@@ -972,17 +934,18 @@ class CrossSectionHolding(CrossSection):
                 - ``'K'``: Kreis
 
             rounding (Optional[float]): rounding of the edges
-            add_dim (bool): see :py:attr:`~__init__`
-            long_label(Optional[str]): see :py:attr:`~__init__`
-            unit (Optional[str]): see :py:attr:`~__init__`
+            **kwargs (object): see :py:attr:`~__init__`
+
+        Keyword Args:
+            description (Optional[str]): optional longer name of the cross section
+            working_directory (str): directory where the files get saved
+            unit (Optional[str]): enter unit to add the unit in the plots
 
         Returns:
-            CrossSection: pre defined box (=Kasten) cross section
+            CrossSectionHolding: pre defined box (=Kasten) cross section
         """
         name = 'K'
-        cross_section = CrossSection(label=label, description=long_label, width=width, height=height,
-                                     add_dim=add_dim,
-                                     unit=unit)
+        cross_section = cls(label=label, width=width, height=height, **kwargs)
 
         if isna(channel):
             channel = None
@@ -1062,14 +1025,14 @@ class CrossSectionHolding(CrossSection):
             # gerade Decke
             cross_section.add(height, width / 2)
 
-        if cross_section.name is None or cross_section.name == '':
-            cross_section.name = name
+        if cross_section.label is None or cross_section.label == '':
+            cross_section.label = name
         cross_section.check_point_cloud()
         return cross_section
 
     ####################################################################################################################
-    @staticmethod
-    def box_from_string(label, height, width, custom_label=None, unit=None):
+    @classmethod
+    def box_from_string(cls, label, **kwargs):
         """
         create pre defined box (=Kasten) cross section with the string label.
         This function takes the information from the label and pass them to the :py:attr:`~box` - function.
@@ -1078,13 +1041,18 @@ class CrossSectionHolding(CrossSection):
 
         Args:
             label (str): see the :ref:`Examples_for_box_shaped_profiles`
+            **kwargs (object): see :py:attr:`~__init__`
+
+        Keyword Args:
             height (float): see :py:attr:`~__init__`
             width (float): see :py:attr:`~__init__`
-            custom_label (str):
-            unit (Optional[str]): see :py:attr:`~__init__`
+            rounding (Optional[float]): rounding of the edges
+            description (Optional[str]): optional longer name of the cross section
+            working_directory (str): directory where the files get saved
+            unit (Optional[str]): enter unit to add the unit in the plots
 
         Returns:
-            CrossSection: pre defined box (=Kasten) cross section
+            CrossSectionHolding: pre defined box (=Kasten) cross section
 
         Examples:
             .. figure:: images/Kasten-Profile.gif
@@ -1108,17 +1076,15 @@ class CrossSectionHolding(CrossSection):
 
             bench, roof = [x_ if x_ != '' else None for x_ in (bench, roof)]
 
-            cross_section = CrossSection.box(label, height=height, width=width, channel=channel, bench=bench,
-                                             roof=roof,
-                                             long_label=custom_label, unit=unit)
+            cross_section = cls.box(label, channel=channel, bench=bench, roof=roof, **kwargs)
             return cross_section
 
         # --------------------------------------
         else:
             raise NotImplementedError('"{}" unknown !'.format(label))
 
-    @staticmethod
-    def from_point_cloud(relative_coordinates, *args, **kwargs):
+    @classmethod
+    def from_point_cloud(cls, relative_coordinates, *args, **kwargs):
         """
         get the cross sections from a point cloud where every point is relative to the lowers point in the cross section
 
@@ -1128,8 +1094,19 @@ class CrossSectionHolding(CrossSection):
             *args: arguments, see :py:attr:`~__init__`
             **kwargs: keyword arguments, see :py:attr:`~__init__`
 
+        Keyword Args:
+            label (str): main name/label/number of the cross section
+            description (Optional[str]): optional longer name of the cross section
+            height (float): absolute height of the CS
+            width (Optional[float]): absolute width of the CS (optional) can be calculated
+            working_directory (str): directory where the files get saved
+            unit (Optional[str]): enter unit to add the unit in the plots
+            add_dim (bool): if the dimensions should be added to :py:attr:`~out_filename` used for the export
+            add_dn (Optional[float]): if the channel dimension should be added to :py:attr:`~out_filename`
+                                    used for the export enter the diameter as float
+
         Returns:
-            CrossSection: of the point cloud
+            CrossSectionHolding: of the point cloud
 
         .. figure:: images/point_cloud.gif
             :align: center
@@ -1162,7 +1139,8 @@ class CrossSectionHolding(CrossSection):
                 Y: (y_df_filled['right'] - y_df_filled['left']) / 2
             })
 
-        cross_section = CrossSection(*args, **kwargs)
-        cross_section.df_abs = df.copy()
-        cross_section.check_point_cloud(double=False)
+        cross_section = cls(*args, **kwargs)
+        cross_section._df_abs = df.copy()
+        cross_section.double = False
+        cross_section.check_point_cloud()
         return cross_section
