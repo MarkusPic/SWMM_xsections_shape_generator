@@ -404,6 +404,13 @@ class CrossSection:
         fig.tight_layout()
         return fig
 
+    @property
+    def df_rel_fill_swmm(self):
+        df = self.df_rel.copy()
+        df = df.iloc[1:-1].copy()
+        df['y'] *= 2
+        return df
+
     def dat_file(self):
         """
         create the EPA-SWMM Curve Data  ``.dat`` -file, which can be imported into SWMM
@@ -415,8 +422,8 @@ class CrossSection:
         if self.width:
             dim += ', B={}'.format(self.width)
         file.write('{} - {}: {}\n'.format(self.label, self.description, dim))
-        self.df_rel.iloc[1:-1].to_csv(file, sep=' ', index=False, header=False,
-                                      float_format='%0.{}f'.format(self.accuracy))
+        self.df_rel_fill_swmm.to_csv(file, sep=' ', index=False, header=False,
+                                     float_format='%0.{}f'.format(self.accuracy))
 
     def inp_string(self):
         """
@@ -426,15 +433,17 @@ class CrossSection:
         Returns:
             str: formatted text of the data
         """
-        df = self.df_rel.copy()
-        df = df.iloc[1:-1].copy()
+        df = self.df_rel_fill_swmm
 
         df['name'] = path.basename(self.out_filename)
 
         df['shape'] = ''
         df.loc[1, 'shape'] = 'shape'
-        return df[['name', 'shape', 'x', 'y']].to_string(header=None, index=None,
-                                                         float_format='%0.{}f'.format(self.accuracy))
+
+        df = df.set_index('name')
+
+        return df[['shape', 'x', 'y']].to_string(header=False, index=True, index_names=False,
+                                                 float_format='%0.{}f'.format(self.accuracy))
 
     def input_file(self):
         """
@@ -455,11 +464,6 @@ class CrossSection:
         if self._shape_description is None:
             height = self.height
             shape = self.shape
-
-            filled = 'filled'
-
-            def is_filled(shape_i):
-                return shape_i[1] == filled
 
             function = list()
             last_point = (0, 0)
@@ -499,15 +503,13 @@ class CrossSection:
                     # yi = Slope.from_points(shape_prev, shape_next)
 
                     if shape_i[1] is None:
-                        DeprecationWarning('shape_i[1] is None', shape_i)
+                        # this part is only used as boundary condition
+                        # warnings.warn('shape_i[1] is None {}'.format(shape_i))
                         continue
 
                     elif shape_i[0] is None:
-                        DeprecationWarning('shape_i[0] is None', shape_i)
-                        continue
-
-                    elif is_filled(shape_i):
-                        DeprecationWarning('shape_i is filled', shape_i, )
+                        # this part is only used as boundary condition
+                        # warnings.warn('shape_i[0] is None {}'.format(shape_i))
                         continue
 
                     elif isinstance(shape_prev, tuple) and shape_prev[1] is not None:
@@ -532,6 +534,7 @@ class CrossSection:
 
                 # _________________________________
                 elif isinstance(shape_i, sy.Expr):
+                    warnings.warn('sympy Expressions will be removed in future', DeprecationWarning)
                     yi = shape_i.copy()
 
                     start = shape_prev[0]
@@ -546,24 +549,38 @@ class CrossSection:
                 elif isinstance(shape_i, CustomExpr):
                     yi = shape_i
 
-                    start = shape_prev[0]
-                    end = shape_next[0]
-
                     if isinstance(yi, Slope) and yi.x0 is None:
                         yi.set_start_point(*shape_prev)
 
+                    start = shape_prev[0]
+
                     if isinstance(yi, Horizontal):
                         yi.set_points(shape_prev, shape_next)
+
+                        if isinstance(shape_next, tuple):
+                            end = shape_next[0]
+                        elif isinstance(shape_next, CustomExpr):
+                            pass
+
                         if end is None and start is not None:
                             end = start
                             yi.set_x(start)
 
-                    elif end is None and shape_next[1] is not None:
-                        end = float(sy.solve(yi.expr() - shape_next[1], x)[0])
+                    else:
 
-                    if not isinstance(yi, Horizontal) and start == end:
-                        warnings.warn('unused part of the shape detected. Ignoring this part.')
-                        continue
+                        if isinstance(shape_next, tuple):
+                            end = shape_next[0]
+
+                            if end is None and shape_next[1] is not None:
+                                end = float(sy.solve(yi.expr() - shape_next[1], x)[0])
+
+                        elif isinstance(shape_next, CustomExpr):
+                            end = float(sy.solve(yi.expr() - shape_next.expr(), x)[0])
+
+                        if start == end:
+                            warnings.warn('unused part of the shape detected. Ignoring this part.')
+                            continue
+
                     function.append((start, end, yi))
 
                 last_point = (end, yi.solve(end))
@@ -855,8 +872,8 @@ class CrossSectionHolding(CrossSection):
 
         # ------------------------------------------------
         cross_section = cls(label=label, description=long_label, height=height,
-                                     width=(width if notna(width) else None),
-                                     add_dim=add_dim, add_dn=add_dn, unit=unit)
+                            width=(width if notna(width) else None),
+                            add_dim=add_dim, add_dn=add_dn, unit=unit)
 
         # ------------------------------------------------
         # TW-Rinne
@@ -1149,4 +1166,3 @@ class CrossSectionHolding(CrossSection):
         cross_section.df_abs = df.copy()
         cross_section.check_point_cloud(double=False)
         return cross_section
-
