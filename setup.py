@@ -15,7 +15,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='SWMM_xsections_shape_generator',
-    version='0.2 alpha',
+    version='0.3',
     packages=['shape_generator'],
     url='https://github.com/MarkusPic/SWMM_xsections_shape_generator',
     license='MIT',
