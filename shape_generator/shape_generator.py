@@ -168,6 +168,7 @@ class CrossSection:
 
             step = None
             # if functions are used in shape
+
             if num_functions:
                 # number of fixed points in shape
                 num_points = (len(self.shape_description) - num_functions) * 2
@@ -177,6 +178,10 @@ class CrossSection:
                                   isinstance(self.shape_description[i][2], Circle)}
                 # step size used to discretise the expressions
                 step = sum(function_steps.values()) / (max_number_points - num_points)
+
+                min_step = 1 * 10 ** (-self.accuracy) * self.height
+                if step < min_step:
+                    step = min_step
 
             x = list()
             y = list()

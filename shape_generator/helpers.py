@@ -92,8 +92,8 @@ def combine_input_files(shape_path, delete_original=False):
                 continue
             in_fn = path.join(shape_path, fname)
             with open(in_fn) as infile:
-                outfile.write('\n')
                 outfile.write(infile.read())
+                outfile.write('\n\n')
             if delete_original:
                 remove(in_fn)
     print('Files are combined and originals {}deleted.'.format('' if delete_original else 'NOT '))
