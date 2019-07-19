@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Examples for general profile shapes &mdash; SWMM CrossSection shape Generator 0.1 alpha documentation</title>
+  <title>Examples for general profile shapes &mdash; SWMM CrossSection shape Generator 0.2.alpha documentation</title>
   
 
   
@@ -17,34 +17,38 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Examples for box shaped profiles" href="show_case-kasten.html" />
     <link rel="prev" title="API" href="api.html" /> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -58,7 +62,7 @@
             
             
               <div class="version">
-                0.1
+                0.2
               </div>
             
           
@@ -387,7 +391,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">shape_generator</span> <span class="k">import</span> <span class="n">CrossSection</span><span class="p">,</span> <span class="n">circle</span><span class="p">,</span> <span class="n">csv</span>
+<span></span><span class="kn">from</span> <span class="nn">shape_generator</span> <span class="k">import</span> <span class="n">CrossSectionHolding</span> <span class="k">as</span> <span class="n">CrossSection</span><span class="p">,</span> <span class="n">Circle</span><span class="p">,</span> <span class="n">csv</span>
 </pre></div>
 </div>
 </div>
@@ -505,12 +509,12 @@ div.rendered_html tbody tr:hover {
 <span class="c1"># h1 = roh - (r + roh) / (R - roh) * roh</span>
 <span class="n">h1</span> <span class="o">=</span> <span class="n">r</span><span class="o">/</span> <span class="mi">5</span>
 
-<span class="n">cross_section</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">long_label</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span>
-<span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">circle</span><span class="p">(</span><span class="n">roh</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="n">roh</span><span class="p">))</span>
+<span class="n">cross_section</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span>
+<span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Circle</span><span class="p">(</span><span class="n">roh</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="n">roh</span><span class="p">))</span>
 <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">h1</span><span class="p">)</span>
-<span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">circle</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">r</span><span class="p">,</span> <span class="n">y_m</span><span class="o">=-</span><span class="p">(</span><span class="n">R</span> <span class="o">-</span> <span class="n">r</span><span class="p">)))</span>
+<span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Circle</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">r</span><span class="p">,</span> <span class="n">y_m</span><span class="o">=-</span><span class="p">(</span><span class="n">R</span> <span class="o">-</span> <span class="n">r</span><span class="p">)))</span>
 <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">r</span><span class="p">)</span>
-<span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">circle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">r</span><span class="p">))</span>
+<span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Circle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">r</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -520,96 +524,11 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 ______________________________
-Pr_P0  -&gt;  0
+Pr_P0:  0
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">cross_section</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-0 :  sqrt(-(x - 15.0)**2 + 225.0)
-1 :  (6.0, None)
-2 :  sqrt(-(x - 60.0)**2 + 8100.0) - 60.0
-3 :  (60.0, None)
-4 :  sqrt(-(x - 60.0)**2 + 900.0)
-            x          y
-0    0.000000   0.000000
-1    1.000000   5.385165
-2    2.000000   7.483315
-3    3.000000   9.000000
-4    4.000000  10.198039
-5    5.000000  11.180340
-6    6.000000  12.000000
-7    6.947368  12.700613
-8    7.894737  13.383029
-9    8.842105  14.046330
-10   9.789474  14.691736
-11  10.736842  15.320361
-12  11.684211  15.931312
-13  12.631579  16.526287
-14  13.578947  17.104415
-15  14.526316  17.666694
-16  15.473684  18.214035
-17  16.421053  18.745608
-18  17.368421  19.262302
-19  18.315789  19.764931
-20  19.263158  20.252706
-21  20.210526  20.726919
-22  21.157895  21.186816
-23  22.105263  21.633137
-24  23.052632  22.066553
-25  24.000000  22.486363
-26  24.947368  22.893228
-27  25.894737  23.287748
-28  26.842105  23.669272
-29  27.789474  24.038393
-..        ...        ...
-66  62.812500  29.867920
-67  63.750000  29.764702
-68  64.687500  29.631447
-69  65.625000  29.467938
-70  66.562500  29.273540
-71  67.500000  29.047375
-72  68.437500  28.788889
-73  69.375000  28.497533
-74  70.312500  28.172019
-75  71.250000  27.810744
-76  72.187500  27.412637
-77  73.125000  26.976552
-78  74.062500  26.500192
-79  75.000000  25.980762
-80  75.937500  25.416140
-81  76.875000  24.803919
-82  77.812500  24.139856
-83  78.750000  23.418742
-84  79.687500  22.635871
-85  80.625000  21.785531
-86  81.562500  20.858575
-87  82.500000  19.843135
-88  83.437500  18.725922
-89  84.375000  17.488836
-90  85.312500  16.102877
-91  86.250000  14.523688
-92  87.187500  12.681193
-93  88.125000  10.439558
-94  89.062500   7.443128
-95  90.000000   0.000000
-
-[96 rows x 2 columns]
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -618,7 +537,7 @@ Pr_P0  -&gt;  0
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -647,153 +566,153 @@ Pr_P0  -&gt;  0
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.000</td>
-      <td>0.000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.999</td>
-      <td>5.382</td>
+      <td>0.9</td>
+      <td>5.117617</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>1.998</td>
-      <td>7.479</td>
+      <td>1.8</td>
+      <td>7.124605</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>2.997</td>
-      <td>9.000</td>
+      <td>2.7</td>
+      <td>8.585453</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>3.996</td>
-      <td>10.197</td>
+      <td>3.6</td>
+      <td>9.748846</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>5.004</td>
-      <td>11.178</td>
+      <td>4.5</td>
+      <td>10.712143</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>6.003</td>
-      <td>11.997</td>
+      <td>5.4</td>
+      <td>11.525624</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>6.948</td>
-      <td>12.699</td>
+      <td>6.0</td>
+      <td>12.000000</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>7.893</td>
-      <td>13.383</td>
+      <td>6.9</td>
+      <td>12.666292</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>8.838</td>
-      <td>14.049</td>
+      <td>7.8</td>
+      <td>13.315483</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>9.792</td>
-      <td>14.688</td>
+      <td>8.7</td>
+      <td>13.948022</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>10.737</td>
-      <td>15.318</td>
+      <td>9.6</td>
+      <td>14.564335</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>11.682</td>
-      <td>15.930</td>
+      <td>10.5</td>
+      <td>15.164819</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>12.636</td>
-      <td>16.524</td>
+      <td>11.4</td>
+      <td>15.749851</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>13.581</td>
-      <td>17.100</td>
+      <td>12.3</td>
+      <td>16.319788</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>14.526</td>
-      <td>17.667</td>
+      <td>13.2</td>
+      <td>16.874963</td>
     </tr>
     <tr>
       <th>16</th>
-      <td>15.471</td>
-      <td>18.216</td>
+      <td>14.1</td>
+      <td>17.415696</td>
     </tr>
     <tr>
       <th>17</th>
-      <td>16.425</td>
-      <td>18.747</td>
+      <td>15.0</td>
+      <td>17.942286</td>
     </tr>
     <tr>
       <th>18</th>
-      <td>17.370</td>
-      <td>19.260</td>
+      <td>15.9</td>
+      <td>18.455019</td>
     </tr>
     <tr>
       <th>19</th>
-      <td>18.315</td>
-      <td>19.764</td>
+      <td>16.8</td>
+      <td>18.954164</td>
     </tr>
     <tr>
       <th>20</th>
-      <td>19.260</td>
-      <td>20.250</td>
+      <td>17.7</td>
+      <td>19.439977</td>
     </tr>
     <tr>
       <th>21</th>
-      <td>20.214</td>
-      <td>20.727</td>
+      <td>18.6</td>
+      <td>19.912702</td>
     </tr>
     <tr>
       <th>22</th>
-      <td>21.159</td>
-      <td>21.186</td>
+      <td>19.5</td>
+      <td>20.372570</td>
     </tr>
     <tr>
       <th>23</th>
-      <td>22.104</td>
-      <td>21.636</td>
+      <td>20.4</td>
+      <td>20.819800</td>
     </tr>
     <tr>
       <th>24</th>
-      <td>23.049</td>
-      <td>22.068</td>
+      <td>21.3</td>
+      <td>21.254600</td>
     </tr>
     <tr>
       <th>25</th>
-      <td>24.003</td>
-      <td>22.482</td>
+      <td>22.2</td>
+      <td>21.677169</td>
     </tr>
     <tr>
       <th>26</th>
-      <td>24.948</td>
-      <td>22.896</td>
+      <td>23.1</td>
+      <td>22.087697</td>
     </tr>
     <tr>
       <th>27</th>
-      <td>25.893</td>
-      <td>23.292</td>
+      <td>24.0</td>
+      <td>22.486363</td>
     </tr>
     <tr>
       <th>28</th>
-      <td>26.838</td>
-      <td>23.670</td>
+      <td>24.9</td>
+      <td>22.873337</td>
     </tr>
     <tr>
       <th>29</th>
-      <td>27.792</td>
-      <td>24.039</td>
+      <td>25.8</td>
+      <td>23.248784</td>
     </tr>
     <tr>
       <th>...</th>
@@ -801,162 +720,162 @@ Pr_P0  -&gt;  0
       <td>...</td>
     </tr>
     <tr>
-      <th>66</th>
-      <td>62.811</td>
-      <td>29.871</td>
-    </tr>
-    <tr>
-      <th>67</th>
-      <td>63.747</td>
-      <td>29.763</td>
-    </tr>
-    <tr>
-      <th>68</th>
-      <td>64.692</td>
-      <td>29.628</td>
-    </tr>
-    <tr>
-      <th>69</th>
-      <td>65.628</td>
-      <td>29.466</td>
-    </tr>
-    <tr>
-      <th>70</th>
-      <td>66.564</td>
-      <td>29.277</td>
-    </tr>
-    <tr>
-      <th>71</th>
-      <td>67.500</td>
-      <td>29.043</td>
-    </tr>
-    <tr>
       <th>72</th>
-      <td>68.436</td>
-      <td>28.791</td>
+      <td>64.5</td>
+      <td>29.660580</td>
     </tr>
     <tr>
       <th>73</th>
-      <td>69.372</td>
-      <td>28.494</td>
+      <td>65.4</td>
+      <td>29.509998</td>
     </tr>
     <tr>
       <th>74</th>
-      <td>70.308</td>
-      <td>28.170</td>
+      <td>66.3</td>
+      <td>29.331042</td>
     </tr>
     <tr>
       <th>75</th>
-      <td>71.253</td>
-      <td>27.810</td>
+      <td>67.2</td>
+      <td>29.123187</td>
     </tr>
     <tr>
       <th>76</th>
-      <td>72.189</td>
-      <td>27.414</td>
+      <td>68.1</td>
+      <td>28.885810</td>
     </tr>
     <tr>
       <th>77</th>
-      <td>73.125</td>
-      <td>26.973</td>
+      <td>69.0</td>
+      <td>28.618176</td>
     </tr>
     <tr>
       <th>78</th>
-      <td>74.061</td>
-      <td>26.496</td>
+      <td>69.9</td>
+      <td>28.319428</td>
     </tr>
     <tr>
       <th>79</th>
-      <td>74.997</td>
-      <td>25.983</td>
+      <td>70.8</td>
+      <td>27.988569</td>
     </tr>
     <tr>
       <th>80</th>
-      <td>75.942</td>
-      <td>25.416</td>
+      <td>71.7</td>
+      <td>27.624446</td>
     </tr>
     <tr>
       <th>81</th>
-      <td>76.878</td>
-      <td>24.804</td>
+      <td>72.6</td>
+      <td>27.225723</td>
     </tr>
     <tr>
       <th>82</th>
-      <td>77.814</td>
-      <td>24.138</td>
+      <td>73.5</td>
+      <td>26.790857</td>
     </tr>
     <tr>
       <th>83</th>
-      <td>78.750</td>
-      <td>23.418</td>
+      <td>74.4</td>
+      <td>26.318055</td>
     </tr>
     <tr>
       <th>84</th>
-      <td>79.686</td>
-      <td>22.635</td>
+      <td>75.3</td>
+      <td>25.805232</td>
     </tr>
     <tr>
       <th>85</th>
-      <td>80.622</td>
-      <td>21.789</td>
+      <td>76.2</td>
+      <td>25.249950</td>
     </tr>
     <tr>
       <th>86</th>
-      <td>81.558</td>
-      <td>20.862</td>
+      <td>77.1</td>
+      <td>24.649341</td>
     </tr>
     <tr>
       <th>87</th>
-      <td>82.503</td>
-      <td>19.845</td>
+      <td>78.0</td>
+      <td>24.000000</td>
     </tr>
     <tr>
       <th>88</th>
-      <td>83.439</td>
-      <td>18.729</td>
+      <td>78.9</td>
+      <td>23.297854</td>
     </tr>
     <tr>
       <th>89</th>
-      <td>84.375</td>
-      <td>17.487</td>
+      <td>79.8</td>
+      <td>22.537968</td>
     </tr>
     <tr>
       <th>90</th>
-      <td>85.311</td>
-      <td>16.101</td>
+      <td>80.7</td>
+      <td>21.714281</td>
     </tr>
     <tr>
       <th>91</th>
-      <td>86.247</td>
-      <td>14.526</td>
+      <td>81.6</td>
+      <td>20.819222</td>
     </tr>
     <tr>
       <th>92</th>
-      <td>87.192</td>
-      <td>12.681</td>
+      <td>82.5</td>
+      <td>19.843135</td>
     </tr>
     <tr>
       <th>93</th>
-      <td>88.128</td>
-      <td>10.440</td>
+      <td>83.4</td>
+      <td>18.773385</td>
     </tr>
     <tr>
       <th>94</th>
-      <td>89.064</td>
-      <td>7.443</td>
+      <td>84.3</td>
+      <td>17.592896</td>
     </tr>
     <tr>
       <th>95</th>
-      <td>90.000</td>
-      <td>0.000</td>
+      <td>85.2</td>
+      <td>16.277592</td>
+    </tr>
+    <tr>
+      <th>96</th>
+      <td>86.1</td>
+      <td>14.791552</td>
+    </tr>
+    <tr>
+      <th>97</th>
+      <td>87.0</td>
+      <td>13.076697</td>
+    </tr>
+    <tr>
+      <th>98</th>
+      <td>87.9</td>
+      <td>11.026786</td>
+    </tr>
+    <tr>
+      <th>99</th>
+      <td>88.8</td>
+      <td>8.400000</td>
+    </tr>
+    <tr>
+      <th>100</th>
+      <td>89.7</td>
+      <td>4.232021</td>
+    </tr>
+    <tr>
+      <th>101</th>
+      <td>90.0</td>
+      <td>0.000000</td>
     </tr>
   </tbody>
 </table>
-<p>96 rows × 2 columns</p>
+<p>102 rows × 2 columns</p>
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -968,14 +887,14 @@ Pr_P0  -&gt;  0
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/show_case_7_0.png" src="_images/show_case_7_0.png" />
+<img alt="_images/show_case_6_0.png" src="_images/show_case_6_0.png" />
 </div>
 </div>
 </div>
 <div class="section" id="Example-for-custom-cross-section">
 <h2>Example for custom cross section<a class="headerlink" href="#Example-for-custom-cross-section" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -984,8 +903,8 @@ Pr_P0  -&gt;  0
 <span class="n">r</span> <span class="o">=</span> <span class="mi">20</span>  <span class="c1"># cm</span>
 <span class="n">unit</span> <span class="o">=</span> <span class="s1">&#39;cm&#39;</span>
 
-<span class="n">kreis</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">no</span><span class="p">,</span> <span class="n">long_label</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">r</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span>
-<span class="n">kreis</span><span class="o">.</span><span class="n">add_and_show</span><span class="p">(</span><span class="n">circle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="n">r</span><span class="p">))</span>
+<span class="n">kreis</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">no</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">r</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span>
+<span class="n">kreis</span><span class="o">.</span><span class="n">add_and_show</span><span class="p">(</span><span class="n">Circle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="n">r</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -995,9 +914,36 @@ Pr_P0  -&gt;  0
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 ______________________________
-Pr_test  -&gt;  Kreis
+Pr_test:  Kreis
 -----
-sqrt(-(x - 20.0)**2 + 400.0)
+(0, 40.0, Circle Function (radius=20.00, mid=[20.00, 0.00]))
+-----
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/show_case_8_1.png" src="_images/show_case_8_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">kreis</span><span class="o">.</span><span class="n">add_and_show</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+-----
+(0, 20.0, Circle Function (radius=20.00, mid=[20.00, 0.00]))
+(20.0, 40, Slope Function (k=-1.00, zero=[20.00, 20.00]))
 -----
 </pre></div></div>
 </div>
@@ -1013,7 +959,7 @@ sqrt(-(x - 20.0)**2 + 400.0)
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">kreis</span><span class="o">.</span><span class="n">add_and_show</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
+<span></span><span class="n">kreis</span><span class="o">.</span><span class="n">add_and_show</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="s1">&#39;°slope&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1023,8 +969,8 @@ sqrt(-(x - 20.0)**2 + 400.0)
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 -----
-sqrt(-(x - 20.0)**2 + 400.0)
-(20.0, 20.0)
+(0, 20.0, Circle Function (radius=20.00, mid=[20.00, 0.00]))
+(20.0, 40.0, Slope Function (k=0.58, zero=[20.00, 20.00]))
 -----
 </pre></div></div>
 </div>
@@ -1040,34 +986,6 @@ sqrt(-(x - 20.0)**2 + 400.0)
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">kreis</span><span class="o">.</span><span class="n">add_and_show</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="s1">&#39;°slope&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
------
-sqrt(-(x - 20.0)**2 + 400.0)
-(20.0, 20.0)
-(0.57735, &#39;slope&#39;)
------
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/show_case_11_1.png" src="_images/show_case_11_1.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">kreis</span><span class="o">.</span><span class="n">add_and_show</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span><span class="mf">1.5</span><span class="o">*</span><span class="n">r</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1078,10 +996,9 @@ sqrt(-(x - 20.0)**2 + 400.0)
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 -----
-sqrt(-(x - 20.0)**2 + 400.0)
-(20.0, 20.0)
-(0.57735, &#39;slope&#39;)
-(None, 30.0)
+(0, 20.0, Circle Function (radius=20.00, mid=[20.00, 0.00]))
+(20.0, 25.773502691896248, Slope Function (k=0.58, zero=[20.00, 20.00]))
+(25.773502691896248, 40, Slope Function (k=-0.47, zero=[25.77, 30.00]))
 -----
 </pre></div></div>
 </div>
@@ -1089,7 +1006,7 @@ sqrt(-(x - 20.0)**2 + 400.0)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/show_case_12_1.png" src="_images/show_case_12_1.png" />
+<img alt="_images/show_case_11_1.png" src="_images/show_case_11_1.png" />
 </div>
 </div>
 </div>
@@ -1106,7 +1023,7 @@ sqrt(-(x - 20.0)**2 + 400.0)
         <a href="show_case-kasten.html" class="btn btn-neutral float-right" title="Examples for box shaped profiles" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="api.html" class="btn btn-neutral" title="API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-left" title="API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -1132,27 +1049,16 @@ sqrt(-(x - 20.0)**2 + 400.0)
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
-    
-
-  
-
-  <script type="text/javascript" src="_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

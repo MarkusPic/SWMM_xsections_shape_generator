@@ -10,7 +10,7 @@ from webbrowser import open as open_file
 from numpy import NaN
 from pandas import isna, notna
 
-from .helpers import deg2slope, channel_end, Circle, x, CustomExpr, Slope, Vertical, Horizontal, sqrt, fix
+from .helpers import deg2slope, channel_end, Circle, x, CustomExpr, Slope, Vertical, Horizontal, sqrt
 
 g = 9.81  # m/s^2 Erdbeschleunigung
 ny = 1.31e-6  # m^2/s bei 10°C von Wasser
@@ -128,6 +128,9 @@ class CrossSection:
                     - ``°slope`` : slope as an angle in degree (°)
                     - ``%slope`` : slope in percentage (%)
         """
+        self._df_abs = None
+        self._shape_description = None
+
         if isinstance(x_or_expr, CustomExpr):
             self.shape.append(x_or_expr)
 
@@ -312,7 +315,8 @@ class CrossSection:
             **kwargs: see :py:attr:`~add` keyword arguments
         """
         self.add(*args, **kwargs)
-        print('-' * 5, *self.shape, '-' * 5, sep='\n')
+        # print('-' * 5, *self.shape, '-' * 5, sep='\n')
+        print('-' * 5, *self.shape_description, '-' * 5, sep='\n')
         self.check_point_cloud()
         self.profile_abs_figure()
 
@@ -370,7 +374,7 @@ class CrossSection:
         Returns:
             matplotlib.figure.Figure: plot of the absolute dimensions
         """
-        df = self.df_abs
+        df = self.df_abs.reset_index()
 
         w = int(df['y'].max())
         h = int(df['x'].max())
@@ -383,9 +387,9 @@ class CrossSection:
         xlim = custom_round(w, base)
         ylim = custom_round(h, base)
 
-        other_side = df.copy().sort_values('x', ascending=False)
+        other_side = df.copy().sort_index(ascending=False)
         other_side['y'] *= -1
-        df = df.append(other_side)
+        df = df.append(other_side).reset_index(drop=True)
         ax = df.plot(x='y', y='x', legend=False, zorder=1000000, clip_on=False)
         ax.set_aspect('equal', 'box')
         ax.set_xticks(list(range(-xlim, xlim, base)), minor=False)
@@ -480,6 +484,12 @@ class CrossSection:
             # result list
             function = list()
 
+            def add_slope_to_function(point0, point1):
+                start = point0[0]
+                end = point1[0]
+                yi = Slope.from_points(point0, point1)
+                function.append((start, end, yi))
+
             # boundary condition
             last_point = (0, 0)
             final_point = (self.height, 0)
@@ -503,6 +513,12 @@ class CrossSection:
 
                     if (shape_i[0] is None) or (shape_i[1] is None):
                         # this part is only used as boundary condition
+                        if shape_next == final_point:
+                            start = last_point[0]
+                            end = shape_next[0]
+                            yi = Slope.from_points(last_point, shape_next)
+                            function.append((start, end, yi))
+
                         continue
 
                     if last_point[1] is not None:
@@ -555,13 +571,13 @@ class CrossSection:
                                 end = float(res[0])
                             else:
                                 # multiple results
-                                # TODO: how to handly it
+                                # TODO: how to handle it
                                 end = float(res[0])
 
                         else:
                             raise NotImplementedError('Unknown Input in shape')
 
-                        end = fix(end)
+                        end = float(end)
 
                         if start == end:
                             warnings.warn('unused part of the shape detected. Ignoring this part.')
@@ -573,7 +589,7 @@ class CrossSection:
                     if isinstance(shape_next, tuple) and shape_next[1] is not None:
                         last_point = (end, shape_next[1])
                     else:
-                        last_point = (end, fix(yi.solve(end)))
+                        last_point = (end, float(yi.solve(end)))
 
             # ____________________________________________________________
             self._shape_description = function
@@ -1158,9 +1174,6 @@ class CrossSectionHolding(CrossSection):
 
             Point cloud
         """
-        X = 'x'  # horizontal distance to lowest point (dry weather channel)
-        Y = 'y'  # vertical distance to lowest point (dry weather channel)
-
         # height of the profile = maximum Y coordinate
         height_pr = relative_coordinates.index.max()
 
@@ -1179,6 +1192,9 @@ class CrossSectionHolding(CrossSection):
         cross_section = cls(*args, **kwargs)
 
         if 0:
+            X = 'x'  # horizontal distance to lowest point (dry weather channel)
+            Y = 'y'  # vertical distance to lowest point (dry weather channel)
+
             df = pd.DataFrame(
                 {
                     X: y_df.index,

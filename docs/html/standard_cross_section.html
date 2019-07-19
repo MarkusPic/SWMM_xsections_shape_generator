@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Standard cross section &mdash; SWMM CrossSection shape Generator 0.1 alpha documentation</title>
+  <title>Standard cross section &mdash; SWMM CrossSection shape Generator 0.2.alpha documentation</title>
   
 
   
@@ -17,33 +17,37 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="Examples for box shaped profiles" href="show_case-kasten.html" /> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -57,7 +61,7 @@
             
             
               <div class="version">
-                0.1
+                0.2
               </div>
             
           
@@ -385,7 +389,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">shape_generator</span> <span class="k">import</span> <span class="n">CrossSection</span>
+<span></span><span class="kn">from</span> <span class="nn">shape_generator</span> <span class="k">import</span> <span class="n">CrossSectionHolding</span> <span class="k">as</span> <span class="n">CrossSection</span>
 </pre></div>
 </div>
 </div>
@@ -413,46 +417,54 @@ div.rendered_html tbody tr:hover {
 <p>w_channel (float)</p>
 <div class="section" id="Dictionary">
 <h2>Dictionary<a class="headerlink" href="#Dictionary" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="docutils">
+<table class="docutils align-center">
 <colgroup>
-<col width="16%" />
-<col width="38%" />
-<col width="46%" />
+<col style="width: 16%" />
+<col style="width: 38%" />
+<col style="width: 46%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">english</th>
-<th class="head">deutsch</th>
-<th class="head">description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>english</p></th>
+<th class="head"><p>deutsch</p></th>
+<th class="head"><p>description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>channel</td>
-<td>Trockenwetter-Rinne</td>
-<td>&#160;</td>
+<tbody>
+<tr class="row-even"><td><p>channel</p></td>
+<td><p>Trockenwetter-Rinne</p></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td>roof</td>
-<td>Firste/Decke</td>
-<td>Bogen an der Rohr Firste</td>
+<tr class="row-odd"><td><p>roof</p></td>
+<td><p>Firste/Decke</p></td>
+<td><p>Bogen an der Rohr Firste</p></td>
 </tr>
-<tr class="row-even"><td>wall</td>
-<td>Wand</td>
-<td>Radius der Seitenwand</td>
+<tr class="row-even"><td><p>wall</p></td>
+<td><p>Wand</p></td>
+<td><p>Radius der Seitenwand</p></td>
 </tr>
-<tr class="row-odd"><td>bench</td>
-<td>Berme</td>
-<td>Neigung um der TW-Rinne</td>
+<tr class="row-odd"><td><p>bench</p></td>
+<td><p>Berme</p></td>
+<td><p>Neigung um der TW-Rinne</p></td>
 </tr>
 </tbody>
 </table>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">cs</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="o">.</span><span class="n">standard</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">generator</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+______________________________
+Pr_test:
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
@@ -493,22 +505,22 @@ div.rendered_html tbody tr:hover {
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.00</td>
+      <td>0.0</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.02</td>
+      <td>0.0</td>
+      <td>50.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>200.0</td>
       <td>50.0</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>200.00</td>
-      <td>50.0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>200.02</td>
+      <td>200.0</td>
       <td>0.0</td>
     </tr>
   </tbody>
@@ -538,16 +550,24 @@ div.rendered_html tbody tr:hover {
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">cs</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="o">.</span><span class="n">standard</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span>
                            <span class="n">r_channel</span><span class="o">=</span><span class="mi">35</span><span class="p">)</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">generator</span><span class="p">()</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+______________________________
+Pr_test:
+</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/standard_cross_section_9_0.png" src="_images/standard_cross_section_9_0.png" />
+<img alt="_images/standard_cross_section_9_1.png" src="_images/standard_cross_section_9_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -558,16 +578,24 @@ div.rendered_html tbody tr:hover {
 <span></span><span class="n">cs</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="o">.</span><span class="n">standard</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span>
                            <span class="n">r_channel</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span>
                            <span class="n">pre_bench</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">generator</span><span class="p">()</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+______________________________
+Pr_test:
+</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/standard_cross_section_10_0.png" src="_images/standard_cross_section_10_0.png" />
+<img alt="_images/standard_cross_section_10_1.png" src="_images/standard_cross_section_10_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -579,16 +607,24 @@ div.rendered_html tbody tr:hover {
                            <span class="n">r_channel</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span>
                            <span class="n">pre_bench</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span>
                            <span class="n">slope_bench</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">generator</span><span class="p">()</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+______________________________
+Pr_test:
+</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/standard_cross_section_11_0.png" src="_images/standard_cross_section_11_0.png" />
+<img alt="_images/standard_cross_section_11_1.png" src="_images/standard_cross_section_11_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -600,16 +636,24 @@ div.rendered_html tbody tr:hover {
                            <span class="n">r_channel</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span>
                            <span class="n">h_bench</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
                            <span class="n">slope_bench</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">generator</span><span class="p">()</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+______________________________
+Pr_test:
+</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/standard_cross_section_12_0.png" src="_images/standard_cross_section_12_0.png" />
+<img alt="_images/standard_cross_section_12_1.png" src="_images/standard_cross_section_12_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -621,16 +665,24 @@ div.rendered_html tbody tr:hover {
                            <span class="n">r_channel</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span>
                            <span class="n">w_channel</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
                            <span class="n">slope_bench</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">generator</span><span class="p">()</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+______________________________
+Pr_test:
+</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/standard_cross_section_13_0.png" src="_images/standard_cross_section_13_0.png" />
+<img alt="_images/standard_cross_section_13_1.png" src="_images/standard_cross_section_13_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -640,16 +692,24 @@ div.rendered_html tbody tr:hover {
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">cs</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="o">.</span><span class="n">standard</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span>
                            <span class="n">slope_bench</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">generator</span><span class="p">()</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+______________________________
+Pr_test:
+</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/standard_cross_section_14_0.png" src="_images/standard_cross_section_14_0.png" />
+<img alt="_images/standard_cross_section_14_1.png" src="_images/standard_cross_section_14_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -660,16 +720,24 @@ div.rendered_html tbody tr:hover {
 <span></span><span class="n">cs</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="o">.</span><span class="n">standard</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span>
                            <span class="n">r_channel</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
                            <span class="n">slope_bench</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">generator</span><span class="p">()</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+______________________________
+Pr_test:
+</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/standard_cross_section_15_0.png" src="_images/standard_cross_section_15_0.png" />
+<img alt="_images/standard_cross_section_15_1.png" src="_images/standard_cross_section_15_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -679,16 +747,24 @@ div.rendered_html tbody tr:hover {
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">cs</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="o">.</span><span class="n">standard</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span>
                            <span class="n">r_roof</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">generator</span><span class="p">()</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+______________________________
+Pr_test:
+</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/standard_cross_section_16_0.png" src="_images/standard_cross_section_16_0.png" />
+<img alt="_images/standard_cross_section_16_1.png" src="_images/standard_cross_section_16_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -698,16 +774,24 @@ div.rendered_html tbody tr:hover {
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">cs</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="o">.</span><span class="n">standard</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span>
                            <span class="n">r_roof</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">r_wall</span><span class="o">=</span><span class="mi">110</span><span class="p">)</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">generator</span><span class="p">()</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+______________________________
+Pr_test:
+</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/standard_cross_section_17_0.png" src="_images/standard_cross_section_17_0.png" />
+<img alt="_images/standard_cross_section_17_1.png" src="_images/standard_cross_section_17_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -717,16 +801,24 @@ div.rendered_html tbody tr:hover {
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">cs</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="o">.</span><span class="n">standard</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span>
                            <span class="n">r_roof</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">generator</span><span class="p">()</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+______________________________
+Pr_test:
+</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/standard_cross_section_18_0.png" src="_images/standard_cross_section_18_0.png" />
+<img alt="_images/standard_cross_section_18_1.png" src="_images/standard_cross_section_18_1.png" />
 </div>
 </div>
 <p>You can even make a standard egg cross section</p>
@@ -738,7 +830,6 @@ div.rendered_html tbody tr:hover {
 <span></span><span class="n">r</span> <span class="o">=</span> <span class="mf">30.</span>
 <span class="n">cs</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="o">.</span><span class="n">standard</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">r</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">r</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span>
                            <span class="n">r_channel</span><span class="o">=</span><span class="n">r</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">r_wall</span><span class="o">=</span><span class="mi">3</span> <span class="o">*</span> <span class="n">r</span><span class="p">,</span>  <span class="n">r_wall_bottom</span><span class="o">=</span><span class="mi">3</span> <span class="o">*</span> <span class="n">r</span><span class="p">,</span> <span class="n">r_roof</span><span class="o">=</span><span class="n">r</span><span class="p">,</span> <span class="n">h_bench</span><span class="o">=</span><span class="n">r</span><span class="o">/</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">generator</span><span class="p">()</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -748,14 +839,24 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Warning: unused part of the shape detected. Ignoring this part.
+______________________________
+Pr_test:
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/markus/PycharmProjects/SWMM_xsections_shape_generator/shape_generator/shape_generator.py:583: UserWarning: unused part of the shape detected. Ignoring this part.
+  warnings.warn(&#39;unused part of the shape detected. Ignoring this part.&#39;)
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/standard_cross_section_20_1.png" src="_images/standard_cross_section_20_1.png" />
+<img alt="_images/standard_cross_section_20_2.png" src="_images/standard_cross_section_20_2.png" />
 </div>
 </div>
 <p>The warning occurred because the r_wall part was ignored. However, this input cannot be omitted, otherwise the following will happen.</p>
@@ -770,7 +871,6 @@ Warning: unused part of the shape detected. Ignoring this part.
                            <span class="n">r_wall</span><span class="o">=</span><span class="mi">3</span> <span class="o">*</span> <span class="n">r</span><span class="p">,</span>
                            <span class="n">r_roof</span><span class="o">=</span><span class="n">r</span><span class="p">,</span>
                            <span class="n">h_bench</span><span class="o">=</span><span class="n">r</span><span class="o">/</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">generator</span><span class="p">()</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -780,14 +880,24 @@ Warning: unused part of the shape detected. Ignoring this part.
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Warning: unused part of the shape detected. Ignoring this part.
+______________________________
+Pr_test:
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/markus/PycharmProjects/SWMM_xsections_shape_generator/shape_generator/shape_generator.py:583: UserWarning: unused part of the shape detected. Ignoring this part.
+  warnings.warn(&#39;unused part of the shape detected. Ignoring this part.&#39;)
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/standard_cross_section_22_1.png" src="_images/standard_cross_section_22_1.png" />
+<img alt="_images/standard_cross_section_22_2.png" src="_images/standard_cross_section_22_2.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -801,16 +911,24 @@ Warning: unused part of the shape detected. Ignoring this part.
                            <span class="n">r_wall_bottom</span><span class="o">=</span><span class="mi">3</span> <span class="o">*</span> <span class="n">r</span><span class="p">,</span>
                            <span class="n">r_roof</span><span class="o">=</span><span class="n">r</span><span class="p">,</span>
                            <span class="n">h_bench</span><span class="o">=</span><span class="n">r</span><span class="o">/</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">generator</span><span class="p">()</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+______________________________
+Pr_test:
+</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/standard_cross_section_23_0.png" src="_images/standard_cross_section_23_0.png" />
+<img alt="_images/standard_cross_section_23_1.png" src="_images/standard_cross_section_23_1.png" />
 </div>
 </div>
 </div>
@@ -825,7 +943,7 @@ Warning: unused part of the shape detected. Ignoring this part.
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="show_case-kasten.html" class="btn btn-neutral" title="Examples for box shaped profiles" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="show_case-kasten.html" class="btn btn-neutral float-left" title="Examples for box shaped profiles" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -851,27 +969,16 @@ Warning: unused part of the shape detected. Ignoring this part.
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
-    
-
-  
-
-  <script type="text/javascript" src="_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

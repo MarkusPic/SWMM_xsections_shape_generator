@@ -46,3 +46,7 @@ Main Function
 
 .. autoclass:: shape_generator.shape_generator.CrossSection
     :members:
+
+
+.. autoclass:: shape_generator.shape_generator.CrossSectionHolding
+    :members:

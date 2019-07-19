@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Examples for box shaped profiles &mdash; SWMM CrossSection shape Generator 0.1 alpha documentation</title>
+  <title>Examples for box shaped profiles &mdash; SWMM CrossSection shape Generator 0.2.alpha documentation</title>
   
 
   
@@ -17,34 +17,38 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Standard cross section" href="standard_cross_section.html" />
     <link rel="prev" title="Examples for general profile shapes" href="show_case.html" /> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -58,7 +62,7 @@
             
             
               <div class="version">
-                0.1
+                0.2
               </div>
             
           
@@ -383,7 +387,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">shape_generator</span> <span class="k">import</span> <span class="n">CrossSection</span>
+<span></span><span class="kn">from</span> <span class="nn">shape_generator</span> <span class="k">import</span> <span class="n">CrossSectionHolding</span> <span class="k">as</span> <span class="n">CrossSection</span>
 <span class="n">unit</span> <span class="o">=</span> <span class="s1">&#39;cm&#39;</span>  <span class="c1"># only for the title in the plot</span>
 </pre></div>
 </div>
@@ -408,7 +412,7 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 ______________________________
-Pr_K.60  -&gt;  K.60
+Pr_K.60:
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -438,7 +442,7 @@ Pr_K.60  -&gt;  K.60
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 ______________________________
-Pr_K.R_B  -&gt;  K.R_B
+Pr_K.R_B:
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -468,7 +472,7 @@ Pr_K.R_B  -&gt;  K.R_B
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 ______________________________
-Pr_K.60H_K  -&gt;  K.60H_K
+Pr_K.60H_K:
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -492,100 +496,104 @@ Pr_K.60H_K  -&gt;  K.60H_K
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Pr_K.60H_K_200x100  shape 0.0031 0.0305
-Pr_K.60H_K_200x100        0.0063 0.0429
-Pr_K.60H_K_200x100        0.0094 0.0523
-Pr_K.60H_K_200x100        0.0126 0.0601
-Pr_K.60H_K_200x100        0.0157 0.0668
-Pr_K.60H_K_200x100        0.0188 0.0728
-Pr_K.60H_K_200x100        0.0220 0.0781
-Pr_K.60H_K_200x100        0.0251 0.0831
-Pr_K.60H_K_200x100        0.0282 0.0876
-Pr_K.60H_K_200x100        0.0314 0.0918
-Pr_K.60H_K_200x100        0.0345 0.0957
-Pr_K.60H_K_200x100        0.0377 0.0994
-Pr_K.60H_K_200x100        0.0408 0.1028
-Pr_K.60H_K_200x100        0.0439 0.1061
-Pr_K.60H_K_200x100        0.1879 0.2500
-Pr_K.60H_K_200x100        0.7500 0.2500
-Pr_K.60H_K_200x100        0.7532 0.2500
-Pr_K.60H_K_200x100        0.7563 0.2499
-Pr_K.60H_K_200x100        0.7595 0.2498
-Pr_K.60H_K_200x100        0.7627 0.2497
-Pr_K.60H_K_200x100        0.7658 0.2495
-Pr_K.60H_K_200x100        0.7690 0.2493
-Pr_K.60H_K_200x100        0.7722 0.2490
-Pr_K.60H_K_200x100        0.7753 0.2487
-Pr_K.60H_K_200x100        0.7785 0.2484
-Pr_K.60H_K_200x100        0.7816 0.2480
-Pr_K.60H_K_200x100        0.7848 0.2476
-Pr_K.60H_K_200x100        0.7880 0.2471
-Pr_K.60H_K_200x100        0.7911 0.2466
-Pr_K.60H_K_200x100        0.7943 0.2460
-Pr_K.60H_K_200x100        0.7975 0.2455
-Pr_K.60H_K_200x100        0.8006 0.2448
-Pr_K.60H_K_200x100        0.8038 0.2441
-Pr_K.60H_K_200x100        0.8070 0.2434
-Pr_K.60H_K_200x100        0.8101 0.2427
-Pr_K.60H_K_200x100        0.8133 0.2419
-Pr_K.60H_K_200x100        0.8165 0.2410
-Pr_K.60H_K_200x100        0.8196 0.2401
-Pr_K.60H_K_200x100        0.8228 0.2392
-Pr_K.60H_K_200x100        0.8259 0.2382
-Pr_K.60H_K_200x100        0.8291 0.2372
-Pr_K.60H_K_200x100        0.8323 0.2361
-Pr_K.60H_K_200x100        0.8354 0.2349
-Pr_K.60H_K_200x100        0.8386 0.2338
-Pr_K.60H_K_200x100        0.8418 0.2325
-Pr_K.60H_K_200x100        0.8449 0.2313
-Pr_K.60H_K_200x100        0.8481 0.2299
-Pr_K.60H_K_200x100        0.8513 0.2286
-Pr_K.60H_K_200x100        0.8544 0.2271
-Pr_K.60H_K_200x100        0.8576 0.2257
-Pr_K.60H_K_200x100        0.8608 0.2241
-Pr_K.60H_K_200x100        0.8639 0.2225
-Pr_K.60H_K_200x100        0.8671 0.2209
-Pr_K.60H_K_200x100        0.8703 0.2192
-Pr_K.60H_K_200x100        0.8734 0.2174
-Pr_K.60H_K_200x100        0.8766 0.2156
-Pr_K.60H_K_200x100        0.8797 0.2137
-Pr_K.60H_K_200x100        0.8829 0.2117
-Pr_K.60H_K_200x100        0.8861 0.2097
-Pr_K.60H_K_200x100        0.8892 0.2076
-Pr_K.60H_K_200x100        0.8924 0.2055
-Pr_K.60H_K_200x100        0.8956 0.2032
-Pr_K.60H_K_200x100        0.8987 0.2009
-Pr_K.60H_K_200x100        0.9019 0.1986
-Pr_K.60H_K_200x100        0.9051 0.1961
-Pr_K.60H_K_200x100        0.9082 0.1936
-Pr_K.60H_K_200x100        0.9114 0.1909
-Pr_K.60H_K_200x100        0.9146 0.1882
-Pr_K.60H_K_200x100        0.9177 0.1854
-Pr_K.60H_K_200x100        0.9209 0.1825
-Pr_K.60H_K_200x100        0.9241 0.1795
-Pr_K.60H_K_200x100        0.9272 0.1763
-Pr_K.60H_K_200x100        0.9304 0.1731
-Pr_K.60H_K_200x100        0.9335 0.1697
-Pr_K.60H_K_200x100        0.9367 0.1663
-Pr_K.60H_K_200x100        0.9399 0.1626
-Pr_K.60H_K_200x100        0.9430 0.1589
-Pr_K.60H_K_200x100        0.9462 0.1549
-Pr_K.60H_K_200x100        0.9494 0.1508
-Pr_K.60H_K_200x100        0.9525 0.1466
-Pr_K.60H_K_200x100        0.9557 0.1421
-Pr_K.60H_K_200x100        0.9589 0.1374
-Pr_K.60H_K_200x100        0.9620 0.1325
-Pr_K.60H_K_200x100        0.9652 0.1273
-Pr_K.60H_K_200x100        0.9684 0.1217
-Pr_K.60H_K_200x100        0.9715 0.1159
-Pr_K.60H_K_200x100        0.9747 0.1096
-Pr_K.60H_K_200x100        0.9778 0.1029
-Pr_K.60H_K_200x100        0.9810 0.0956
-Pr_K.60H_K_200x100        0.9842 0.0875
-Pr_K.60H_K_200x100        0.9873 0.0785
-Pr_K.60H_K_200x100        0.9905 0.0682
-Pr_K.60H_K_200x100        0.9937 0.0559
-Pr_K.60H_K_200x100        0.9968 0.0397
+Pr_K.60H_K  shape 0.0031 0.0604
+Pr_K.60H_K        0.0061 0.0848
+Pr_K.60H_K        0.0092 0.1034
+Pr_K.60H_K        0.0122 0.1188
+Pr_K.60H_K        0.0153 0.1320
+Pr_K.60H_K        0.0184 0.1438
+Pr_K.60H_K        0.0214 0.1546
+Pr_K.60H_K        0.0245 0.1642
+Pr_K.60H_K        0.0276 0.1732
+Pr_K.60H_K        0.0306 0.1816
+Pr_K.60H_K        0.0337 0.1894
+Pr_K.60H_K        0.0367 0.1966
+Pr_K.60H_K        0.0398 0.2036
+Pr_K.60H_K        0.0429 0.2100
+Pr_K.60H_K        0.0439 0.2122
+Pr_K.60H_K        0.1879 0.5000
+Pr_K.60H_K        0.7500 0.5000
+Pr_K.60H_K        0.7531 0.5000
+Pr_K.60H_K        0.7561 0.4998
+Pr_K.60H_K        0.7592 0.4996
+Pr_K.60H_K        0.7622 0.4994
+Pr_K.60H_K        0.7653 0.4990
+Pr_K.60H_K        0.7684 0.4986
+Pr_K.60H_K        0.7714 0.4982
+Pr_K.60H_K        0.7745 0.4976
+Pr_K.60H_K        0.7776 0.4970
+Pr_K.60H_K        0.7806 0.4962
+Pr_K.60H_K        0.7837 0.4954
+Pr_K.60H_K        0.7867 0.4946
+Pr_K.60H_K        0.7898 0.4936
+Pr_K.60H_K        0.7929 0.4926
+Pr_K.60H_K        0.7959 0.4914
+Pr_K.60H_K        0.7990 0.4904
+Pr_K.60H_K        0.8021 0.4890
+Pr_K.60H_K        0.8051 0.4876
+Pr_K.60H_K        0.8082 0.4862
+Pr_K.60H_K        0.8112 0.4848
+Pr_K.60H_K        0.8143 0.4832
+Pr_K.60H_K        0.8174 0.4816
+Pr_K.60H_K        0.8204 0.4798
+Pr_K.60H_K        0.8235 0.4780
+Pr_K.60H_K        0.8265 0.4760
+Pr_K.60H_K        0.8296 0.4740
+Pr_K.60H_K        0.8327 0.4718
+Pr_K.60H_K        0.8357 0.4696
+Pr_K.60H_K        0.8388 0.4674
+Pr_K.60H_K        0.8419 0.4650
+Pr_K.60H_K        0.8449 0.4626
+Pr_K.60H_K        0.8480 0.4600
+Pr_K.60H_K        0.8510 0.4574
+Pr_K.60H_K        0.8541 0.4546
+Pr_K.60H_K        0.8572 0.4518
+Pr_K.60H_K        0.8602 0.4488
+Pr_K.60H_K        0.8633 0.4458
+Pr_K.60H_K        0.8663 0.4426
+Pr_K.60H_K        0.8694 0.4392
+Pr_K.60H_K        0.8725 0.4358
+Pr_K.60H_K        0.8755 0.4324
+Pr_K.60H_K        0.8786 0.4288
+Pr_K.60H_K        0.8817 0.4250
+Pr_K.60H_K        0.8847 0.4212
+Pr_K.60H_K        0.8878 0.4172
+Pr_K.60H_K        0.8908 0.4132
+Pr_K.60H_K        0.8939 0.4088
+Pr_K.60H_K        0.8970 0.4044
+Pr_K.60H_K        0.9000 0.4000
+Pr_K.60H_K        0.9031 0.3952
+Pr_K.60H_K        0.9062 0.3904
+Pr_K.60H_K        0.9092 0.3854
+Pr_K.60H_K        0.9123 0.3804
+Pr_K.60H_K        0.9153 0.3750
+Pr_K.60H_K        0.9184 0.3696
+Pr_K.60H_K        0.9215 0.3638
+Pr_K.60H_K        0.9245 0.3580
+Pr_K.60H_K        0.9276 0.3520
+Pr_K.60H_K        0.9306 0.3456
+Pr_K.60H_K        0.9337 0.3392
+Pr_K.60H_K        0.9368 0.3324
+Pr_K.60H_K        0.9398 0.3254
+Pr_K.60H_K        0.9429 0.3180
+Pr_K.60H_K        0.9460 0.3104
+Pr_K.60H_K        0.9490 0.3026
+Pr_K.60H_K        0.9521 0.2944
+Pr_K.60H_K        0.9551 0.2858
+Pr_K.60H_K        0.9582 0.2768
+Pr_K.60H_K        0.9613 0.2674
+Pr_K.60H_K        0.9643 0.2574
+Pr_K.60H_K        0.9674 0.2470
+Pr_K.60H_K        0.9705 0.2358
+Pr_K.60H_K        0.9735 0.2240
+Pr_K.60H_K        0.9766 0.2114
+Pr_K.60H_K        0.9796 0.1976
+Pr_K.60H_K        0.9827 0.1828
+Pr_K.60H_K        0.9858 0.1664
+Pr_K.60H_K        0.9888 0.1478
+Pr_K.60H_K        0.9919 0.1264
+Pr_K.60H_K        0.9949 0.1000
+Pr_K.60H_K        0.9980 0.0630
 </pre></div></div>
 </div>
 </div>
@@ -601,7 +609,7 @@ Pr_K.60H_K_200x100        0.9968 0.0397
         <a href="standard_cross_section.html" class="btn btn-neutral float-right" title="Standard cross section" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="show_case.html" class="btn btn-neutral" title="Examples for general profile shapes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="show_case.html" class="btn btn-neutral float-left" title="Examples for general profile shapes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -627,27 +635,16 @@ Pr_K.60H_K_200x100        0.9968 0.0397
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
-    
-
-  
-
-  <script type="text/javascript" src="_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

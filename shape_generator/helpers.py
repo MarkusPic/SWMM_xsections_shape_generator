@@ -72,6 +72,7 @@ def channel_end(r, end_degree):
 
 
 def sqrt(i):
+    """ Return the square root of x. """
     return i ** (1 / 2)
 
 
@@ -98,15 +99,6 @@ def combine_input_files(shape_path, delete_original=False):
                 remove(in_fn)
     print('Files are combined and originals {}deleted.'.format('' if delete_original else 'NOT '))
 
-
-def fix(x):
-    return float(x)
-    # return round(x, accuracy)
-
-
-####################################################################################################################
-# testing new functions
-####################################################################################################################
 
 ####################################################################################################################
 class CustomExpr:
@@ -171,23 +163,37 @@ class Slope(CustomExpr):
         return f'Slope Function (k={self.slope:0.2f}, zero=[{self.x0:0.2f}, {self.y0:0.2f}])'
 
     def set_start_point(self, point):
+        """set start point"""
         x0, y0 = point
         self.x0 = x0
         self.y0 = y0
 
     def set_end_point(self, point):
+        """set end point"""
         x1, y1 = point
         self.x1 = x1
         self.y1 = y1
 
     def expr(self):
+        """get sympy expression"""
         return self.y0 + (x - self.x0) / self.slope
 
     def solve(self, i):
+        """get y value"""
         return self.y0 + (i - self.x0) / self.slope
 
     @classmethod
     def from_points(cls, start, end):
+        """
+        set the slope by giving the start and end point
+
+        Args:
+            start ():
+            end ():
+
+        Returns:
+
+        """
         x0, f0 = start
         x1, f1 = end
         if abs(f0 - f1) < 1.0e-6:
@@ -202,12 +208,15 @@ class Slope(CustomExpr):
         return new_slope
 
     def end_point(self):
+        """get the end point"""
         return self.x1, self.y1
 
     def length(self, i0, i1):
+        """get shape length between two values"""
         return sqrt((self.solve(i0) - self.solve(i1)) ** 2 + (i0 - i1) ** 2)
 
     def area(self, i0, i1):
+        """get shape area between two values"""
         return (self.solve(i0) + self.solve(i1)) / 2 * np.abs(i0 - i1)
 
 

@@ -2,6 +2,14 @@ from . import Circle, CrossSection
 
 
 class EggSection(CrossSection):
+    """
+    .. figure:: images/ei.gif
+            :align: center
+            :alt: egg
+            :figclass: align-center
+
+            Egg Section (DWA-A 110, 2006)
+    """
     def __init__(self, r, label=None, description=None):
         R = 3 * r
         roh = r / 2
@@ -22,6 +30,14 @@ class EggSection(CrossSection):
 
 
 class CircleSection(CrossSection):
+    """
+    .. figure:: images/kreis1.gif
+            :align: center
+            :alt: circle
+            :figclass: align-center
+
+            Circle Section (DWA-A 110, 2006)
+    """
     def __init__(self, r, label=None, description=None):
         d = 2 * r
         height = d
