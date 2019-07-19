@@ -11,7 +11,7 @@ setup(
     name='SWMM_xsections_shape_generator',
     version='0.2',
     packages=['shape_generator'],
-    url='https://github.com/tugraz-sww/SWMM_xsections_shape_generator',
+    url='https://github.com/MarkusPic/SWMM_xsections_shape_generator',
     license='MIT',
     author='Markus Pichler',
     author_email='markus.pichler@tugraz.at',
