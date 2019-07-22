@@ -23,10 +23,10 @@ class CrossSection:
     A Class that should help to generate custom cross section shapes for the SWMM software.
 
     Attributes:
-        accuracy (int): number of decimal points to use for the export
+        label (str): main name/label/number of the cross section
+        description (Optional[str]): optional description of the cross section
         shape (list): descriptions of the cross section as commands in a list
-        _shape_description (list): points and functions to describe the cross section
-        _df_abs (pandas.DataFrame): maximum 100 points to describe the cross section in absolute values
+        accuracy (int): number of decimal points to use for the export
         working_directory (str): directory where the files get saved
         unit (str): unit of entered values
         double (bool): if the cross section two separate cross sections
@@ -37,10 +37,10 @@ class CrossSection:
 
         Args:
             label (str): main name/label/number of the cross section
-            description (Optional[str]): optional longer name of the cross section
+            description (Optional[str]): optional description of the cross section
             height (float): absolute height of the CS
-            width (Optional[float]): absolute width of the CS (optional) can be calculated
-            working_directory (str): directory where the files get saved
+            width (Optional[float]): absolute width of the CS (optional) can be estimated
+            working_directory (str): directory where the files are saved
             unit (Optional[str]): enter unit to add the unit in the plots
         """
         self.label = label
@@ -51,19 +51,21 @@ class CrossSection:
         self._height = height
         self._width = width
         self.shape = list()
-        self._shape_description = None  # NEW
+        self._shape_description = None  # functions to describe the cross section
         self.accuracy = 4
         self.working_directory = working_directory
         self.unit = unit
         self.double = False
 
-        print('_' * 30)
-
-        print(self)
-
+        # _______________________________
         # Profile data
         self._df_abs = None
 
+        # _______________________________
+        print('_' * 30)
+        print(self)
+
+        # _______________________________
         # calculate stationary flow
         self._area_v = None
         self._r_hyd_v = None
@@ -82,10 +84,22 @@ class CrossSection:
 
     @property
     def height(self):
+        """
+        absolute height of the CS
+
+        Returns:
+            float: absolute height of the CS
+        """
         return self._height
 
     @property
     def width(self):
+        """
+        absolute width of the CS
+
+        Returns:
+            float: absolute width of the CS
+        """
         return self._width
 
     @property
@@ -112,7 +126,7 @@ class CrossSection:
 
 
         Args:
-            x_or_expr (Optional[float , sympy.Expr , None, CustomExpr]):
+            x_or_expr (Optional[float , None, CustomExpr]):
 
                 - :obj:`float` : x coordinate or x-axis boundary or slope if any str keyword is used in argument ``y``
                 - :obj:`CustomExpr` : Expression/function for the cross section part
@@ -164,6 +178,9 @@ class CrossSection:
         Args:
             max_number_points (int): number of points to describe the shape of the cross section
                                      100 is the limit of points which can be used as a SWMM shape
+
+        Returns:
+            pandas.DataFrame: absolute point coordinates
         """
         if self._df_abs is None:
             # number of expressions used in shape
@@ -480,6 +497,12 @@ class CrossSection:
     ####################################################################################################################
     @property
     def shape_description(self):
+        """
+        functions to describe the cross section
+
+        Returns:
+
+        """
         if self._shape_description is None:
             # result list
             function = list()
@@ -771,6 +794,11 @@ class CrossSection:
 ########################################################################################################################
 ########################################################################################################################
 class CrossSectionHolding(CrossSection):
+    """
+    Attributes:
+        add_dim (bool): add the dimension (height x width) to the label and output filename
+        add_dn (bool): add the channel diameter (DN ...) to the label and output filename
+    """
     def __init__(self, label, add_dim=False, add_dn=None, **kwargs):
         """Initialise the cross section class
 

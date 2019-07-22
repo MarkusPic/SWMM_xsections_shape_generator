@@ -180,10 +180,10 @@
 <span class="sd">    A Class that should help to generate custom cross section shapes for the SWMM software.</span>
 
 <span class="sd">    Attributes:</span>
-<span class="sd">        accuracy (int): number of decimal points to use for the export</span>
+<span class="sd">        label (str): main name/label/number of the cross section</span>
+<span class="sd">        description (Optional[str]): optional description of the cross section</span>
 <span class="sd">        shape (list): descriptions of the cross section as commands in a list</span>
-<span class="sd">        _shape_description (list): points and functions to describe the cross section</span>
-<span class="sd">        _df_abs (pandas.DataFrame): maximum 100 points to describe the cross section in absolute values</span>
+<span class="sd">        accuracy (int): number of decimal points to use for the export</span>
 <span class="sd">        working_directory (str): directory where the files get saved</span>
 <span class="sd">        unit (str): unit of entered values</span>
 <span class="sd">        double (bool): if the cross section two separate cross sections</span>
@@ -194,10 +194,10 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            label (str): main name/label/number of the cross section</span>
-<span class="sd">            description (Optional[str]): optional longer name of the cross section</span>
+<span class="sd">            description (Optional[str]): optional description of the cross section</span>
 <span class="sd">            height (float): absolute height of the CS</span>
-<span class="sd">            width (Optional[float]): absolute width of the CS (optional) can be calculated</span>
-<span class="sd">            working_directory (str): directory where the files get saved</span>
+<span class="sd">            width (Optional[float]): absolute width of the CS (optional) can be estimated</span>
+<span class="sd">            working_directory (str): directory where the files are saved</span>
 <span class="sd">            unit (Optional[str]): enter unit to add the unit in the plots</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
@@ -208,19 +208,21 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_height</span> <span class="o">=</span> <span class="n">height</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_width</span> <span class="o">=</span> <span class="n">width</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_shape_description</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># NEW</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shape_description</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># functions to describe the cross section</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="mi">4</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">=</span> <span class="n">working_directory</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="o">=</span> <span class="n">unit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">double</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;_&#39;</span> <span class="o">*</span> <span class="mi">30</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-
+        <span class="c1"># _______________________________</span>
         <span class="c1"># Profile data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_df_abs</span> <span class="o">=</span> <span class="kc">None</span>
 
+        <span class="c1"># _______________________________</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;_&#39;</span> <span class="o">*</span> <span class="mi">30</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># _______________________________</span>
         <span class="c1"># calculate stationary flow</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_area_v</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_r_hyd_v</span> <span class="o">=</span> <span class="kc">None</span>
@@ -239,10 +241,22 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        absolute height of the CS</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: absolute height of the CS</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_height</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        absolute width of the CS</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: absolute width of the CS</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_width</span>
 
     <span class="nd">@property</span>
@@ -269,7 +283,7 @@
 
 
 <span class="sd">        Args:</span>
-<span class="sd">            x_or_expr (Optional[float , sympy.Expr , None, CustomExpr]):</span>
+<span class="sd">            x_or_expr (Optional[float , None, CustomExpr]):</span>
 
 <span class="sd">                - :obj:`float` : x coordinate or x-axis boundary or slope if any str keyword is used in argument ``y``</span>
 <span class="sd">                - :obj:`CustomExpr` : Expression/function for the cross section part</span>
@@ -321,6 +335,9 @@
 <span class="sd">        Args:</span>
 <span class="sd">            max_number_points (int): number of points to describe the shape of the cross section</span>
 <span class="sd">                                     100 is the limit of points which can be used as a SWMM shape</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pandas.DataFrame: absolute point coordinates</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_df_abs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># number of expressions used in shape</span>
@@ -637,6 +654,12 @@
     <span class="c1">####################################################################################################################</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">shape_description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        functions to describe the cross section</span>
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shape_description</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># result list</span>
             <span class="n">function</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -928,6 +951,11 @@
 <span class="c1">########################################################################################################################</span>
 <span class="c1">########################################################################################################################</span>
 <div class="viewcode-block" id="CrossSectionHolding"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSectionHolding">[docs]</a><span class="k">class</span> <span class="nc">CrossSectionHolding</span><span class="p">(</span><span class="n">CrossSection</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        add_dim (bool): add the dimension (height x width) to the label and output filename</span>
+<span class="sd">        add_dn (bool): add the channel diameter (DN ...) to the label and output filename</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="CrossSectionHolding.__init__"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSectionHolding.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">add_dim</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_dn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialise the cross section class</span>
 

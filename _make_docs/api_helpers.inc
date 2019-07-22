@@ -9,10 +9,10 @@ Helper Functions
     deg2slope
     channel_end
     combine_input_files
-    shape_generator.helpers.Slope
-    shape_generator.helpers.Vertical
-    shape_generator.helpers.Horizontal
-    shape_generator.helpers.Circle
+    Slope
+    Vertical
+    Horizontal
+    Circle
 
 .. automodule:: shape_generator.helpers
     :members: csv, deg2slope

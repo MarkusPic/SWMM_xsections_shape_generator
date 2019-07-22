@@ -3,6 +3,8 @@ from . import Circle, CrossSection
 
 class EggSection(CrossSection):
     """
+    egg shaped cross section
+
     .. figure:: images/ei.gif
             :align: center
             :alt: egg
@@ -31,6 +33,8 @@ class EggSection(CrossSection):
 
 class CircleSection(CrossSection):
     """
+    circle cross section
+
     .. figure:: images/kreis1.gif
             :align: center
             :alt: circle

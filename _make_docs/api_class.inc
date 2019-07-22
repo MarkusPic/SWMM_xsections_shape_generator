@@ -1,28 +1,36 @@
 Main Function
---------------------
+-----------------
 
-.. currentmodule:: shape_generator.shape_generator.CrossSection
+CrossSection
+================
+
+.. currentmodule:: shape_generator.shape_generator
 
 .. rubric:: Class
 
 .. autosummary::
-    shape_generator.shape_generator.CrossSection
+    CrossSection
 
 .. rubric:: Methods
 
+.. currentmodule:: shape_generator.shape_generator.CrossSection
+
 .. autosummary::
     __init__
+    height
+    width
     add
-    check_for_slopes
-    create_point_cloud
+    df_abs
+    get_width
+    set_double_cross_section
     check_point_cloud
     df_rel
-    cross_section_area
+    df_rel_fill_swmm
+    shape_description
 
 .. rubric:: Macros
 
 .. autosummary::
-    generator
     make
     add_and_show
 
@@ -35,6 +43,37 @@ Main Function
     dat_file
     inp_string
     input_file
+
+.. rubric:: Shape parameters
+
+.. autosummary::
+    b_w_t
+    l_u_t
+    area_t
+    r_hyd_t
+    area_v
+    r_hyd_v
+    l_u_v
+    velocity_t
+    velocity_v
+    flow_t
+    flow_v
+    h_t
+
+CrossSectionHolding
+=======================
+
+.. rubric:: Class
+
+.. currentmodule:: shape_generator.shape_generator
+
+.. autosummary::
+    CrossSectionHolding
+
+.. currentmodule:: shape_generator.shape_generator.CrossSectionHolding
+
+.. autosummary::
+    __init__
 
 .. rubric:: Pre defined Cross Sections
 

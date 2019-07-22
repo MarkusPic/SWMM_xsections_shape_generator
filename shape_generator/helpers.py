@@ -222,7 +222,15 @@ class Slope(CustomExpr):
 
 ####################################################################################################################
 class Vertical(CustomExpr):
+    """
+    function of a vertical line
+    """
     def __init__(self, y):
+        """
+
+        Args:
+            y (float): y value of the vertical line
+        """
         self.y = y
         CustomExpr.__init__(self)
 
@@ -244,6 +252,9 @@ class Vertical(CustomExpr):
 
 ####################################################################################################################
 class Horizontal(CustomExpr):
+    """
+    function of a horizontal line
+    """
     def __init__(self):
         CustomExpr.__init__(self)
         self.x = None
@@ -298,7 +309,27 @@ class Horizontal(CustomExpr):
 
 ####################################################################################################################
 class Circle(CustomExpr):
+    """
+    function of a circle
+
+    .. figure:: images/kreis.gif
+        :align: center
+        :alt: circle
+        :figclass: align-center
+
+        Circle
+    """
     def __init__(self, r, x_m=0, y_m=0, clockwise=False):
+        """
+
+        Args:
+            r (float): radius
+            x_m (float): x axis value of the mid point
+            y_m (float): y axis value of the mid point
+            clockwise (bool): whether the circle is clockwise or anticlockwise
+
+        """
+
         self.r = float(r)
         self.x_m = float(x_m)
         self.y_m = float(y_m)
@@ -313,21 +344,9 @@ class Circle(CustomExpr):
         """
         get function/expression of a circle with a given mid point
 
-        Args:
-            r (float): radius
-            x_m (float): x axis value of the mid point
-            y_m (float): y axis value of the mid point
-            clockwise (bool): whether the circle is clockwise or anticlockwise
 
         Returns:
             sympy.core.expr.Expr: function of the circle
-
-        .. figure:: images/kreis.gif
-            :align: center
-            :alt: circle
-            :figclass: align-center
-
-            Circle
         """
         return sy.sqrt(sy.Float(self.r) ** 2 - (x - sy.Float(self.x_m)) ** 2) * (-1 if self.clockwise else 1) + \
                sy.Float(self.y_m)

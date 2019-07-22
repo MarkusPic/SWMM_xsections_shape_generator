@@ -1,12 +1,20 @@
 Examples Classes
 --------------------
 
-.. autosummary::
-    shape_generator.example_cross_sections.CircleSection
-    shape_generator.example_cross_sections.EggSection
+.. currentmodule:: shape_generator.example_cross_sections
 
-.. autoclass:: shape_generator.example_cross_sections.CircleSection
+.. autosummary::
+    CircleSection
+    EggSection
+
+CircleSection
+=======================
+
+.. autoclass:: CircleSection
     :members:
 
-.. autoclass:: shape_generator.example_cross_sections.EggSection
+EggSection
+=======================
+
+.. autoclass:: EggSection
     :members:
