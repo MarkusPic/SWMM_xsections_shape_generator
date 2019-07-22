@@ -170,6 +170,14 @@
 <span class="sd">            Egg Section (DWA-A 110, 2006)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="EggSection.__init__"><a class="viewcode-back" href="../../api.html#shape_generator.example_cross_sections.EggSection.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;init</span>
+<span class="sd">        egg shaped cross section</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            r (float): radius of the egg</span>
+<span class="sd">            label (str): name/label/number of the cross section; dafault = &quot;Ei &lt;width&gt;/&lt;height&gt;&quot;</span>
+<span class="sd">            description (str): optional description of the cross section</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">R</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">r</span>
         <span class="n">roh</span> <span class="o">=</span> <span class="n">r</span> <span class="o">/</span> <span class="mi">2</span>
         <span class="n">height</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="mi">3</span>
@@ -200,6 +208,14 @@
 <span class="sd">            Circle Section (DWA-A 110, 2006)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="CircleSection.__init__"><a class="viewcode-back" href="../../api.html#shape_generator.example_cross_sections.CircleSection.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;init</span>
+<span class="sd">        circle cross section</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            r (float): radius of the circle</span>
+<span class="sd">            label (str): name/label/number of the cross section; dafault = &quot;DN &lt;diameter&gt;&quot;</span>
+<span class="sd">            description (str): optional description of the cross section</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">r</span>
         <span class="n">height</span> <span class="o">=</span> <span class="n">d</span>
         <span class="n">width</span> <span class="o">=</span> <span class="n">d</span>

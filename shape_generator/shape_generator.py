@@ -23,7 +23,7 @@ class CrossSection:
     A Class that should help to generate custom cross section shapes for the SWMM software.
 
     Attributes:
-        label (str): main name/label/number of the cross section
+        label (str): name/label/number of the cross section
         description (Optional[str]): optional description of the cross section
         shape (list): descriptions of the cross section as commands in a list
         accuracy (int): number of decimal points to use for the export
@@ -71,10 +71,7 @@ class CrossSection:
         self._r_hyd_v = None
         self._l_u_v = None
         self._r_hyd_v = None
-        self._Q_v = None
-        self._Q_v_params = dict(slope=None, k=None)
         self._v_v = None
-        self._v_v_params = dict(slope=None, k=None)
 
     def __repr__(self):
         return str(self)
@@ -316,7 +313,7 @@ class CrossSection:
             print(self.df_abs)
         self.check_point_cloud()
         if plot:
-            self.profile_abs_plot(show, file_format='pdf')
+            self.profile_abs_plot(auto_open=show, file_format='pdf')
         self.input_file()
 
     def add_and_show(self, *args, **kwargs):
@@ -498,10 +495,10 @@ class CrossSection:
     @property
     def shape_description(self):
         """
-        functions to describe the cross section
+        list of functions to describe the cross section shape
 
         Returns:
-
+            list: description of the cross section shape
         """
         if self._shape_description is None:
             # result list
@@ -620,6 +617,16 @@ class CrossSection:
         return self._shape_description
 
     def b_w_t(self, hi):
+        """
+        width of the cross section at a certain height
+        (Wasseroberflächenbreite im teilgefüllten Querschnitt)
+
+        Args:
+            hi (float | numpy.ndarray): a certain height
+
+        Returns:
+            float | numpy.ndarray: width at the certain height
+        """
         if isinstance(hi, np.ndarray):
             w = np.array([np.NaN] * hi.size)
             # w = hi.copy()
@@ -635,6 +642,16 @@ class CrossSection:
                     return f.solve(hi) * 2
 
     def l_u_t(self, hi):
+        """
+        wetted perimeter in the partially filled cross section at a certain water level height
+        (benetzter Umfang im teilgefüllten Querschnitt)
+
+        Args:
+            hi (float | numpy.ndarray): a certain height
+
+        Returns:
+            float | numpy.ndarray: wetted perimeter at the certain height
+        """
         if isinstance(hi, np.ndarray):
             l = np.array([0.] * hi.size)
 
@@ -658,7 +675,30 @@ class CrossSection:
 
         return l * 2
 
+    @property
+    def l_u_v(self):
+        """
+        wetted perimeter of the full filled cross section
+        (benetzter Umfang im vollgefüllten Querschnitt)
+
+        Returns:
+            float | numpy.ndarray: wetted perimeter
+        """
+        if self._l_u_v is None:
+            self._l_u_v = self.l_u_t(self.height)
+        return self._l_u_v
+
     def area_t(self, hi):
+        """
+        flow area in the partially filled cross section at a certain water level height
+        (Fließquerschnitt im teilgefüllten Querschnitt)
+
+        Args:
+            hi (float | numpy.ndarray): a certain height
+
+        Returns:
+            float | numpy.ndarray: flow area at the certain height
+        """
         if isinstance(hi, np.ndarray):
             a = np.array([0.] * hi.size)
 
@@ -682,46 +722,78 @@ class CrossSection:
 
         return a * 2
 
-    def r_hyd_t(self, hi):
-        return self.area_t(hi) / self.l_u_t(hi)
-
     @property
     def area_v(self):
+        """
+        flow area of the full filled cross section
+        (Fließquerschnitt im vollgefüllten Querschnitt)
+
+        Returns:
+            float | numpy.ndarray: flow area
+        """
         if self._area_v is None:
             self._area_v = self.area_t(self.height)
         return self._area_v
 
+    def r_hyd_t(self, hi):
+        """
+        hydraulic radius in the partially filled cross section at a certain water level height
+        (hydraulischer Radius im teilgefüllten Querschnitt)
+
+        Args:
+            hi (float | numpy.ndarray): a certain height
+
+        Returns:
+            float | numpy.ndarray: hydraulic radius at the certain height
+        """
+        return self.area_t(hi) / self.l_u_t(hi)
+
     @property
     def r_hyd_v(self):
+        """
+        hydraulic radius of the full filled cross section
+        (hydraulischer Radius im vollgefüllten Querschnitt)
+
+        Returns:
+            float | numpy.ndarray: hydraulic radius
+        """
         if self._r_hyd_v is None:
             self._r_hyd_v = self.area_v / self.l_u_v
         return self._r_hyd_v
 
-    @property
-    def l_u_v(self):
-        if self._l_u_v is None:
-            self._l_u_v = self.l_u_t(self.height)
-        return self._l_u_v
-
     ####################################################################################################################
-    @staticmethod
-    def _velocity(slope, k, r_hyd):
+    def velocity_v(self, slope, k):
         """
         calculate velocity in partially filled sewer channel
 
         Args:
             slope (float): ablosute slope in m/m
             k (float): Betriebliche Rauhigkeit in mm
-            r_hyd (float): hydraulic radius in mm
 
         Returns:
-            float: velocity in m/s
+            float: full filling velocity in m/s
+
+        References:
+            DWA-A 110 Section 4.1.1 Vollfüllung
         """
-        r_hyd /= 1000
-        J = slope  # / 1000
-        k = k / 1000
-        return (-2 * np.log10(2.51 * ny / (4 * r_hyd * sqrt(2 * g * J)) + k / (14.84 * r_hyd)) * sqrt(
-            2 * g * 4 * r_hyd * J))
+        if self._v_v is None:
+            self._v_v = dict()
+
+        if k not in self._v_v:
+            self._v_v[k] = dict()
+
+        if slope not in self._v_v[k]:
+            self._v_v[k][slope] = None
+
+        if self._v_v[k][slope] is None:
+            r_hyd = self.r_hyd_v / 1000  # from mm to m
+            J = slope  # / 1000
+            k = k / 1000  # from mm to m
+            self._v_v[k][slope] = (
+                    -2 * np.log10(2.51 * ny / (4 * r_hyd * sqrt(2 * g * J)) + k / (14.84 * r_hyd)) * sqrt(
+                2 * g * 4 * r_hyd * J))
+
+        return self._v_v[k][slope]
 
     def velocity_t(self, hi, slope, k):
         """
@@ -734,26 +806,11 @@ class CrossSection:
 
         Returns:
             float: velocity in m/s
+
+        References:
+            DWA-A 110 Section 4.1.2 Teilfüllung
         """
-        return self._velocity(slope, k, self.r_hyd_t(hi))
-
-    def velocity_v(self, slope, k):
-        """
-        calculate velocity in partially filled sewer channel
-
-        Args:
-            slope (float): ablosute slope in m/m
-            k (float): Betriebliche Rauhigkeit in mm
-
-        Returns:
-            float: full filling velocity in m/s
-        """
-        new_v_v_params = dict(slope=slope, k=k)
-        if self._v_v is None or self._v_v_params != new_v_v_params:
-            self._v_v_params = new_v_v_params
-            self._v_v = self.velocity_t(self.height, slope, k)
-
-        return self._v_v
+        return (self.r_hyd_t(hi) / self.r_hyd_v) ** 0.625 * self.velocity_v(slope, k)
 
     def flow_t(self, hi, slope, k):
         """
@@ -772,7 +829,7 @@ class CrossSection:
         """
 
         Args:
-            slope (float): ablosute slope in m/m
+            slope (float): absolute slope in m/m
             k (float): Betriebliche Rauhigkeit in mm
 
         Returns:
@@ -782,6 +839,17 @@ class CrossSection:
 
     ####################################################################################################################
     def h_t(self, Q_t, slope, k):
+        """
+        get the height of the water level based on the known flow
+
+        Args:
+            Q_t (float): flow in L/s
+            slope (float): absolute slope in m/m
+            k (float): Betriebliche Rauhigkeit in mm
+
+        Returns:
+            float: height of the water level
+        """
         # hi = '?'
         # self.flow_t(hi, slope, k)
         # self.flow_v(slope, k)
@@ -799,18 +867,19 @@ class CrossSectionHolding(CrossSection):
         add_dim (bool): add the dimension (height x width) to the label and output filename
         add_dn (bool): add the channel diameter (DN ...) to the label and output filename
     """
+
     def __init__(self, label, add_dim=False, add_dn=None, **kwargs):
         """Initialise the cross section class
 
         Args:
-            label (str): main name/label/number of the cross section
+            label (str): name/label/number of the cross section
             add_dim (bool): if the dimensions should be added to :py:attr:`~out_filename` used for the export
             add_dn (Optional[float]): if the channel dimension should be added to :py:attr:`~out_filename`
                                     used for the export enter the diameter as float
             **kwargs (object): see :py:attr:`~__init__`
 
         Keyword Args:
-            description (Optional[str]): optional longer name of the cross section
+            description (Optional[str]): optional description of the cross section
             height (float): absolute height of the CS
             width (Optional[float]): absolute width of the CS (optional) can be calculated
             working_directory (str): directory where the files get saved

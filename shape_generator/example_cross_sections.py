@@ -13,6 +13,14 @@ class EggSection(CrossSection):
             Egg Section (DWA-A 110, 2006)
     """
     def __init__(self, r, label=None, description=None):
+        """init
+        egg shaped cross section
+
+        Args:
+            r (float): radius of the egg
+            label (str): name/label/number of the cross section; dafault = "Ei <width>/<height>"
+            description (str): optional description of the cross section
+        """
         R = 3 * r
         roh = r / 2
         height = r * 3
@@ -43,6 +51,14 @@ class CircleSection(CrossSection):
             Circle Section (DWA-A 110, 2006)
     """
     def __init__(self, r, label=None, description=None):
+        """init
+        circle cross section
+
+        Args:
+            r (float): radius of the circle
+            label (str): name/label/number of the cross section; dafault = "DN <diameter>"
+            description (str): optional description of the cross section
+        """
         d = 2 * r
         height = d
         width = d

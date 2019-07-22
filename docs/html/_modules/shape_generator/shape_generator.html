@@ -180,7 +180,7 @@
 <span class="sd">    A Class that should help to generate custom cross section shapes for the SWMM software.</span>
 
 <span class="sd">    Attributes:</span>
-<span class="sd">        label (str): main name/label/number of the cross section</span>
+<span class="sd">        label (str): name/label/number of the cross section</span>
 <span class="sd">        description (Optional[str]): optional description of the cross section</span>
 <span class="sd">        shape (list): descriptions of the cross section as commands in a list</span>
 <span class="sd">        accuracy (int): number of decimal points to use for the export</span>
@@ -228,10 +228,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_r_hyd_v</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_l_u_v</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_r_hyd_v</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_Q_v</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_Q_v_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">slope</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_v_v</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_v_v_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">slope</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_v_v</span> <span class="o">=</span> <span class="kc">None</span></div>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -473,7 +470,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">check_point_cloud</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">plot</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">profile_abs_plot</span><span class="p">(</span><span class="n">show</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">profile_abs_plot</span><span class="p">(</span><span class="n">auto_open</span><span class="o">=</span><span class="n">show</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_file</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="CrossSection.add_and_show"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.add_and_show">[docs]</a>    <span class="k">def</span> <span class="nf">add_and_show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -655,10 +652,10 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">shape_description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        functions to describe the cross section</span>
+<span class="sd">        list of functions to describe the cross section shape</span>
 
 <span class="sd">        Returns:</span>
-
+<span class="sd">            list: description of the cross section shape</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shape_description</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># result list</span>
@@ -776,7 +773,17 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shape_description</span>
 
-    <span class="k">def</span> <span class="nf">b_w_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
+<div class="viewcode-block" id="CrossSection.b_w_t"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.b_w_t">[docs]</a>    <span class="k">def</span> <span class="nf">b_w_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        width of the cross section at a certain height</span>
+<span class="sd">        (Wasseroberflächenbreite im teilgefüllten Querschnitt)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hi (float | numpy.ndarray): a certain height</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float | numpy.ndarray: width at the certain height</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">]</span> <span class="o">*</span> <span class="n">hi</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
             <span class="c1"># w = hi.copy()</span>
@@ -789,9 +796,19 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape_description</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">lower</span> <span class="o">&lt;=</span> <span class="n">hi</span> <span class="o">&lt;=</span> <span class="n">upper</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+                    <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span></div>
 
-    <span class="k">def</span> <span class="nf">l_u_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
+<div class="viewcode-block" id="CrossSection.l_u_t"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.l_u_t">[docs]</a>    <span class="k">def</span> <span class="nf">l_u_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        wetted perimeter in the partially filled cross section at a certain water level height</span>
+<span class="sd">        (benetzter Umfang im teilgefüllten Querschnitt)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hi (float | numpy.ndarray): a certain height</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float | numpy.ndarray: wetted perimeter at the certain height</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="n">l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">]</span> <span class="o">*</span> <span class="n">hi</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
 
@@ -813,9 +830,32 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">break</span>
 
-        <span class="k">return</span> <span class="n">l</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">return</span> <span class="n">l</span> <span class="o">*</span> <span class="mi">2</span></div>
 
-    <span class="k">def</span> <span class="nf">area_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">l_u_v</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        wetted perimeter of the full filled cross section</span>
+<span class="sd">        (benetzter Umfang im vollgefüllten Querschnitt)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float | numpy.ndarray: wetted perimeter</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_l_u_v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_l_u_v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_u_t</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_l_u_v</span>
+
+<div class="viewcode-block" id="CrossSection.area_t"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.area_t">[docs]</a>    <span class="k">def</span> <span class="nf">area_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        flow area in the partially filled cross section at a certain water level height</span>
+<span class="sd">        (Fließquerschnitt im teilgefüllten Querschnitt)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hi (float | numpy.ndarray): a certain height</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float | numpy.ndarray: flow area at the certain height</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">]</span> <span class="o">*</span> <span class="n">hi</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
 
@@ -837,48 +877,80 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">break</span>
 
-        <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="mi">2</span>
-
-    <span class="k">def</span> <span class="nf">r_hyd_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_t</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_u_t</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="mi">2</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">area_v</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        flow area of the full filled cross section</span>
+<span class="sd">        (Fließquerschnitt im vollgefüllten Querschnitt)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float | numpy.ndarray: flow area</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_area_v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_area_v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_t</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_area_v</span>
 
+<div class="viewcode-block" id="CrossSection.r_hyd_t"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.r_hyd_t">[docs]</a>    <span class="k">def</span> <span class="nf">r_hyd_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        hydraulic radius in the partially filled cross section at a certain water level height</span>
+<span class="sd">        (hydraulischer Radius im teilgefüllten Querschnitt)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hi (float | numpy.ndarray): a certain height</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float | numpy.ndarray: hydraulic radius at the certain height</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_t</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_u_t</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span></div>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">r_hyd_v</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        hydraulic radius of the full filled cross section</span>
+<span class="sd">        (hydraulischer Radius im vollgefüllten Querschnitt)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float | numpy.ndarray: hydraulic radius</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_r_hyd_v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_r_hyd_v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_v</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_u_v</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_r_hyd_v</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">l_u_v</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_l_u_v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_l_u_v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_u_t</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_l_u_v</span>
-
     <span class="c1">####################################################################################################################</span>
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_velocity</span><span class="p">(</span><span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">r_hyd</span><span class="p">):</span>
+<div class="viewcode-block" id="CrossSection.velocity_v"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.velocity_v">[docs]</a>    <span class="k">def</span> <span class="nf">velocity_v</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        calculate velocity in partially filled sewer channel</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            slope (float): ablosute slope in m/m</span>
 <span class="sd">            k (float): Betriebliche Rauhigkeit in mm</span>
-<span class="sd">            r_hyd (float): hydraulic radius in mm</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            float: velocity in m/s</span>
+<span class="sd">            float: full filling velocity in m/s</span>
+
+<span class="sd">        References:</span>
+<span class="sd">            DWA-A 110 Section 4.1.1 Vollfüllung</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">r_hyd</span> <span class="o">/=</span> <span class="mi">1000</span>
-        <span class="n">J</span> <span class="o">=</span> <span class="n">slope</span>  <span class="c1"># / 1000</span>
-        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="o">/</span> <span class="mi">1000</span>
-        <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">2.51</span> <span class="o">*</span> <span class="n">ny</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">r_hyd</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="n">J</span><span class="p">))</span> <span class="o">+</span> <span class="n">k</span> <span class="o">/</span> <span class="p">(</span><span class="mf">14.84</span> <span class="o">*</span> <span class="n">r_hyd</span><span class="p">))</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span>
-            <span class="mi">2</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">r_hyd</span> <span class="o">*</span> <span class="n">J</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v_v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_v_v</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v_v</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_v_v</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">slope</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v_v</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_v_v</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">slope</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v_v</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">slope</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">r_hyd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_hyd_v</span> <span class="o">/</span> <span class="mi">1000</span>  <span class="c1"># from mm to m</span>
+            <span class="n">J</span> <span class="o">=</span> <span class="n">slope</span>  <span class="c1"># / 1000</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="o">/</span> <span class="mi">1000</span>  <span class="c1"># from mm to m</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_v_v</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">slope</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">2.51</span> <span class="o">*</span> <span class="n">ny</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">r_hyd</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="n">J</span><span class="p">))</span> <span class="o">+</span> <span class="n">k</span> <span class="o">/</span> <span class="p">(</span><span class="mf">14.84</span> <span class="o">*</span> <span class="n">r_hyd</span><span class="p">))</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span>
+                <span class="mi">2</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">r_hyd</span> <span class="o">*</span> <span class="n">J</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v_v</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">slope</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="CrossSection.velocity_t"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.velocity_t">[docs]</a>    <span class="k">def</span> <span class="nf">velocity_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hi</span><span class="p">,</span> <span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -891,26 +963,11 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float: velocity in m/s</span>
+
+<span class="sd">        References:</span>
+<span class="sd">            DWA-A 110 Section 4.1.2 Teilfüllung</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_velocity</span><span class="p">(</span><span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_hyd_t</span><span class="p">(</span><span class="n">hi</span><span class="p">))</span></div>
-
-<div class="viewcode-block" id="CrossSection.velocity_v"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.velocity_v">[docs]</a>    <span class="k">def</span> <span class="nf">velocity_v</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        calculate velocity in partially filled sewer channel</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            slope (float): ablosute slope in m/m</span>
-<span class="sd">            k (float): Betriebliche Rauhigkeit in mm</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            float: full filling velocity in m/s</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">new_v_v_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">slope</span><span class="o">=</span><span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v_v</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v_v_params</span> <span class="o">!=</span> <span class="n">new_v_v_params</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_v_v_params</span> <span class="o">=</span> <span class="n">new_v_v_params</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_v_v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">velocity_t</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v_v</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_hyd_t</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_hyd_v</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.625</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">velocity_v</span><span class="p">(</span><span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CrossSection.flow_t"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.flow_t">[docs]</a>    <span class="k">def</span> <span class="nf">flow_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hi</span><span class="p">,</span> <span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -929,7 +986,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            slope (float): ablosute slope in m/m</span>
+<span class="sd">            slope (float): absolute slope in m/m</span>
 <span class="sd">            k (float): Betriebliche Rauhigkeit in mm</span>
 
 <span class="sd">        Returns:</span>
@@ -938,14 +995,25 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">velocity_v</span><span class="p">(</span><span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_v</span> <span class="o">*</span> <span class="mf">1.0e-6</span> <span class="o">*</span> <span class="mi">1000</span></div>
 
     <span class="c1">####################################################################################################################</span>
-    <span class="k">def</span> <span class="nf">h_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Q_t</span><span class="p">,</span> <span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<div class="viewcode-block" id="CrossSection.h_t"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.h_t">[docs]</a>    <span class="k">def</span> <span class="nf">h_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Q_t</span><span class="p">,</span> <span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        get the height of the water level based on the known flow</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            Q_t (float): flow in L/s</span>
+<span class="sd">            slope (float): absolute slope in m/m</span>
+<span class="sd">            k (float): Betriebliche Rauhigkeit in mm</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: height of the water level</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># hi = &#39;?&#39;</span>
         <span class="c1"># self.flow_t(hi, slope, k)</span>
         <span class="c1"># self.flow_v(slope, k)</span>
         <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">minimize_scalar</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">minimize_scalar</span><span class="p">(</span><span class="k">lambda</span> <span class="n">hi</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">Q_t</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_t</span><span class="p">(</span><span class="n">hi</span><span class="p">,</span> <span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">)),</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">),</span>
                               <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bounded&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span></div>
+        <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span></div></div>
 
 
 <span class="c1">########################################################################################################################</span>
@@ -956,18 +1024,19 @@
 <span class="sd">        add_dim (bool): add the dimension (height x width) to the label and output filename</span>
 <span class="sd">        add_dn (bool): add the channel diameter (DN ...) to the label and output filename</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="CrossSectionHolding.__init__"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSectionHolding.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">add_dim</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_dn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialise the cross section class</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            label (str): main name/label/number of the cross section</span>
+<span class="sd">            label (str): name/label/number of the cross section</span>
 <span class="sd">            add_dim (bool): if the dimensions should be added to :py:attr:`~out_filename` used for the export</span>
 <span class="sd">            add_dn (Optional[float]): if the channel dimension should be added to :py:attr:`~out_filename`</span>
 <span class="sd">                                    used for the export enter the diameter as float</span>
 <span class="sd">            **kwargs (object): see :py:attr:`~__init__`</span>
 
 <span class="sd">        Keyword Args:</span>
-<span class="sd">            description (Optional[str]): optional longer name of the cross section</span>
+<span class="sd">            description (Optional[str]): optional description of the cross section</span>
 <span class="sd">            height (float): absolute height of the CS</span>
 <span class="sd">            width (Optional[float]): absolute width of the CS (optional) can be calculated</span>
 <span class="sd">            working_directory (str): directory where the files get saved</span>

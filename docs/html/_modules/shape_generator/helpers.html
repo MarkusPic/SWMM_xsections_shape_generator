@@ -379,7 +379,15 @@
 
 <span class="c1">####################################################################################################################</span>
 <div class="viewcode-block" id="Vertical"><a class="viewcode-back" href="../../api.html#shape_generator.helpers.Vertical">[docs]</a><span class="k">class</span> <span class="nc">Vertical</span><span class="p">(</span><span class="n">CustomExpr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    function of a vertical line</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Vertical.__init__"><a class="viewcode-back" href="../../api.html#shape_generator.helpers.Vertical.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            y (float): y value of the vertical line</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
         <span class="n">CustomExpr</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
@@ -401,6 +409,9 @@
 
 <span class="c1">####################################################################################################################</span>
 <div class="viewcode-block" id="Horizontal"><a class="viewcode-back" href="../../api.html#shape_generator.helpers.Horizontal">[docs]</a><span class="k">class</span> <span class="nc">Horizontal</span><span class="p">(</span><span class="n">CustomExpr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    function of a horizontal line</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Horizontal.__init__"><a class="viewcode-back" href="../../api.html#shape_generator.helpers.Horizontal.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">CustomExpr</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="kc">None</span>
@@ -466,6 +477,16 @@
 <span class="sd">        Circle</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Circle.__init__"><a class="viewcode-back" href="../../api.html#shape_generator.helpers.Circle.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y_m</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">clockwise</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            r (float): radius</span>
+<span class="sd">            x_m (float): x axis value of the mid point</span>
+<span class="sd">            y_m (float): y axis value of the mid point</span>
+<span class="sd">            clockwise (bool): whether the circle is clockwise or anticlockwise</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x_m</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x_m</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y_m</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">y_m</span><span class="p">)</span>
@@ -480,11 +501,6 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        get function/expression of a circle with a given mid point</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            r (float): radius</span>
-<span class="sd">            x_m (float): x axis value of the mid point</span>
-<span class="sd">            y_m (float): y axis value of the mid point</span>
-<span class="sd">            clockwise (bool): whether the circle is clockwise or anticlockwise</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            sympy.core.expr.Expr: function of the circle</span>
