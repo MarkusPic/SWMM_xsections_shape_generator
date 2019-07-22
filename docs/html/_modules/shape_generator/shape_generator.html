@@ -410,10 +410,9 @@
 <div class="viewcode-block" id="CrossSection.check_point_cloud"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.check_point_cloud">[docs]</a>    <span class="k">def</span> <span class="nf">check_point_cloud</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        remove errors from the point cloud, ie.:</span>
-
-<span class="sd">        - remove duplicates,</span>
-<span class="sd">        - (if specified) remove points which overlap the overall cross section width and</span>
-<span class="sd">        - other errors...</span>
+<span class="sd">            - remove duplicates,</span>
+<span class="sd">            - (if specified) remove points which overlap the overall cross section width and</span>
+<span class="sd">            - other errors...</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_rel</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">)</span>
@@ -455,23 +454,6 @@
 <span class="sd">            pandas.DataFrame: point coordinate values relative to the cross section height</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-<div class="viewcode-block" id="CrossSection.make"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.make">[docs]</a>    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        :py:attr:`~generator` + :py:attr:`~profile_abs_plot` + :py:attr:`~input_file`</span>
-
-<span class="sd">        macro function</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            show (bool):  see :py:attr:`~generator` arguments</span>
-<span class="sd">            plot (bool): if  :py:attr:`~profile_abs_plot` should be executed</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">check_point_cloud</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">plot</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">profile_abs_plot</span><span class="p">(</span><span class="n">auto_open</span><span class="o">=</span><span class="n">show</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">input_file</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="CrossSection.add_and_show"><a class="viewcode-back" href="../../api.html#shape_generator.shape_generator.CrossSection.add_and_show">[docs]</a>    <span class="k">def</span> <span class="nf">add_and_show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -596,6 +578,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">df_rel_fill_swmm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        get the relative data curve for EPA-SWMM</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pandas.DataFrame: relative data curve for EPA-SWMM</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_rel</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">df</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">2</span>

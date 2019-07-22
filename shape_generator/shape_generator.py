@@ -253,10 +253,9 @@ class CrossSection:
     def check_point_cloud(self):
         """
         remove errors from the point cloud, ie.:
-
-        - remove duplicates,
-        - (if specified) remove points which overlap the overall cross section width and
-        - other errors...
+            - remove duplicates,
+            - (if specified) remove points which overlap the overall cross section width and
+            - other errors...
         """
         df = self.df_rel
         df = df.round(self.accuracy)
@@ -298,23 +297,6 @@ class CrossSection:
             pandas.DataFrame: point coordinate values relative to the cross section height
         """
         return (self.df_abs / self.height).copy()
-
-    def make(self, show=False, plot=True):
-        """
-        :py:attr:`~generator` + :py:attr:`~profile_abs_plot` + :py:attr:`~input_file`
-
-        macro function
-
-        Args:
-            show (bool):  see :py:attr:`~generator` arguments
-            plot (bool): if  :py:attr:`~profile_abs_plot` should be executed
-        """
-        if show:
-            print(self.df_abs)
-        self.check_point_cloud()
-        if plot:
-            self.profile_abs_plot(auto_open=show, file_format='pdf')
-        self.input_file()
 
     def add_and_show(self, *args, **kwargs):
         """
@@ -439,6 +421,12 @@ class CrossSection:
 
     @property
     def df_rel_fill_swmm(self):
+        """
+        get the relative data curve for EPA-SWMM
+
+        Returns:
+            pandas.DataFrame: relative data curve for EPA-SWMM
+        """
         df = self.df_rel.copy()
         df = df.iloc[1:-1].copy()
         df['y'] *= 2

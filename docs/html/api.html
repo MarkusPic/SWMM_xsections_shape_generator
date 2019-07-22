@@ -519,8 +519,8 @@ This makes it easier to import all shapes to the .inp file.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.df_rel" title="shape_generator.shape_generator.CrossSection.df_rel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_rel</span></code></a></p></td>
 <td><p>relative point coordinates</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_rel_fill_swmm</span></code></p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.df_rel_fill_swmm" title="shape_generator.shape_generator.CrossSection.df_rel_fill_swmm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_rel_fill_swmm</span></code></a></p></td>
+<td><p>get the relative data curve for EPA-SWMM</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.shape_description" title="shape_generator.shape_generator.CrossSection.shape_description"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shape_description</span></code></a></p></td>
 <td><p>list of functions to describe the cross section shape</p></td>
@@ -534,8 +534,8 @@ This makes it easier to import all shapes to the .inp file.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.make" title="shape_generator.shape_generator.CrossSection.make"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make</span></code></a>([show, plot])</p></td>
-<td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">generator</span></code> + <a class="reference internal" href="#shape_generator.shape_generator.CrossSection.profile_abs_plot" title="shape_generator.shape_generator.CrossSection.profile_abs_plot"><code class="xref py py-attr docutils literal notranslate"><span class="pre">profile_abs_plot</span></code></a> + <a class="reference internal" href="#shape_generator.shape_generator.CrossSection.input_file" title="shape_generator.shape_generator.CrossSection.input_file"><code class="xref py py-attr docutils literal notranslate"><span class="pre">input_file</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">make</span></code></p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.add_and_show" title="shape_generator.shape_generator.CrossSection.add_and_show"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_and_show</span></code></a>(*args, **kwargs)</p></td>
 <td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.add" title="shape_generator.shape_generator.CrossSection.add"><code class="xref py py-attr docutils literal notranslate"><span class="pre">add</span></code></a> + <code class="xref py py-attr docutils literal notranslate"><span class="pre">generator</span></code> + <a class="reference internal" href="#shape_generator.shape_generator.CrossSection.profile_abs_figure" title="shape_generator.shape_generator.CrossSection.profile_abs_figure"><code class="xref py py-attr docutils literal notranslate"><span class="pre">profile_abs_figure</span></code></a></p></td>
@@ -902,12 +902,14 @@ and writes them into the <a class="reference internal" href="#shape_generator.sh
 <dl class="method">
 <dt id="shape_generator.shape_generator.CrossSection.check_point_cloud">
 <code class="descname">check_point_cloud</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.check_point_cloud"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.check_point_cloud" title="Permalink to this definition">¶</a></dt>
-<dd><p>remove errors from the point cloud, ie.:</p>
-<ul class="simple">
+<dd><dl class="simple">
+<dt>remove errors from the point cloud, ie.:</dt><dd><ul class="simple">
 <li><p>remove duplicates,</p></li>
 <li><p>(if specified) remove points which overlap the overall cross section width and</p></li>
 <li><p>other errors…</p></li>
 </ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -921,21 +923,6 @@ and writes them into the <a class="reference internal" href="#shape_generator.sh
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.25.0)">pandas.DataFrame</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="shape_generator.shape_generator.CrossSection.make">
-<code class="descname">make</code><span class="sig-paren">(</span><em>show=False</em>, <em>plot=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.make"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.make" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">generator</span></code> + <a class="reference internal" href="#shape_generator.shape_generator.CrossSection.profile_abs_plot" title="shape_generator.shape_generator.CrossSection.profile_abs_plot"><code class="xref py py-attr docutils literal notranslate"><span class="pre">profile_abs_plot</span></code></a> + <a class="reference internal" href="#shape_generator.shape_generator.CrossSection.input_file" title="shape_generator.shape_generator.CrossSection.input_file"><code class="xref py py-attr docutils literal notranslate"><span class="pre">input_file</span></code></a></p>
-<p>macro function</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>show</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – see <code class="xref py py-attr docutils literal notranslate"><span class="pre">generator</span></code> arguments</p></li>
-<li><p><strong>plot</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – if  <a class="reference internal" href="#shape_generator.shape_generator.CrossSection.profile_abs_plot" title="shape_generator.shape_generator.CrossSection.profile_abs_plot"><code class="xref py py-attr docutils literal notranslate"><span class="pre">profile_abs_plot</span></code></a> should be executed</p></li>
-</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -995,6 +982,20 @@ and writes them into the <a class="reference internal" href="#shape_generator.sh
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.1.1)">matplotlib.figure.Figure</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="shape_generator.shape_generator.CrossSection.df_rel_fill_swmm">
+<code class="descname">df_rel_fill_swmm</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.df_rel_fill_swmm" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the relative data curve for EPA-SWMM</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>relative data curve for EPA-SWMM</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.25.0)">pandas.DataFrame</a></p>
 </dd>
 </dl>
 </dd></dl>
