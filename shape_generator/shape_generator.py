@@ -300,7 +300,7 @@ class CrossSection:
 
     def add_and_show(self, *args, **kwargs):
         """
-        :py:attr:`~add` + :py:attr:`~generator` + :py:attr:`~profile_abs_figure`
+        :py:attr:`~add` + :py:attr:`~check_point_cloud` + :py:attr:`~profile_abs_figure`
 
         and print the raw shape (description of the cross section)
 
