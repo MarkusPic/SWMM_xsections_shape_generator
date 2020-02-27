@@ -1,8 +1,8 @@
 from io import StringIO
 from os import path, listdir, remove
 from math import radians, tan, cos, pi, atan, sin
+from pandas import read_csv
 
-import pandas as pd
 import sympy as sy
 import numpy as np
 
@@ -24,7 +24,7 @@ def csv(txt, comment=None):
     Returns:
         pandas.DataFrame: csv table as pandas DataFrame
     """
-    df = pd.read_csv(StringIO(txt), index_col=0, skipinitialspace=True, skip_blank_lines=True, comment=comment)
+    df = read_csv(StringIO(txt), index_col=0, skipinitialspace=True, skip_blank_lines=True, comment=comment)
     df = df[df.index.notnull()].copy()
     df.index = df.index.astype(str)
     return df
