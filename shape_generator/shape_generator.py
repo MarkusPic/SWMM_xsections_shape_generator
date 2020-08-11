@@ -389,10 +389,13 @@ class CrossSection:
         ax = df.plot(x='y', y='x', legend=False, zorder=1000000, clip_on=False)
         ax.set_aspect('equal', 'box')
         ax.set_xticks(list(range(-xlim, xlim, base)), minor=False)
-        ax.set_xticks(list(range(-xlim, xlim, half_base)), minor=True)
+        if half_base != 0:
+            ax.set_xticks(list(range(-xlim, xlim, half_base)), minor=True)
 
         ax.set_yticks(list(range(0, ylim, base)), minor=False)
-        ax.set_yticks(list(range(0, ylim, half_base)), minor=True)
+        if half_base != 0:
+            ax.set_yticks(list(range(0, ylim, half_base)), minor=True)
+
         # ax.set_axis_off()
         # ax.set_frame_on(False)
         # ax.axis()
@@ -1298,5 +1301,34 @@ class CrossSectionHolding(CrossSection):
                 if y == 0 and x in (0, height_pr):
                     continue
                 cross_section.add(x, y)
+
+        return cross_section
+
+
+########################################################################################################################
+class CrossSectionMisc(CrossSection):
+    def __init__(self, label, **kwargs):
+        """Initialise the cross section class
+
+        Args:
+            label (str): name/label/number of the cross section
+            **kwargs (object): see :py:attr:`~__init__`
+
+        Keyword Args:
+            description (Optional[str]): optional description of the cross section
+            height (float): absolute height of the CS
+            width (Optional[float]): absolute width of the CS (optional) can be calculated
+            working_directory (str): directory where the files get saved
+            unit (Optional[str]): enter unit to add the unit in the plots
+
+        """
+        CrossSection.__init__(self, label, **kwargs)
+
+    @classmethod
+    def from_swmm_shape(cls, label, relative_coordinates, height, *args, **kwargs):
+        cross_section = cls(label, height=height, *args, **kwargs)
+
+        for x, y in relative_coordinates:
+            cross_section.add(x*height, y*height / 2)
 
         return cross_section
