@@ -232,6 +232,12 @@ class CrossSection:
 
         return self._df_abs
 
+    def reduce_points(self):
+        print()
+        # self._df_abs
+        # ramer_douglas(line, dist)
+        # self._df_abs
+
     def get_width(self):
         """
         get absolute width of cross section
@@ -324,7 +330,7 @@ class CrossSection:
             auto_open (bool): whether the plot should be opened after its creation
             file_format (str): file format, ie: ``png``, ``pdf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)
         """
-        ax = self.df_rel.plot(x='y', y='x', legend=False)
+        ax = self.df_rel.plot(x='y', y='x', style='.-', legend=False)
         ax.set_aspect('equal', 'box')
         ax.set_ylabel('rel H')
         ax.set_xlabel('B/H')
@@ -1265,7 +1271,7 @@ class CrossSectionHolding(CrossSection):
         # height of the profile = maximum Y coordinate
         height_pr = relative_coordinates.index.max()
 
-        # horizontal distance to lowest point (dry weather channel)
+        # horizontal distance to the lowest point (dry weather channel)
         # split to left and right part of the profile
         y_df = pd.concat([relative_coordinates.loc[:height_pr].rename('right'),
                           relative_coordinates.loc[height_pr:].rename('left')], axis=1)
