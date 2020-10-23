@@ -13,6 +13,17 @@ x = sy.Symbol('x', real=True, positive=True)
 accuracy = 10
 
 
+def to_num(x):
+    if x == '':
+        return None
+    elif x.replace('-', '').isdecimal():
+        return int(x)
+    elif ('.' in x) and (x.lower().replace('.', '').replace('-', '').replace('e', '').isdecimal()):
+        return float(x)
+    else:
+        return x
+
+
 def csv(txt, comment=None):
     """
     Read the string in txt as csv file and return the content as DataFrame.
@@ -22,12 +33,40 @@ def csv(txt, comment=None):
         comment (str): comment sign
 
     Returns:
-        pandas.DataFrame: csv table as pandas DataFrame
+        dict: profile label and values
     """
     df = read_csv(StringIO(txt), index_col=0, skipinitialspace=True, skip_blank_lines=True, comment=comment)
     df = df[df.index.notnull()].copy()
     df.index = df.index.astype(str)
     return df
+
+
+def to_xs_dict(txt, comment=None):
+    """
+    Read the string in txt as csv file and return the content as DataFrame.
+
+    Args:
+        txt (str): content of csv
+        comment (str): comment sign
+
+    Returns:
+        dict: profile label and values
+    """
+    di = dict()
+    names = []
+    for line in txt.split('\n'):
+        if line == '':
+            continue
+        elif isinstance(comment, str) and line.startswith(comment):
+            continue
+        elif not names:
+            names = [n.strip() for n in line.split(',')[1:]]
+            di['_names'] = names
+        else:
+            name, *values = [n.strip() for n in line.split(',')]
+            # di[name] = {k: to_num(v) for k, v in zip(names, values)}
+            di[name] = [to_num(v) for v in values]
+    return di
 
 
 def deg2slope(degree):

@@ -9,6 +9,7 @@ from os import path
 from webbrowser import open as open_file
 from numpy import NaN
 from pandas import isna, notna
+from .curve_simplification import ramer_douglas
 
 from .helpers import deg2slope, channel_end, Circle, x, CustomExpr, Slope, Vertical, Horizontal, sqrt
 
@@ -52,7 +53,7 @@ class CrossSection:
         self._width = width
         self.shape = list()
         self._shape_description = None  # functions to describe the cross section
-        self.accuracy = 4
+        self.accuracy = 3
         self.working_directory = working_directory
         self.unit = unit
         self.double = False
@@ -72,6 +73,11 @@ class CrossSection:
         self._l_u_v = None
         self._r_hyd_v = None
         self._v_v = None
+
+        # _______________________________
+        # number of points to describe the shape of the cross section
+        # 100 is the limit of points which can be used as a SWMM shape
+        self.max_number_points = 100
 
     def __repr__(self):
         return str(self)
@@ -165,7 +171,7 @@ class CrossSection:
                 self.shape.append((x, y))
 
     @property
-    def df_abs(self, max_number_points=100):
+    def df_abs_OLD(self):
         """create absolute point coordinates and write it into :py:attr:`~df_abs`
 
         To create a :obj:`pandas.DataFrame` of all the points to describe the cross section.
@@ -194,7 +200,7 @@ class CrossSection:
                 function_steps = {i: s[1] - s[0] for i, s in enumerate(self.shape_description) if
                                   isinstance(self.shape_description[i][2], Circle)}
                 # step size used to discretise the expressions
-                step = sum(function_steps.values()) / (max_number_points - num_points)
+                step = sum(function_steps.values()) / (self.max_number_points - num_points)
 
                 min_step = 1 * 10 ** (-self.accuracy) * self.height
                 if step < min_step:
@@ -232,11 +238,59 @@ class CrossSection:
 
         return self._df_abs
 
-    def reduce_points(self):
-        print()
-        # self._df_abs
-        # ramer_douglas(line, dist)
-        # self._df_abs
+    @property
+    def df_abs(self):
+        """create absolute point coordinates and write it into :py:attr:`~df_abs`
+
+        To create a :obj:`pandas.DataFrame` of all the points to describe the cross section.
+        This function replaces the Expressions given in :py:attr:`~add` to points with x and y coordinates
+        and writes them into the :py:attr:`~df_abs` attribute.
+
+        Args:
+            max_number_points (int): number of points to describe the shape of the cross section
+                                     100 is the limit of points which can be used as a SWMM shape
+
+        Returns:
+            pandas.DataFrame: absolute point coordinates
+        """
+        if self._df_abs is None:
+            step = 10 ** (-self.accuracy) * self.height
+            # if functions are used in shape
+
+            x = list()
+            y = list()
+
+            for start, end, f in self.shape_description:
+                if isinstance(f, Circle):
+                    nx = np.arange(start, end + step, step).clip(max=end)
+                    ny = f.solve(nx)
+                    x += list(nx)
+                    y += list(ny)
+                elif isinstance(f, Horizontal):
+                    x0, y0 = f.start_point()
+                    x1, y1 = f.end_point()
+                    x += [x0, x1]
+                    y += [y0, y1]
+                else:
+                    nx = np.array([start, end])
+                    x += list(nx)
+                    y += list(f.solve(nx))
+            y, x = zip(*ramer_douglas(list(zip(x, y)), dist=step))
+
+            # the absolute points of the final shape
+            df = pd.DataFrame()
+            df['x'] = x
+            df['y'] = y
+
+            # df = df.drop_duplicates().reset_index(drop=True)
+
+            if len(x) > self.max_number_points:
+                self._df_abs = None
+                return self.df_abs_OLD
+
+            self._df_abs = df.astype(float).copy()
+
+        return self._df_abs
 
     def get_width(self):
         """
