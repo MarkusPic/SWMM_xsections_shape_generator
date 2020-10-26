@@ -1,4 +1,5 @@
 import warnings
+
 import matplotlib.pyplot as plt
 import numpy as np
 import sympy as sy
@@ -7,10 +8,11 @@ import pandas as pd
 from math import radians, cos, ceil, log10, floor
 from os import path
 from webbrowser import open as open_file
+
 from numpy import NaN
 from pandas import isna, notna
-from .curve_simplification import ramer_douglas
 
+from .curve_simplification import ramer_douglas
 from .helpers import deg2slope, channel_end, Circle, x, CustomExpr, Slope, Vertical, Horizontal, sqrt
 
 g = 9.81  # m/s^2 Erdbeschleunigung
@@ -61,6 +63,7 @@ class CrossSection:
         # _______________________________
         # Profile data
         self._df_abs = None
+        self.points = list()
 
         # _______________________________
         print('_' * 30)
@@ -116,6 +119,11 @@ class CrossSection:
         """
         return path.join(self.working_directory, str(self.label))
 
+    def _reset_shape(self):
+        self.points = list()
+        self._df_abs = None
+        self._shape_description = None
+
     def add(self, x_or_expr, y=None):
         """
         add part of cross section
@@ -145,8 +153,7 @@ class CrossSection:
                     - ``°slope`` : slope as an angle in degree (°)
                     - ``%slope`` : slope in percentage (%)
         """
-        self._df_abs = None
-        self._shape_description = None
+        self._reset_shape()
 
         if isinstance(x_or_expr, CustomExpr):
             self.shape.append(x_or_expr)
@@ -170,8 +177,7 @@ class CrossSection:
 
                 self.shape.append((x, y))
 
-    @property
-    def df_abs_OLD(self):
+    def get_points_OLD(self):
         """create absolute point coordinates and write it into :py:attr:`~df_abs`
 
         To create a :obj:`pandas.DataFrame` of all the points to describe the cross section.
@@ -185,7 +191,7 @@ class CrossSection:
         Returns:
             pandas.DataFrame: absolute point coordinates
         """
-        if self._df_abs is None:
+        if not self.points:
             # number of expressions used in shape
             num_functions = sum([isinstance(i[2], Circle) for i in self.shape_description])
 
@@ -227,16 +233,19 @@ class CrossSection:
                     x += list(nx)
                     y += list(f.solve(nx))
 
-            # the absolute points of the final shape
-            df = pd.DataFrame()
-            df['x'] = x
-            df['y'] = y
+            self.points = x, y
 
-            df = df.drop_duplicates().reset_index(drop=True)
+        return self.points
 
-            self._df_abs = df.astype(float).copy()
+    @property
+    def df_abs_OLD(self):
+        x, y = self.get_points_OLD()
+        # the absolute points of the final shape
+        df = pd.DataFrame()
+        df['x'] = x
+        df['y'] = y
 
-        return self._df_abs
+        return df.drop_duplicates().reset_index(drop=True).astype(float)
 
     @property
     def df_abs(self):
@@ -277,16 +286,14 @@ class CrossSection:
                     y += list(f.solve(nx))
             y, x = zip(*ramer_douglas(list(zip(x, y)), dist=step))
 
+            if len(x) > self.max_number_points:
+                self._df_abs = None
+                return self.df_abs_OLD
+
             # the absolute points of the final shape
             df = pd.DataFrame()
             df['x'] = x
             df['y'] = y
-
-            # df = df.drop_duplicates().reset_index(drop=True)
-
-            if len(x) > self.max_number_points:
-                self._df_abs = None
-                return self.df_abs_OLD
 
             self._df_abs = df.astype(float).copy()
 
