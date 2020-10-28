@@ -66,8 +66,8 @@ class CrossSection:
         self.points = list()
 
         # _______________________________
-        print('_' * 30)
-        print(self)
+        # print('_' * 30)
+        # print(self)
 
         # _______________________________
         # calculate stationary flow
@@ -249,6 +249,20 @@ class CrossSection:
 
     @property
     def df_abs(self):
+        return self.df_abs_NEW
+
+    @property
+    def df_abs_NEW(self):
+        x, y = self.get_points_NEW()
+
+        # the absolute points of the final shape
+        df = pd.DataFrame()
+        df['x'] = x
+        df['y'] = y
+
+        return df.astype(float).copy()
+
+    def get_points_NEW(self):
         """create absolute point coordinates and write it into :py:attr:`~df_abs`
 
         To create a :obj:`pandas.DataFrame` of all the points to describe the cross section.
@@ -262,7 +276,7 @@ class CrossSection:
         Returns:
             pandas.DataFrame: absolute point coordinates
         """
-        if self._df_abs is None:
+        if not self.points:
             step = 10 ** (-self.accuracy) * self.height
             # if functions are used in shape
 
@@ -284,20 +298,15 @@ class CrossSection:
                     nx = np.array([start, end])
                     x += list(nx)
                     y += list(f.solve(nx))
-            y, x = zip(*ramer_douglas(list(zip(x, y)), dist=step))
+            x, y = zip(*ramer_douglas(list(zip(x, y)), dist=step))
 
             if len(x) > self.max_number_points:
                 self._df_abs = None
-                return self.df_abs_OLD
+                return self.get_points_OLD()
 
-            # the absolute points of the final shape
-            df = pd.DataFrame()
-            df['x'] = x
-            df['y'] = y
+            self.points = x, y
 
-            self._df_abs = df.astype(float).copy()
-
-        return self._df_abs
+        return self.points
 
     def get_width(self):
         """
