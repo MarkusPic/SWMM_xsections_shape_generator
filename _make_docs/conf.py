@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'SWMM CrossSection shape Generator'
-copyright = '2019, Pichler'
+copyright = '2020, Pichler'
 author = 'Pichler'
 
 # The short X.Y version
@@ -84,7 +84,8 @@ pygments_style = None
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'  # 'alabaster'
+# html_theme = 'sphinx_rtd_theme'  # 'alabaster'
+html_theme = 'sphinx_material'  # 'alabaster'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -95,7 +96,7 @@ html_theme = 'sphinx_rtd_theme'  # 'alabaster'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ['images']
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -193,12 +194,48 @@ autosummary_generate = True
 # -- Options for intersphinx extension ---------------------------------------
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None,
+intersphinx_mapping = {'https://docs.python.org/3/': None,
                        #'pd': ('http://pandas.pydata.org/pandas-docs/stable/', None),
-                       'http://pandas.pydata.org/pandas-docs/stable/': None,
-                       'numpy': ('http://docs.scipy.org/doc/numpy/', None),
+                       'https://pandas.pydata.org/pandas-docs/stable/': None,
+                       'numpy': ('https://numpy.org/doc/stable/', None),
                        #'scipy': ('http://docs.scipy.org/doc/scipy/reference/', None),
-                       'matplotlib': ('http://matplotlib.sourceforge.net/', None),
+                       'matplotlib': ('https://matplotlib.org/', None),
                        #'sympy': ('https://docs.sympy.org/latest/', None),
                        'sympy': ('https://docs.sympy.org/latest/', 'https://docs.sympy.org/latest/objects.inv')
                        }
+
+# -- Material Sphinx ---------------------------------------
+# Set link name generated in the top bar.
+html_title = 'Documentation'
+
+# Material theme options (see theme.conf for more information)
+html_theme_options = {
+
+    # Set the name of the project to appear in the navigation.
+    'nav_title': 'SWMM CrossSection shape Generator',
+
+    # Specify a base_url used to generate sitemap.xml. If not
+    # specified, then no sitemap will be built.
+    # 'base_url': 'https://project.github.io/project',
+
+    # Set the color and the accent color
+    'color_primary': 'red',
+    'color_accent': 'light-blue',
+
+    # Set the repo location to get a badge with stats
+    'repo_url': 'https://github.com/MarkusPic/SWMM_xsections_shape_generator',
+    'repo_name': 'SWMM_xsections_shape_generator',
+
+    # Visible levels of the global TOC; -1 means unlimited
+    'globaltoc_depth': 2,
+    # If False, expand all TOC entries
+    'globaltoc_collapse': False,
+    # If True, show hidden TOC entries
+    'globaltoc_includehidden': True,
+}
+
+html_sidebars = {
+    "**": ["logo-text.html", "globaltoc.html", "localtoc.html", "searchbox.html"]
+}
+
+html_show_sourcelink = False

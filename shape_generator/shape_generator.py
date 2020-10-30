@@ -140,7 +140,7 @@ class CrossSection:
             x_or_expr (Optional[float , None, CustomExpr]):
 
                 - :obj:`float` : x coordinate or x-axis boundary or slope if any str keyword is used in argument ``y``
-                - :obj:`CustomExpr` : Expression/function for the cross section part
+                - :obj:`CustomExpr` : Expression/function for the cross section part, i.e.:  :obj:`shape_generator.Circle`, :obj:`Slope`, :obj:`Vertical`, :obj:`Horizontal`
                 - :obj:`None` : if a y-axis boundary is given
 
             y (Optional[float,str]): y coordinate of unit of slope
@@ -178,15 +178,12 @@ class CrossSection:
                 self.shape.append((x, y))
 
     def get_points_OLD(self):
+        ""
         """create absolute point coordinates and write it into :py:attr:`~df_abs`
 
         To create a :obj:`pandas.DataFrame` of all the points to describe the cross section.
         This function replaces the Expressions given in :py:attr:`~add` to points with x and y coordinates
         and writes them into the :py:attr:`~df_abs` attribute.
-
-        Args:
-            max_number_points (int): number of points to describe the shape of the cross section
-                                     100 is the limit of points which can be used as a SWMM shape
 
         Returns:
             pandas.DataFrame: absolute point coordinates
@@ -249,11 +246,20 @@ class CrossSection:
 
     @property
     def df_abs(self):
+        """create absolute point coordinates and write it into :py:attr:`~df_abs`
+
+        To create a :obj:`pandas.DataFrame` of all the points to describe the cross section.
+        This function replaces the Expressions given in :py:attr:`~add` to points with x and y coordinates
+        and writes them into the :py:attr:`~df_abs` attribute.
+
+        Returns:
+            pandas.DataFrame: absolute point coordinates
+        """
         return self.df_abs_NEW
 
     @property
     def df_abs_NEW(self):
-        x, y = self.get_points_NEW()
+        x, y = self.get_points()
 
         # the absolute points of the final shape
         df = pd.DataFrame()
@@ -262,19 +268,15 @@ class CrossSection:
 
         return df.astype(float).copy()
 
-    def get_points_NEW(self):
-        """create absolute point coordinates and write it into :py:attr:`~df_abs`
+    def get_points(self):
+        """create absolute point coordinates and write it into :py:attr:`~points`
 
-        To create a :obj:`pandas.DataFrame` of all the points to describe the cross section.
+        To create a :obj:`list[tuple]` of all the points to describe the cross section.
         This function replaces the Expressions given in :py:attr:`~add` to points with x and y coordinates
-        and writes them into the :py:attr:`~df_abs` attribute.
-
-        Args:
-            max_number_points (int): number of points to describe the shape of the cross section
-                                     100 is the limit of points which can be used as a SWMM shape
+        and writes them into the :py:attr:`~points` attribute.
 
         Returns:
-            pandas.DataFrame: absolute point coordinates
+            list[list[float,float]]: absolute point coordinates
         """
         if not self.points:
             step = 10 ** (-self.accuracy) * self.height
@@ -930,6 +932,8 @@ class CrossSection:
 ########################################################################################################################
 class CrossSectionHolding(CrossSection):
     """
+    cross section class for Holding Graz
+
     Attributes:
         add_dim (bool): add the dimension (height x width) to the label and output filename
         add_dn (bool): add the channel diameter (DN ...) to the label and output filename
@@ -1033,6 +1037,7 @@ class CrossSectionHolding(CrossSection):
 
         Examples:
             see :ref:`Examples_for_standard_profiles`
+            see :ref:`standard_cross_section.ipynb`
 
 
         .. figure:: images/standard.gif
@@ -1402,6 +1407,19 @@ class CrossSectionMisc(CrossSection):
 
     @classmethod
     def from_swmm_shape(cls, label, relative_coordinates, height, *args, **kwargs):
+        """
+        create a object with the data of the swmm curve data as relative coordinates
+
+        Args:
+            label (str): main name/label/number of the cross section
+            relative_coordinates (list[list[float, float]]): list of x- and y-coordinate-tuples
+            height (float): absolute height of the CS
+            *args: arguments, see :py:attr:`~__init__`
+            **kwargs: keyword arguments, see :py:attr:`~__init__`
+
+        Returns:
+            CrossSectionMisc: of the shape coordinates
+        """
         cross_section = cls(label, height=height, *args, **kwargs)
 
         for x, y in relative_coordinates:
