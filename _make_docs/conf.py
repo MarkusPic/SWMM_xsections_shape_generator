@@ -84,8 +84,8 @@ pygments_style = None
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-# html_theme = 'sphinx_rtd_theme'  # 'alabaster'
-html_theme = 'sphinx_material'  # 'alabaster'
+html_theme = 'sphinx_rtd_theme'  # 'alabaster'
+# html_theme = 'sphinx_material'  # 'alabaster'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -96,7 +96,7 @@ html_theme = 'sphinx_material'  # 'alabaster'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['images']
+# html_static_path = ['images', '_static']
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -204,6 +204,7 @@ intersphinx_mapping = {'https://docs.python.org/3/': None,
                        'sympy': ('https://docs.sympy.org/latest/', 'https://docs.sympy.org/latest/objects.inv')
                        }
 
+"""
 # -- Material Sphinx ---------------------------------------
 # Set link name generated in the top bar.
 html_title = 'Documentation'
@@ -219,8 +220,14 @@ html_theme_options = {
     # 'base_url': 'https://project.github.io/project',
 
     # Set the color and the accent color
-    'color_primary': 'red',
-    'color_accent': 'light-blue',
+    'theme_color': '#ED1A52',  # TU_RED
+    # red, pink, purple, deep-purple, indigo, blue, light-blue, cyan,
+    # teal, green, light-green, lime, yellow, amber, orange, deep-orange,
+    # brown, grey, blue-grey, white
+    'color_primary': 'blue-grey',  # TU_RED
+    # red, pink, purple, deep-purple, indigo, blue, light-blue, cyan,
+    # teal, green, light-green, lime, yellow, amber, orange, deep-orange
+    'color_accent': 'light-blue',  #SWW_DARKGREY
 
     # Set the repo location to get a badge with stats
     'repo_url': 'https://github.com/MarkusPic/SWMM_xsections_shape_generator',
@@ -237,5 +244,5 @@ html_theme_options = {
 html_sidebars = {
     "**": ["logo-text.html", "globaltoc.html", "localtoc.html", "searchbox.html"]
 }
-
+"""
 html_show_sourcelink = False

@@ -1036,9 +1036,7 @@ class CrossSectionHolding(CrossSection):
             CrossSectionHolding: standard cross section
 
         Examples:
-            see :ref:`Examples_for_standard_profiles`
-            see :ref:`standard_cross_section.ipynb`
-
+            see :doc:`standard_cross_section`
 
         .. figure:: images/standard.gif
             :align: center
@@ -1142,8 +1140,6 @@ class CrossSectionHolding(CrossSection):
         """
         pre defined box (=Kasten) cross section
 
-        see :ref:`Examples_for_box_shaped_profiles`
-
         Args:
             label (str): see :py:attr:`~__init__`
             height (float): see :py:attr:`~__init__`
@@ -1171,6 +1167,9 @@ class CrossSectionHolding(CrossSection):
 
         Returns:
             CrossSectionHolding: pre defined box (=Kasten) cross section
+
+        Examples:
+            see :doc:`show_case-kasten`
         """
         name = 'K'
         cross_section = cls(label=label, width=width, height=height, **kwargs)
@@ -1263,12 +1262,11 @@ class CrossSectionHolding(CrossSection):
     def box_from_string(cls, label, **kwargs):
         """
         create pre defined box (=Kasten) cross section with the string label.
+
         This function takes the information from the label and pass them to the :py:attr:`~box` - function.
 
-        see :ref:`Examples_for_box_shaped_profiles`
-
         Args:
-            label (str): see the :ref:`Examples_for_box_shaped_profiles`
+            label (str): see the :doc:`show_case-kasten`
             **kwargs (object): see :py:attr:`~__init__`
 
         Keyword Args:
@@ -1283,6 +1281,8 @@ class CrossSectionHolding(CrossSection):
             CrossSectionHolding: pre defined box (=Kasten) cross section
 
         Examples:
+            see :doc:`show_case-kasten`
+
             .. figure:: images/Kasten-Profile.gif
                 :align: center
                 :alt: Kasten-Profile

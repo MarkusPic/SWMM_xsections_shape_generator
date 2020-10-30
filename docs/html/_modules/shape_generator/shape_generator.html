@@ -1,391 +1,173 @@
 
+
 <!DOCTYPE html>
-
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="lang:clipboard.copy" content="Copy to clipboard">
-  <meta name="lang:clipboard.copied" content="Copied to clipboard">
-  <meta name="lang:search.language" content="en">
-  <meta name="lang:search.pipeline.stopwords" content="True">
-  <meta name="lang:search.pipeline.trimmer" content="True">
-  <meta name="lang:search.result.none" content="No matching documents">
-  <meta name="lang:search.result.one" content="1 matching document">
-  <meta name="lang:search.result.other" content="# matching documents">
-  <meta name="lang:search.tokenizer" content="[\s\-]+">
-
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
   
-    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
-
-    <style>
-      body,
-      input {
-        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
-      }
-
-      code,
-      kbd,
-      pre {
-        font-family: "Roboto Mono", "Courier New", Courier, monospace
-      }
-    </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>shape_generator.shape_generator &mdash; SWMM CrossSection shape Generator 0.2.alpha documentation</title>
   
 
-  <link rel="stylesheet" href="../../_static/stylesheets/application.css"/>
-  <link rel="stylesheet" href="../../_static/stylesheets/application-palette.css"/>
-  <link rel="stylesheet" href="../../_static/stylesheets/application-fixes.css"/>
   
-  <link rel="stylesheet" href="../../_static/fonts/material-icons.css"/>
-  
-  <meta name="theme-color" content="#3f51b5">
-  <script src="../../_static/javascripts/modernizr.js"></script>
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
   
   
   
-    <title>shape_generator.shape_generator &#8212; Documentation</title>
-    <link rel="stylesheet" href="../../_static/material.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-  
-   
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
 
-  </head>
-  <body dir=ltr
-        data-md-color-primary=red data-md-color-accent=light-blue>
-  
-  <svg class="md-svg">
-    <defs data-children-count="0">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
-      
-    </defs>
-  </svg>
-  
-  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
-  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
-  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
-  <a href="#_modules/shape_generator/shape_generator" tabindex="1" class="md-skip"> Skip to content </a>
-  <header class="md-header" data-md-component="header">
-  <nav class="md-header-nav md-grid">
-    <div class="md-flex navheader">
-      <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="Documentation"
-           class="md-header-nav__button md-logo">
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
-            &nbsp;
+
           
-        </a>
-      </div>
-      <div class="md-flex__cell md-flex__cell--shrink">
-        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
-      </div>
-      <div class="md-flex__cell md-flex__cell--stretch">
-        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
-          <span class="md-header-nav__topic">SWMM CrossSection shape Generator</span>
-          <span class="md-header-nav__topic"> shape_generator.shape_generator </span>
-        </div>
-      </div>
-      <div class="md-flex__cell md-flex__cell--shrink">
-        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
-        
-<div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" action="../../search.html" method="GET" name="search">
-      <input type="text" class="md-search__input" name="q" placeholder="Search"
-             autocapitalize="off" autocomplete="off" spellcheck="false"
-             data-md-component="query" data-md-state="active">
-      <label class="md-icon md-search__icon" for="__search"></label>
-      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
-        &#xE5CD;
-      </button>
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result">
-          <div class="md-search-result__meta">
-            Type to start searching
-          </div>
-          <ol class="md-search-result__list"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> SWMM CrossSection shape Generator
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
 </div>
 
-      </div>
-      
-        <div class="md-flex__cell md-flex__cell--shrink">
-          <div class="md-header-nav__source">
-            <a href="https://github.com/MarkusPic/SWMM_xsections_shape_generator" title="Go to repository" class="md-source" data-md-source="github">
-
-    <div class="md-source__icon">
-      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
-        <use xlink:href="#__github" width="24" height="24"></use>
-      </svg>
-    </div>
-  
-  <div class="md-source__repository">
-    SWMM_xsections_shape_generator
-  </div>
-</a>
-          </div>
+          
         </div>
-      
-      
-  
-  <script src="../../_static/javascripts/version_dropdown.js"></script>
-  <script>
-    var json_loc = "../../"versions.json"",
-        target_loc = "../../../",
-        text = "Versions";
-    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
-  </script>
-  
 
-    </div>
-  </nav>
-</header>
-
-  
-  <div class="md-container">
-    
-    
-    
-  <nav class="md-tabs" data-md-component="tabs">
-    <div class="md-tabs__inner md-grid">
-      <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">Documentation</a></li>
-          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
-      </ul>
-    </div>
-  </nav>
-    <main class="md-main">
-      <div class="md-main__inner md-grid" data-md-component="container">
         
-          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
-            <div class="md-sidebar__scrollwrap">
-              <div class="md-sidebar__inner">
-                <nav class="md-nav md-nav--primary" data-md-level="0">
-  <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="Documentation" class="md-nav__button md-logo">
-      
-        <img src="../../_static/" alt=" logo" width="48" height="48">
-      
-    </a>
-    <a href="../../index.html"
-       title="Documentation">SWMM CrossSection shape Generator</a>
-  </label>
-    <div class="md-nav__source">
-      <a href="https://github.com/MarkusPic/SWMM_xsections_shape_generator" title="Go to repository" class="md-source" data-md-source="github">
-
-    <div class="md-source__icon">
-      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
-        <use xlink:href="#__github" width="24" height="24"></use>
-      </svg>
-    </div>
-  
-  <div class="md-source__repository">
-    SWMM_xsections_shape_generator
-  </div>
-</a>
-    </div>
-  
-  
-
-  
-  <ul class="md-nav__list">
-    <li class="md-nav__item">
-    
-      <span class="md-nav__link caption"><span class="caption-text">Overview:</span></span>
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../../install.html" class="md-nav__link">Install</a>
-      <ul class="md-nav__list"> 
-    <li class="md-nav__item">
-    
-    
-      <a href="../../install.html#python-packages" class="md-nav__link">python Packages</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../../install.html#fresh-install" class="md-nav__link">Fresh install</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../../install.html#update-package" class="md-nav__link">Update package</a>
-      
-    
-    </li></ul>
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../../main.html" class="md-nav__link">General information</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-      <span class="md-nav__link caption"><span class="caption-text">API:</span></span>
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../../api_helpers.html" class="md-nav__link">Helper Functions</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../../api_class.html" class="md-nav__link">Main Function</a>
-      <ul class="md-nav__list"> 
-    <li class="md-nav__item">
-    
-    
-      <a href="../../api_class.html#crosssection" class="md-nav__link">CrossSection</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../../api_class.html#crosssectionholding" class="md-nav__link">CrossSectionHolding</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../../api_class.html#crosssectionmisc" class="md-nav__link">CrossSectionMisc</a>
-      
-    
-    </li></ul>
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../../api_examples.html" class="md-nav__link">Examples Classes</a>
-      <ul class="md-nav__list"> 
-    <li class="md-nav__item">
-    
-    
-      <a href="../../api_examples.html#circlesection" class="md-nav__link">CircleSection</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../../api_examples.html#eggsection" class="md-nav__link">EggSection</a>
-      
-    
-    </li></ul>
-    
-    </li>
-    <li class="md-nav__item">
-    
-      <span class="md-nav__link caption"><span class="caption-text">Examples:</span></span>
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../../show_case.html" class="md-nav__link">Examples for general profile shapes</a>
-      <ul class="md-nav__list"> 
-    <li class="md-nav__item">
-    
-    
-      <a href="../../show_case.html#Example-for-standard-egg-cross-section" class="md-nav__link">Example for standard egg cross section</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../../show_case.html#Example-for-custom-cross-section" class="md-nav__link">Example for custom cross section</a>
-      
-    
-    </li></ul>
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../../show_case-kasten.html" class="md-nav__link">Examples for box shaped profiles</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../../standard_cross_section.html" class="md-nav__link">Standard cross section</a>
-      <ul class="md-nav__list"> 
-    <li class="md-nav__item">
-    
-    
-      <a href="../../standard_cross_section.html#Dictionary" class="md-nav__link">Dictionary</a>
-      
-    
-    </li></ul>
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../../show_case_swmm_standard.html" class="md-nav__link">SWMM Standard cross section as an example</a>
-      
-    
-    </li>
-  </ul>
-  
-
-</nav>
-              </div>
-            </div>
-          </div>
-          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
-            <div class="md-sidebar__scrollwrap">
-              <div class="md-sidebar__inner">
-                
-<nav class="md-nav md-nav--secondary">
-  <ul class="md-nav__list" data-md-scrollfix="">
-  </ul>
-</nav>
-              </div>
-            </div>
-          </div>
-        
-        <div class="md-content">
-          <article class="md-content__inner md-typeset" role="main">
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
             
-  <h1 id="modules-shape-generator-shape-generator--page-root">Source code for shape_generator.shape_generator</h1><div class="highlight"><pre>
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Overview:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">General information</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api_helpers.html">Helper Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_class.html">Main Function</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_examples.html">Examples Classes</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../show_case.html">Examples for general profile shapes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../show_case-kasten.html">Examples for box shaped profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../standard_cross_section.html">Standard cross section</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../show_case_swmm_standard.html">SWMM Standard cross section as an example</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SWMM CrossSection shape Generator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>shape_generator.shape_generator</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for shape_generator.shape_generator</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -410,7 +192,7 @@
 <span class="c1">########################################################################################################################</span>
 <span class="c1">########################################################################################################################</span>
 <div class="viewcode-block" id="CrossSection"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection">[docs]</a><span class="k">class</span> <span class="nc">CrossSection</span><span class="p">:</span>
-    <span class="sd">"""main class</span>
+    <span class="sd">&quot;&quot;&quot;main class</span>
 <span class="sd">    A Class that should help to generate custom cross section shapes for the SWMM software.</span>
 
 <span class="sd">    Attributes:</span>
@@ -421,10 +203,10 @@
 <span class="sd">        working_directory (str): directory where the files get saved</span>
 <span class="sd">        unit (str): unit of entered values</span>
 <span class="sd">        double (bool): if the cross section two separate cross sections</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="CrossSection.__init__"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">working_directory</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">"""Initialise the cross section class</span>
+<div class="viewcode-block" id="CrossSection.__init__"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">working_directory</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialise the cross section class</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            label (str): main name/label/number of the cross section</span>
@@ -433,9 +215,9 @@
 <span class="sd">            width (Optional[float]): absolute width of the CS (optional) can be estimated</span>
 <span class="sd">            working_directory (str): directory where the files are saved</span>
 <span class="sd">            unit (Optional[str]): enter unit to add the unit in the plots</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">''</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="k">if</span> <span class="n">description</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">description</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
@@ -454,7 +236,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
 
         <span class="c1"># _______________________________</span>
-        <span class="c1"># print('_' * 30)</span>
+        <span class="c1"># print(&#39;_&#39; * 30)</span>
         <span class="c1"># print(self)</span>
 
         <span class="c1"># _______________________________</span>
@@ -474,37 +256,37 @@
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">:  </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        absolute height of the CS</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float: absolute height of the CS</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_height</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        absolute width of the CS</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float: absolute width of the CS</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_width</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">out_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        filename of the figure/text-file to be created</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: filename</span>
 
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">working_directory</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">_reset_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -513,7 +295,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_shape_description</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="CrossSection.add"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_or_expr</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        add part of cross section</span>
 
 <span class="sd">        can be a:</span>
@@ -540,7 +322,7 @@
 <span class="sd">                    - ``slope`` : ready to use slope 1 / :math:`\\Delta` y</span>
 <span class="sd">                    - ``°slope`` : slope as an angle in degree (°)</span>
 <span class="sd">                    - ``%slope`` : slope in percentage (%)</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reset_shape</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x_or_expr</span><span class="p">,</span> <span class="n">CustomExpr</span><span class="p">):</span>
@@ -552,11 +334,11 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="n">x_or_expr</span>
 
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">'slope'</span> <span class="ow">in</span> <span class="n">y</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;slope&#39;</span> <span class="ow">in</span> <span class="n">y</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Horizontal</span><span class="p">())</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">unit</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'slope'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
+                    <span class="n">unit</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;slope&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Slope</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">))</span>
 
             <span class="k">else</span><span class="p">:</span>
@@ -566,8 +348,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span></div>
 
     <span class="k">def</span> <span class="nf">get_points_OLD</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">""</span>
-        <span class="sd">"""create absolute point coordinates and write it into :py:attr:`~df_abs`</span>
+        <span class="s2">&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;create absolute point coordinates and write it into :py:attr:`~df_abs`</span>
 
 <span class="sd">        To create a :obj:`pandas.DataFrame` of all the points to describe the cross section.</span>
 <span class="sd">        This function replaces the Expressions given in :py:attr:`~add` to points with x and y coordinates</span>
@@ -575,7 +357,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            pandas.DataFrame: absolute point coordinates</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
             <span class="c1"># number of expressions used in shape</span>
             <span class="n">num_functions</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">Circle</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape_description</span><span class="p">])</span>
@@ -603,7 +385,7 @@
             <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape_description</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">Circle</span><span class="p">):</span>
                     <span class="c1"># this_step = (end - start) / np.floor((end - start) / step)</span>
-                    <span class="c1"># print(step, ' vs ', this_step)</span>
+                    <span class="c1"># print(step, &#39; vs &#39;, this_step)</span>
                     <span class="n">nx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">+</span> <span class="n">step</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="nb">max</span><span class="o">=</span><span class="n">end</span><span class="p">)</span>
                     <span class="n">ny</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
                     <span class="n">x</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
@@ -627,14 +409,14 @@
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_points_OLD</span><span class="p">()</span>
         <span class="c1"># the absolute points of the final shape</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">'x'</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
 
         <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">df_abs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""create absolute point coordinates and write it into :py:attr:`~df_abs`</span>
+        <span class="sd">&quot;&quot;&quot;create absolute point coordinates and write it into :py:attr:`~df_abs`</span>
 
 <span class="sd">        To create a :obj:`pandas.DataFrame` of all the points to describe the cross section.</span>
 <span class="sd">        This function replaces the Expressions given in :py:attr:`~add` to points with x and y coordinates</span>
@@ -642,7 +424,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            pandas.DataFrame: absolute point coordinates</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_abs_NEW</span>
 
     <span class="nd">@property</span>
@@ -651,13 +433,13 @@
 
         <span class="c1"># the absolute points of the final shape</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">'x'</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
 
         <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
 <div class="viewcode-block" id="CrossSection.get_points"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.get_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""create absolute point coordinates and write it into :py:attr:`~points`</span>
+        <span class="sd">&quot;&quot;&quot;create absolute point coordinates and write it into :py:attr:`~points`</span>
 
 <span class="sd">        To create a :obj:`list[tuple]` of all the points to describe the cross section.</span>
 <span class="sd">        This function replaces the Expressions given in :py:attr:`~add` to points with x and y coordinates</span>
@@ -665,7 +447,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            list[list[float,float]]: absolute point coordinates</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
             <span class="n">step</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span>
             <span class="c1"># if functions are used in shape</span>
@@ -699,73 +481,73 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span></div>
 
 <div class="viewcode-block" id="CrossSection.get_width"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.get_width">[docs]</a>    <span class="k">def</span> <span class="nf">get_width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        get absolute width of cross section</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float: width of cross section</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span></div>
 
 <div class="viewcode-block" id="CrossSection.set_double_cross_section"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.set_double_cross_section">[docs]</a>    <span class="k">def</span> <span class="nf">set_double_cross_section</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        make the cross section as a double section (=Doppelprofil)</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">double</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="CrossSection.check_point_cloud"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.check_point_cloud">[docs]</a>    <span class="k">def</span> <span class="nf">check_point_cloud</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        remove errors from the point cloud, ie.:</span>
 <span class="sd">            - remove duplicates,</span>
 <span class="sd">            - (if specified) remove points which overlap the overall cross section width and</span>
 <span class="sd">            - other errors...</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_rel</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">)</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">):</span>
-            <span class="n">df</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span><span class="o">.</span><span class="n">clip_upper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'had to clip the width'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">clip_upper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;had to clip the width&#39;</span><span class="p">)</span>
 
-        <span class="c1"># print((np.arctan(df['x'].diff() / df['y'].diff())/ np.pi * 180).head(10))</span>
+        <span class="c1"># print((np.arctan(df[&#39;x&#39;].diff() / df[&#39;y&#39;].diff())/ np.pi * 180).head(10))</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">double</span><span class="p">:</span>
-            <span class="n">df</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">2</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">2</span>
 
         <span class="c1"># delete errors</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'x'</span><span class="p">]</span><span class="o">.</span><span class="n">expanding</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">==</span> <span class="n">df</span><span class="p">[</span><span class="s1">'x'</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">expanding</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">==</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
         <span class="c1"># change x duplicates</span>
-        <span class="n">dupls</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'x'</span><span class="p">]</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">keep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">dupls</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">keep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dupls</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
-            <span class="n">nx</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'x'</span><span class="p">][</span><span class="n">dupls</span><span class="p">]</span>
+            <span class="n">nx</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][</span><span class="n">dupls</span><span class="p">]</span>
 
             <span class="k">def</span> <span class="nf">raise_values</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">s</span> <span class="o">+</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">index</span><span class="p">)))</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">)</span>
 
             <span class="n">nx</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">raise_values</span><span class="p">)</span>
-            <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nx</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nx</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_df_abs</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">df_rel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""relative point coordinates</span>
+        <span class="sd">&quot;&quot;&quot;relative point coordinates</span>
 
 <span class="sd">        convert the absolute values in the point coordinates to values relative to the cross section height</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            pandas.DataFrame: point coordinate values relative to the cross section height</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
 <div class="viewcode-block" id="CrossSection.add_and_show"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.add_and_show">[docs]</a>    <span class="k">def</span> <span class="nf">add_and_show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :py:attr:`~add` + :py:attr:`~check_point_cloud` + :py:attr:`~profile_abs_figure`</span>
 
 <span class="sd">        and print the raw shape (description of the cross section)</span>
@@ -775,30 +557,30 @@
 <span class="sd">        Args:</span>
 <span class="sd">            *args: see :py:attr:`~add` arguments</span>
 <span class="sd">            **kwargs: see :py:attr:`~add` keyword arguments</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="c1"># print('-' * 5, *self.shape, '-' * 5, sep='\n')</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">'-'</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">shape_description</span><span class="p">,</span> <span class="s1">'-'</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="c1"># print(&#39;-&#39; * 5, *self.shape, &#39;-&#39; * 5, sep=&#39;\n&#39;)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">shape_description</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">check_point_cloud</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="CrossSection.profile_rel_plot"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.profile_rel_plot">[docs]</a>    <span class="k">def</span> <span class="nf">profile_rel_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auto_open</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="s1">'png'</span><span class="p">):</span>
-        <span class="sd">"""</span>
+<div class="viewcode-block" id="CrossSection.profile_rel_plot"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.profile_rel_plot">[docs]</a>    <span class="k">def</span> <span class="nf">profile_rel_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auto_open</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        create a plot graphic into the :py:attr:`~working_directory` with relative dimensions</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            auto_open (bool): whether the plot should be opened after its creation</span>
 <span class="sd">            file_format (str): file format, ie: ``png``, ``pdf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)</span>
-<span class="sd">        """</span>
-        <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_rel</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">'y'</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">'x'</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">'.-'</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">'equal'</span><span class="p">,</span> <span class="s1">'box'</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'rel H'</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'B/H'</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_rel</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;.-&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="s1">&#39;box&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;rel H&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;B/H&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">))</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">()</span>
 
         <span class="c1"># ---------</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_filename</span> <span class="o">+</span> <span class="s1">'_rel.'</span> <span class="o">+</span> <span class="n">file_format</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_filename</span> <span class="o">+</span> <span class="s1">&#39;_rel.&#39;</span> <span class="o">+</span> <span class="n">file_format</span>
 
         <span class="c1"># ---------</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
@@ -807,8 +589,8 @@
         <span class="k">if</span> <span class="n">auto_open</span><span class="p">:</span>
             <span class="n">open_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CrossSection.profile_abs_plot"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.profile_abs_plot">[docs]</a>    <span class="k">def</span> <span class="nf">profile_abs_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auto_open</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="s1">'png'</span><span class="p">):</span>
-        <span class="sd">"""</span>
+<div class="viewcode-block" id="CrossSection.profile_abs_plot"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.profile_abs_plot">[docs]</a>    <span class="k">def</span> <span class="nf">profile_abs_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auto_open</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        create a plot graphic into the :py:attr:`~working_directory` with absolute dimensions.</span>
 
 <span class="sd">        This function uses the :py:attr:`~profile_abs_figure` -function to get a figure and saves the figure in a file.</span>
@@ -816,11 +598,11 @@
 <span class="sd">        Args:</span>
 <span class="sd">            auto_open (bool): whether the plot should be opened after its creation</span>
 <span class="sd">            file_format (str): file format, ie: ``png``, ``pdf``, ... (see :py:meth:`matplotlib.figure.Figure.savefig`)</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
 
         <span class="c1"># ---------</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_filename</span> <span class="o">+</span> <span class="s1">'_abs.'</span> <span class="o">+</span> <span class="n">file_format</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_filename</span> <span class="o">+</span> <span class="s1">&#39;_abs.&#39;</span> <span class="o">+</span> <span class="n">file_format</span>
 
         <span class="c1"># ---------</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
@@ -830,16 +612,16 @@
             <span class="n">open_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CrossSection.profile_abs_figure"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.profile_abs_figure">[docs]</a>    <span class="k">def</span> <span class="nf">profile_abs_figure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        create a plot of the absolute dimensions</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            matplotlib.figure.Figure: plot of the absolute dimensions</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_abs</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 
-        <span class="n">w</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
-        <span class="n">h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'x'</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
 
         <span class="k">def</span> <span class="nf">custom_round</span><span class="p">(</span><span class="n">x_</span><span class="p">,</span> <span class="n">base</span><span class="p">):</span>
             <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">base</span> <span class="o">*</span> <span class="n">ceil</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x_</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="p">))</span>
@@ -850,10 +632,10 @@
         <span class="n">ylim</span> <span class="o">=</span> <span class="n">custom_round</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 
         <span class="n">other_side</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">other_side</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">other_side</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">other_side</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">ax</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">'y'</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">'x'</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1000000</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">'equal'</span><span class="p">,</span> <span class="s1">'box'</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1000000</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="s1">&#39;box&#39;</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">xlim</span><span class="p">,</span> <span class="n">xlim</span><span class="p">,</span> <span class="n">base</span><span class="p">)),</span> <span class="n">minor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">half_base</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">xlim</span><span class="p">,</span> <span class="n">xlim</span><span class="p">,</span> <span class="n">half_base</span><span class="p">)),</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -865,24 +647,24 @@
         <span class="c1"># ax.set_axis_off()</span>
         <span class="c1"># ax.set_frame_on(False)</span>
         <span class="c1"># ax.axis()</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">'both'</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">labelbottom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">labeltop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">labelleft</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">labelbottom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">labeltop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">labelleft</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                        <span class="n">labelright</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="n">xlim</span><span class="p">,</span> <span class="n">xlim</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ylim</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="c1"># ax.grid(True, which='minor', linestyle=':', linewidth=0.5)</span>
+        <span class="c1"># ax.grid(True, which=&#39;minor&#39;, linestyle=&#39;:&#39;, linewidth=0.5)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_axisbelow</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="c1"># ax.set_ylabel('rel H')</span>
-        <span class="c1"># ax.set_xlabel('B/H')</span>
+        <span class="c1"># ax.set_ylabel(&#39;rel H&#39;)</span>
+        <span class="c1"># ax.set_xlabel(&#39;B/H&#39;)</span>
 
         <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span>
-            <span class="n">n</span> <span class="o">+=</span> <span class="s1">': </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+            <span class="n">n</span> <span class="o">+=</span> <span class="s1">&#39;: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
 
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="se">\n</span><span class="si">{:0.0f}</span><span class="s1">x</span><span class="si">{:0.0f}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">custom_round</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">half_base</span><span class="p">))</span> <span class="o">+</span>
-                     <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">''</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="se">\n</span><span class="si">{:0.0f}</span><span class="s1">x</span><span class="si">{:0.0f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">custom_round</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">half_base</span><span class="p">))</span> <span class="o">+</span>
+                     <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
 
         <span class="n">fig</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">()</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
@@ -890,60 +672,60 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">df_rel_fill_swmm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        get the relative data curve for EPA-SWMM</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            pandas.DataFrame: relative data curve for EPA-SWMM</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_rel</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">2</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">2</span>
         <span class="k">return</span> <span class="n">df</span>
 
 <div class="viewcode-block" id="CrossSection.dat_file"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.dat_file">[docs]</a>    <span class="k">def</span> <span class="nf">dat_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        create the EPA-SWMM Curve Data  ``.dat`` -file, which can be imported into SWMM</span>
 <span class="sd">        The file is save into the :py:attr:`~working_directory`.</span>
-<span class="sd">        """</span>
-        <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_filename</span> <span class="o">+</span> <span class="s1">'.dat'</span><span class="p">,</span> <span class="s1">'w+'</span><span class="p">)</span>
-        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'EPASWMM Curve Data</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
-        <span class="n">dim</span> <span class="o">=</span> <span class="s1">'H=</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_filename</span> <span class="o">+</span> <span class="s1">&#39;.dat&#39;</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span>
+        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;EPASWMM Curve Data</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">dim</span> <span class="o">=</span> <span class="s1">&#39;H=</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">:</span>
-            <span class="n">dim</span> <span class="o">+=</span> <span class="s1">', B=</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
-        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1"> - </span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="n">dim</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">df_rel_fill_swmm</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">' '</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                                     <span class="n">float_format</span><span class="o">=</span><span class="s1">'%0.</span><span class="si">{}</span><span class="s1">f'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">))</span></div>
+            <span class="n">dim</span> <span class="o">+=</span> <span class="s1">&#39;, B=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> - </span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="n">dim</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df_rel_fill_swmm</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                     <span class="n">float_format</span><span class="o">=</span><span class="s1">&#39;%0.</span><span class="si">{}</span><span class="s1">f&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="CrossSection.inp_string"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.inp_string">[docs]</a>    <span class="k">def</span> <span class="nf">inp_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        create the curve data for cross section shapes in the ``.inp`` -file (SWMM-Input) format,</span>
 <span class="sd">        which can be pasted into the input file.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: formatted text of the data</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_rel_fill_swmm</span>
 
-        <span class="n">df</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_filename</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_filename</span><span class="p">)</span>
 
-        <span class="n">df</span><span class="p">[</span><span class="s1">'shape'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">''</span>
-        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'shape'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'shape'</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;shape&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;shape&#39;</span>
 
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'name'</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">df</span><span class="p">[[</span><span class="s1">'shape'</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'y'</span><span class="p">]]</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                                                 <span class="n">float_format</span><span class="o">=</span><span class="s1">'%0.</span><span class="si">{}</span><span class="s1">f'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;shape&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                 <span class="n">float_format</span><span class="o">=</span><span class="s1">&#39;%0.</span><span class="si">{}</span><span class="s1">f&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="CrossSection.input_file"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.input_file">[docs]</a>    <span class="k">def</span> <span class="nf">input_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        create the curve data for cross section shapes in the ``.inp`` -file (SWMM-Input) format</span>
 <span class="sd">        and save it as a separate txt-file.</span>
 
 <span class="sd">        This function uses the :py:attr:`~inp_string` -function to get the string and saves the string in a file.</span>
 <span class="sd">        The file is save into the :py:attr:`~working_directory`.</span>
-<span class="sd">        """</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_filename</span> <span class="o">+</span> <span class="s1">'_shape.txt'</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_filename</span> <span class="o">+</span> <span class="s1">&#39;_shape.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inp_string</span><span class="p">())</span></div>
 
     <span class="c1">####################################################################################################################</span>
@@ -951,12 +733,12 @@
     <span class="c1">####################################################################################################################</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">shape_description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        list of functions to describe the cross section shape</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            list: description of the cross section shape</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shape_description</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># result list</span>
             <span class="n">function</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -981,7 +763,7 @@
                     <span class="n">shape_next</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
 
                 <span class="c1"># _________________________________</span>
-                <span class="c1"># if isinstance(shape_i, tuple) and shape_i[1] == 'slope':</span>
+                <span class="c1"># if isinstance(shape_i, tuple) and shape_i[1] == &#39;slope&#39;:</span>
                 <span class="c1">#     shape_i = Slope(shape_i[0])</span>
                 <span class="c1">#     shape_i.set_start_point(last_point)</span>
 
@@ -1028,7 +810,7 @@
                             <span class="n">yi</span><span class="o">.</span><span class="n">set_points</span><span class="p">(</span><span class="n">last_point</span><span class="p">,</span> <span class="n">shape_next</span><span class="p">)</span>
 
                         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape_next</span><span class="p">,</span> <span class="n">CustomExpr</span><span class="p">):</span>
-                            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'must be implemented'</span><span class="p">,</span> <span class="ne">FutureWarning</span><span class="p">)</span>
+                            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;must be implemented&#39;</span><span class="p">,</span> <span class="ne">FutureWarning</span><span class="p">)</span>
 
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape_next</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
@@ -1042,7 +824,7 @@
                             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                                 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize_scalar</span>
                                 <span class="n">end</span> <span class="o">=</span> <span class="n">minimize_scalar</span><span class="p">(</span><span class="k">lambda</span> <span class="n">j</span><span class="p">:</span> <span class="nb">float</span><span class="p">((</span><span class="n">yi</span><span class="o">.</span><span class="n">expr</span><span class="p">()</span> <span class="o">-</span> <span class="n">shape_next</span><span class="o">.</span><span class="n">expr</span><span class="p">())</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">j</span><span class="p">)),</span>
-                                                      <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s1">'bounded'</span><span class="p">)</span><span class="o">.</span><span class="n">x</span>
+                                                      <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bounded&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">x</span>
 
                             <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                                 <span class="n">end</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -1052,12 +834,12 @@
                                 <span class="n">end</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">'Unknown Input in shape'</span><span class="p">)</span>
+                            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Unknown Input in shape&#39;</span><span class="p">)</span>
 
                         <span class="n">end</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">end</span><span class="p">)</span>
 
                         <span class="k">if</span> <span class="n">start</span> <span class="o">==</span> <span class="n">end</span><span class="p">:</span>
-                            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'unused part of the shape detected. Ignoring this part.'</span><span class="p">)</span>
+                            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;unused part of the shape detected. Ignoring this part.&#39;</span><span class="p">)</span>
                             <span class="k">continue</span>
 
                     <span class="n">function</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">yi</span><span class="p">))</span>
@@ -1074,7 +856,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shape_description</span>
 
 <div class="viewcode-block" id="CrossSection.b_w_t"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.b_w_t">[docs]</a>    <span class="k">def</span> <span class="nf">b_w_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        width of the cross section at a certain height</span>
 <span class="sd">        (Wasseroberflächenbreite im teilgefüllten Querschnitt)</span>
 
@@ -1083,7 +865,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float | numpy.ndarray: width at the certain height</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">]</span> <span class="o">*</span> <span class="n">hi</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
             <span class="c1"># w = hi.copy()</span>
@@ -1099,7 +881,7 @@
                     <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span></div>
 
 <div class="viewcode-block" id="CrossSection.l_u_t"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.l_u_t">[docs]</a>    <span class="k">def</span> <span class="nf">l_u_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        wetted perimeter in the partially filled cross section at a certain water level height</span>
 <span class="sd">        (benetzter Umfang im teilgefüllten Querschnitt)</span>
 
@@ -1108,7 +890,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float | numpy.ndarray: wetted perimeter at the certain height</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="n">l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">]</span> <span class="o">*</span> <span class="n">hi</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
 
@@ -1134,19 +916,19 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">l_u_v</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        wetted perimeter of the full filled cross section</span>
 <span class="sd">        (benetzter Umfang im vollgefüllten Querschnitt)</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float | numpy.ndarray: wetted perimeter</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_l_u_v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_l_u_v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_u_t</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_l_u_v</span>
 
 <div class="viewcode-block" id="CrossSection.area_t"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.area_t">[docs]</a>    <span class="k">def</span> <span class="nf">area_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        flow area in the partially filled cross section at a certain water level height</span>
 <span class="sd">        (Fließquerschnitt im teilgefüllten Querschnitt)</span>
 
@@ -1155,7 +937,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float | numpy.ndarray: flow area at the certain height</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">]</span> <span class="o">*</span> <span class="n">hi</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
 
@@ -1181,19 +963,19 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">area_v</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        flow area of the full filled cross section</span>
 <span class="sd">        (Fließquerschnitt im vollgefüllten Querschnitt)</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float | numpy.ndarray: flow area</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_area_v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_area_v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_t</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_area_v</span>
 
 <div class="viewcode-block" id="CrossSection.r_hyd_t"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.r_hyd_t">[docs]</a>    <span class="k">def</span> <span class="nf">r_hyd_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        hydraulic radius in the partially filled cross section at a certain water level height</span>
 <span class="sd">        (hydraulischer Radius im teilgefüllten Querschnitt)</span>
 
@@ -1202,25 +984,25 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float | numpy.ndarray: hydraulic radius at the certain height</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_t</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_u_t</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">r_hyd_v</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        hydraulic radius of the full filled cross section</span>
 <span class="sd">        (hydraulischer Radius im vollgefüllten Querschnitt)</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float | numpy.ndarray: hydraulic radius</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_r_hyd_v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_r_hyd_v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_v</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_u_v</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_r_hyd_v</span>
 
     <span class="c1">####################################################################################################################</span>
 <div class="viewcode-block" id="CrossSection.velocity_v"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.velocity_v">[docs]</a>    <span class="k">def</span> <span class="nf">velocity_v</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        calculate velocity in partially filled sewer channel</span>
 
 <span class="sd">        Args:</span>
@@ -1232,7 +1014,7 @@
 
 <span class="sd">        References:</span>
 <span class="sd">            DWA-A 110 Section 4.1.1 Vollfüllung</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v_v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_v_v</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 
@@ -1253,7 +1035,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v_v</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">slope</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="CrossSection.velocity_t"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.velocity_t">[docs]</a>    <span class="k">def</span> <span class="nf">velocity_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hi</span><span class="p">,</span> <span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        calculate velocity in partially filled sewer channel</span>
 
 <span class="sd">        Args:</span>
@@ -1266,11 +1048,11 @@
 
 <span class="sd">        References:</span>
 <span class="sd">            DWA-A 110 Section 4.1.2 Teilfüllung</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_hyd_t</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_hyd_v</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.625</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">velocity_v</span><span class="p">(</span><span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CrossSection.flow_t"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.flow_t">[docs]</a>    <span class="k">def</span> <span class="nf">flow_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hi</span><span class="p">,</span> <span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            hi (float): water level = height in mm</span>
@@ -1279,11 +1061,11 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float: flow rate in L/s</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">velocity_t</span><span class="p">(</span><span class="n">hi</span><span class="p">,</span> <span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_t</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.0e-6</span> <span class="o">*</span> <span class="mi">1000</span></div>
 
 <div class="viewcode-block" id="CrossSection.flow_v"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.flow_v">[docs]</a>    <span class="k">def</span> <span class="nf">flow_v</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            slope (float): absolute slope in m/m</span>
@@ -1291,12 +1073,12 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float: full filling flow rate in L/s</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">velocity_v</span><span class="p">(</span><span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_v</span> <span class="o">*</span> <span class="mf">1.0e-6</span> <span class="o">*</span> <span class="mi">1000</span></div>
 
     <span class="c1">####################################################################################################################</span>
 <div class="viewcode-block" id="CrossSection.h_t"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSection.h_t">[docs]</a>    <span class="k">def</span> <span class="nf">h_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Q_t</span><span class="p">,</span> <span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        get the height of the water level based on the known flow</span>
 
 <span class="sd">        Args:</span>
@@ -1306,29 +1088,29 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float: height of the water level</span>
-<span class="sd">        """</span>
-        <span class="c1"># hi = '?'</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># hi = &#39;?&#39;</span>
         <span class="c1"># self.flow_t(hi, slope, k)</span>
         <span class="c1"># self.flow_v(slope, k)</span>
         <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize_scalar</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">minimize_scalar</span><span class="p">(</span><span class="k">lambda</span> <span class="n">hi</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">Q_t</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_t</span><span class="p">(</span><span class="n">hi</span><span class="p">,</span> <span class="n">slope</span><span class="p">,</span> <span class="n">k</span><span class="p">)),</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">),</span>
-                              <span class="n">method</span><span class="o">=</span><span class="s1">'bounded'</span><span class="p">)</span>
+                              <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bounded&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span></div></div>
 
 
 <span class="c1">########################################################################################################################</span>
 <span class="c1">########################################################################################################################</span>
 <div class="viewcode-block" id="CrossSectionHolding"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSectionHolding">[docs]</a><span class="k">class</span> <span class="nc">CrossSectionHolding</span><span class="p">(</span><span class="n">CrossSection</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    cross section class for Holding Graz</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        add_dim (bool): add the dimension (height x width) to the label and output filename</span>
 <span class="sd">        add_dn (bool): add the channel diameter (DN ...) to the label and output filename</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="CrossSectionHolding.__init__"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSectionHolding.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">add_dim</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_dn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">"""Initialise the cross section class</span>
+        <span class="sd">&quot;&quot;&quot;Initialise the cross section class</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            label (str): name/label/number of the cross section</span>
@@ -1344,14 +1126,14 @@
 <span class="sd">            working_directory (str): directory where the files get saved</span>
 <span class="sd">            unit (Optional[str]): enter unit to add the unit in the plots</span>
 
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
-            <span class="n">label</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{:0.0f}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:0.0f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">label</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'Pr_'</span><span class="p">):</span>
-            <span class="n">label</span> <span class="o">=</span> <span class="s1">'Pr_'</span> <span class="o">+</span> <span class="n">label</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">label</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Pr_&#39;</span><span class="p">):</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Pr_&#39;</span> <span class="o">+</span> <span class="n">label</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_dim</span> <span class="o">=</span> <span class="n">add_dim</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_dn</span> <span class="o">=</span> <span class="n">add_dn</span>
@@ -1361,38 +1143,38 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_dim</span><span class="p">:</span>
-            <span class="n">s</span> <span class="o">+=</span> <span class="s1">'  |  </span><span class="si">{:0.0f}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;  |  </span><span class="si">{:0.0f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">:</span>
-                <span class="n">s</span> <span class="o">+=</span> <span class="s1">'x</span><span class="si">{:0.0f}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;x</span><span class="si">{:0.0f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_dn</span><span class="p">:</span>
-            <span class="n">s</span> <span class="o">+=</span> <span class="s1">'  |  DN</span><span class="si">{:0.0f}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_dn</span><span class="p">)</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;  |  DN</span><span class="si">{:0.0f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_dn</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">s</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">out_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        filename of the figure/text-file to be created</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: filename</span>
 
-<span class="sd">        """</span>
-        <span class="n">file</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">working_directory</span><span class="p">,</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">working_directory</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_dim</span><span class="p">:</span>
-            <span class="n">file</span> <span class="o">+=</span> <span class="s1">'_</span><span class="si">{:0.0f}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+            <span class="n">file</span> <span class="o">+=</span> <span class="s1">&#39;_</span><span class="si">{:0.0f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">:</span>
-                <span class="n">file</span> <span class="o">+=</span> <span class="s1">'x</span><span class="si">{:0.0f}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+                <span class="n">file</span> <span class="o">+=</span> <span class="s1">&#39;x</span><span class="si">{:0.0f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_dn</span><span class="p">:</span>
-            <span class="n">file</span> <span class="o">+=</span> <span class="s1">'_DN</span><span class="si">{:0.0f}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_dn</span><span class="p">)</span>
+            <span class="n">file</span> <span class="o">+=</span> <span class="s1">&#39;_DN</span><span class="si">{:0.0f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_dn</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">file</span>
 
     <span class="c1">####################################################################################################################</span>
 <div class="viewcode-block" id="CrossSectionHolding.standard"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSectionHolding.standard">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">standard</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">r_channel</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">r_roof</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">r_wall</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">slope_bench</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span>
                  <span class="n">r_round</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">r_wall_bottom</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">h_bench</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">pre_bench</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="n">w_channel</span><span class="o">=</span><span class="n">NaN</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        standard cross section</span>
 
 <span class="sd">        Args:</span>
@@ -1424,9 +1206,7 @@
 <span class="sd">            CrossSectionHolding: standard cross section</span>
 
 <span class="sd">        Examples:</span>
-<span class="sd">            see :ref:`Examples_for_standard_profiles`</span>
-<span class="sd">            see :ref:`standard_cross_section.ipynb`</span>
-
+<span class="sd">            see :doc:`standard_cross_section`</span>
 
 <span class="sd">        .. figure:: images/standard.gif</span>
 <span class="sd">            :align: center</span>
@@ -1447,7 +1227,7 @@
 <span class="sd">        | bench   | Berme               |</span>
 <span class="sd">        +---------+---------------------+</span>
 
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># ------------------------------------------------</span>
         <span class="n">cross_section</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
@@ -1463,7 +1243,7 @@
                 <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">channel_end</span><span class="p">(</span><span class="n">r_channel</span><span class="p">,</span> <span class="n">pre_bench</span><span class="p">))</span>
 
                 <span class="k">if</span> <span class="n">notna</span><span class="p">(</span><span class="n">h_bench</span><span class="p">)</span> <span class="ow">or</span> <span class="n">isna</span><span class="p">(</span><span class="n">slope_bench</span><span class="p">):</span>
-                    <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">pre_bench</span><span class="p">,</span> <span class="s1">'°slope'</span><span class="p">)</span>
+                    <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">pre_bench</span><span class="p">,</span> <span class="s1">&#39;°slope&#39;</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">notna</span><span class="p">(</span><span class="n">h_bench</span><span class="p">):</span>
                     <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">h_bench</span><span class="p">)</span>
@@ -1483,7 +1263,7 @@
         <span class="c1"># ------------------------------------------------</span>
         <span class="k">if</span> <span class="n">notna</span><span class="p">(</span><span class="n">slope_bench</span><span class="p">):</span>
             <span class="c1"># Berme winkel in °</span>
-            <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">slope_bench</span><span class="p">,</span> <span class="s1">'°slope'</span><span class="p">)</span>
+            <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">slope_bench</span><span class="p">,</span> <span class="s1">&#39;°slope&#39;</span><span class="p">)</span>
 
         <span class="c1"># ------------------------------------------------</span>
         <span class="k">if</span> <span class="n">isna</span><span class="p">(</span><span class="n">r_channel</span><span class="p">)</span> <span class="ow">and</span> <span class="n">isna</span><span class="p">(</span><span class="n">slope_bench</span><span class="p">):</span>
@@ -1527,10 +1307,8 @@
     <span class="c1">####################################################################################################################</span>
 <div class="viewcode-block" id="CrossSectionHolding.box"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSectionHolding.box">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">box</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bench</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">roof</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rounding</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        pre defined box (=Kasten) cross section</span>
-
-<span class="sd">        see :ref:`Examples_for_box_shaped_profiles`</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            label (str): see :py:attr:`~__init__`</span>
@@ -1539,15 +1317,15 @@
 <span class="sd">            channel (Optional[float]): diameter of the dry weather channel</span>
 <span class="sd">            bench (Optional[float]): bench (=Berme)</span>
 
-<span class="sd">                - ``''``: flache Berme</span>
-<span class="sd">                - ``'R'``: V-förmiges Profil</span>
-<span class="sd">                - ``'H'``: Schräge Verschneidung</span>
+<span class="sd">                - ``&#39;&#39;``: flache Berme</span>
+<span class="sd">                - ``&#39;R&#39;``: V-förmiges Profil</span>
+<span class="sd">                - ``&#39;H&#39;``: Schräge Verschneidung</span>
 
 <span class="sd">            roof (Optional[float]): roof (=Decke)</span>
 
-<span class="sd">                - ``''``: gerade</span>
-<span class="sd">                - ``'B'``: Bogen</span>
-<span class="sd">                - ``'K'``: Kreis</span>
+<span class="sd">                - ``&#39;&#39;``: gerade</span>
+<span class="sd">                - ``&#39;B&#39;``: Bogen</span>
+<span class="sd">                - ``&#39;K&#39;``: Kreis</span>
 
 <span class="sd">            rounding (Optional[float]): rounding of the edges</span>
 <span class="sd">            **kwargs (object): see :py:attr:`~__init__`</span>
@@ -1559,8 +1337,11 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            CrossSectionHolding: pre defined box (=Kasten) cross section</span>
-<span class="sd">        """</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">'K'</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            see :doc:`show_case-kasten`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;K&#39;</span>
         <span class="n">cross_section</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">isna</span><span class="p">(</span><span class="n">channel</span><span class="p">):</span>
@@ -1569,37 +1350,37 @@
             <span class="n">channel</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">isna</span><span class="p">(</span><span class="n">bench</span><span class="p">):</span>
-            <span class="n">bench</span> <span class="o">=</span> <span class="s1">''</span>
+            <span class="n">bench</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
         <span class="k">if</span> <span class="n">isna</span><span class="p">(</span><span class="n">roof</span><span class="p">):</span>
-            <span class="n">roof</span> <span class="o">=</span> <span class="s1">''</span>
+            <span class="n">roof</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
         <span class="k">if</span> <span class="n">channel</span> <span class="ow">or</span> <span class="n">bench</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">+=</span> <span class="s1">'.'</span>
+            <span class="n">name</span> <span class="o">+=</span> <span class="s1">&#39;.&#39;</span>
             <span class="n">bench</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">bench</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
-                <span class="n">name</span> <span class="o">+=</span> <span class="s1">'</span><span class="si">{:0.0f}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+                <span class="n">name</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{:0.0f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
                 <span class="c1"># diameter to radius</span>
                 <span class="n">channel</span> <span class="o">/=</span> <span class="mi">2</span>
                 <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Circle</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="n">channel</span><span class="p">))</span>
 
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bench</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">bench</span> <span class="o">!=</span> <span class="s1">'45'</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">bench</span> <span class="o">!=</span> <span class="s1">&#39;45&#39;</span><span class="p">:</span>
                     <span class="n">name</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">bench</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="n">bench</span> <span class="o">==</span> <span class="s1">'R'</span><span class="p">:</span>
-                    <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="s1">'</span><span class="si">%s</span><span class="s1">lope'</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">bench</span> <span class="o">==</span> <span class="s1">&#39;R&#39;</span><span class="p">:</span>
+                    <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">lope&#39;</span><span class="p">)</span>
                     <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 
-                <span class="k">elif</span> <span class="n">bench</span> <span class="o">==</span> <span class="s1">'H'</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">bench</span> <span class="o">==</span> <span class="s1">&#39;H&#39;</span><span class="p">:</span>
                     <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">channel_end</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="mi">45</span><span class="p">))</span>
-                    <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="s1">'°slope'</span><span class="p">)</span>
+                    <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="s1">&#39;°slope&#39;</span><span class="p">)</span>
                     <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 
-                <span class="k">elif</span> <span class="n">bench</span> <span class="o">==</span> <span class="s1">'45'</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">bench</span> <span class="o">==</span> <span class="s1">&#39;45&#39;</span><span class="p">:</span>
                     <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">channel_end</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="mi">45</span><span class="p">))</span>
-                    <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="s1">'°slope'</span><span class="p">)</span>
+                    <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="s1">&#39;°slope&#39;</span><span class="p">)</span>
                     <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">channel</span> <span class="o">+</span> <span class="n">rounding</span><span class="p">)</span>
                     <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">channel</span> <span class="o">+</span> <span class="n">rounding</span><span class="p">,</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 
@@ -1610,11 +1391,11 @@
 
                     <span class="k">if</span> <span class="mi">1</span><span class="p">:</span>
                         <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">channel_end</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="mi">45</span><span class="p">))</span>
-                        <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="s1">'°slope'</span><span class="p">)</span>
+                        <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="s1">&#39;°slope&#39;</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">channel</span><span class="p">)</span>
                     <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">channel</span> <span class="o">+</span> <span class="n">rounding</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                    <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s1">'°slope'</span><span class="p">)</span>
+                    <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;°slope&#39;</span><span class="p">)</span>
                     <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
@@ -1622,18 +1403,18 @@
             <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">roof</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">+=</span> <span class="s1">'_'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">roof</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">+=</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">roof</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">roof</span> <span class="o">==</span> <span class="s1">''</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">roof</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
                 <span class="c1"># gerade Decke</span>
                 <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 
-            <span class="k">elif</span> <span class="n">roof</span> <span class="o">==</span> <span class="s1">'B'</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">roof</span> <span class="o">==</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span>
                 <span class="c1"># Bogen-Decke</span>
                 <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">height</span> <span class="o">-</span> <span class="n">width</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">cos</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="mi">30</span><span class="p">))),</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
                 <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Circle</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="n">height</span> <span class="o">-</span> <span class="n">width</span><span class="p">))</span>
 
-            <span class="k">elif</span> <span class="n">roof</span> <span class="o">==</span> <span class="s1">'K'</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">roof</span> <span class="o">==</span> <span class="s1">&#39;K&#39;</span><span class="p">:</span>
                 <span class="c1"># Kreis Decke</span>
                 <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">height</span> <span class="o">-</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
                 <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Circle</span><span class="p">(</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="n">height</span> <span class="o">-</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
@@ -1641,7 +1422,7 @@
             <span class="c1"># gerade Decke</span>
             <span class="n">cross_section</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">cross_section</span><span class="o">.</span><span class="n">label</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">cross_section</span><span class="o">.</span><span class="n">label</span> <span class="o">==</span> <span class="s1">''</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cross_section</span><span class="o">.</span><span class="n">label</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">cross_section</span><span class="o">.</span><span class="n">label</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
             <span class="n">cross_section</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">name</span>
         <span class="n">cross_section</span><span class="o">.</span><span class="n">check_point_cloud</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">cross_section</span></div>
@@ -1649,14 +1430,13 @@
     <span class="c1">####################################################################################################################</span>
 <div class="viewcode-block" id="CrossSectionHolding.box_from_string"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSectionHolding.box_from_string">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">box_from_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        create pre defined box (=Kasten) cross section with the string label.</span>
+
 <span class="sd">        This function takes the information from the label and pass them to the :py:attr:`~box` - function.</span>
 
-<span class="sd">        see :ref:`Examples_for_box_shaped_profiles`</span>
-
 <span class="sd">        Args:</span>
-<span class="sd">            label (str): see the :ref:`Examples_for_box_shaped_profiles`</span>
+<span class="sd">            label (str): see the :doc:`show_case-kasten`</span>
 <span class="sd">            **kwargs (object): see :py:attr:`~__init__`</span>
 
 <span class="sd">        Keyword Args:</span>
@@ -1671,37 +1451,39 @@
 <span class="sd">            CrossSectionHolding: pre defined box (=Kasten) cross section</span>
 
 <span class="sd">        Examples:</span>
+<span class="sd">            see :doc:`show_case-kasten`</span>
+
 <span class="sd">            .. figure:: images/Kasten-Profile.gif</span>
 <span class="sd">                :align: center</span>
 <span class="sd">                :alt: Kasten-Profile</span>
 <span class="sd">                :figclass: align-center</span>
 
 <span class="sd">                Kasten-Profile</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="kn">import</span> <span class="nn">re</span>
-        <span class="n">infos</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">'(K)(\.?)(\d*)([RH]?)_?([BK]?)'</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>  <span class="c1"># _(\d+)x(\d+)</span>
+        <span class="n">infos</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(K)(\.?)(\d*)([RH]?)_?([BK]?)&#39;</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>  <span class="c1"># _(\d+)x(\d+)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">infos</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">infos</span> <span class="o">=</span> <span class="n">infos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">bench</span><span class="p">,</span> <span class="n">roof</span> <span class="o">=</span> <span class="n">infos</span>
 
-            <span class="k">if</span> <span class="n">channel</span> <span class="o">!=</span> <span class="s1">''</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">channel</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
                 <span class="n">channel</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">channel</span> <span class="o">=</span> <span class="kc">None</span>
 
-            <span class="n">bench</span><span class="p">,</span> <span class="n">roof</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_</span> <span class="k">if</span> <span class="n">x_</span> <span class="o">!=</span> <span class="s1">''</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">x_</span> <span class="ow">in</span> <span class="p">(</span><span class="n">bench</span><span class="p">,</span> <span class="n">roof</span><span class="p">)]</span>
+            <span class="n">bench</span><span class="p">,</span> <span class="n">roof</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_</span> <span class="k">if</span> <span class="n">x_</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">x_</span> <span class="ow">in</span> <span class="p">(</span><span class="n">bench</span><span class="p">,</span> <span class="n">roof</span><span class="p">)]</span>
 
             <span class="n">cross_section</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">box</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span> <span class="n">bench</span><span class="o">=</span><span class="n">bench</span><span class="p">,</span> <span class="n">roof</span><span class="o">=</span><span class="n">roof</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">cross_section</span>
 
         <span class="c1"># --------------------------------------</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">'"</span><span class="si">{}</span><span class="s1">" unknown !'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">label</span><span class="p">))</span></div>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot; unknown !&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">label</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="CrossSectionHolding.from_point_cloud"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSectionHolding.from_point_cloud">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_point_cloud</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">relative_coordinates</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        get the cross sections from a point cloud where every point is relative to the lowers point in the cross section</span>
 
 <span class="sd">        Args:</span>
@@ -1730,14 +1512,14 @@
 <span class="sd">            :figclass: align-center</span>
 
 <span class="sd">            Point cloud</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># height of the profile = maximum Y coordinate</span>
         <span class="n">height_pr</span> <span class="o">=</span> <span class="n">relative_coordinates</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 
         <span class="c1"># horizontal distance to the lowest point (dry weather channel)</span>
         <span class="c1"># split to left and right part of the profile</span>
-        <span class="n">y_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">relative_coordinates</span><span class="o">.</span><span class="n">loc</span><span class="p">[:</span><span class="n">height_pr</span><span class="p">]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">'right'</span><span class="p">),</span>
-                          <span class="n">relative_coordinates</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">height_pr</span><span class="p">:]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">'left'</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">y_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">relative_coordinates</span><span class="o">.</span><span class="n">loc</span><span class="p">[:</span><span class="n">height_pr</span><span class="p">]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">),</span>
+                          <span class="n">relative_coordinates</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">height_pr</span><span class="p">:]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">y_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="c1"># interpolate to an even number of points on the left and right part of the profile</span>
         <span class="n">y_df_filled</span> <span class="o">=</span> <span class="n">y_df</span><span class="o">.</span><span class="n">interpolate</span><span class="p">()</span>
@@ -1749,13 +1531,13 @@
         <span class="n">cross_section</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">X</span> <span class="o">=</span> <span class="s1">'x'</span>  <span class="c1"># horizontal distance to lowest point (dry weather channel)</span>
-            <span class="n">Y</span> <span class="o">=</span> <span class="s1">'y'</span>  <span class="c1"># vertical distance to lowest point (dry weather channel)</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span>  <span class="c1"># horizontal distance to lowest point (dry weather channel)</span>
+            <span class="n">Y</span> <span class="o">=</span> <span class="s1">&#39;y&#39;</span>  <span class="c1"># vertical distance to lowest point (dry weather channel)</span>
 
             <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
                 <span class="p">{</span>
                     <span class="n">X</span><span class="p">:</span> <span class="n">y_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
-                    <span class="n">Y</span><span class="p">:</span> <span class="p">(</span><span class="n">y_df_filled</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]</span> <span class="o">-</span> <span class="n">y_df_filled</span><span class="p">[</span><span class="s1">'left'</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+                    <span class="n">Y</span><span class="p">:</span> <span class="p">(</span><span class="n">y_df_filled</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">y_df_filled</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
                 <span class="p">})</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
             <span class="n">cross_section</span><span class="o">.</span><span class="n">_df_abs</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -1764,7 +1546,7 @@
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">xi</span> <span class="o">=</span> <span class="n">y_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-            <span class="n">yi</span> <span class="o">=</span> <span class="p">((</span><span class="n">y_df_filled</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]</span> <span class="o">-</span> <span class="n">y_df_filled</span><span class="p">[</span><span class="s1">'left'</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">yi</span> <span class="o">=</span> <span class="p">((</span><span class="n">y_df_filled</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">y_df_filled</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
             <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">height_pr</span><span class="p">):</span>
@@ -1777,7 +1559,7 @@
 <span class="c1">########################################################################################################################</span>
 <div class="viewcode-block" id="CrossSectionMisc"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSectionMisc">[docs]</a><span class="k">class</span> <span class="nc">CrossSectionMisc</span><span class="p">(</span><span class="n">CrossSection</span><span class="p">):</span>
 <div class="viewcode-block" id="CrossSectionMisc.__init__"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSectionMisc.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">"""Initialise the cross section class</span>
+        <span class="sd">&quot;&quot;&quot;Initialise the cross section class</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            label (str): name/label/number of the cross section</span>
@@ -1790,12 +1572,12 @@
 <span class="sd">            working_directory (str): directory where the files get saved</span>
 <span class="sd">            unit (Optional[str]): enter unit to add the unit in the plots</span>
 
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">CrossSection</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CrossSectionMisc.from_swmm_shape"><a class="viewcode-back" href="../../api_class.html#shape_generator.shape_generator.CrossSectionMisc.from_swmm_shape">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_swmm_shape</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">relative_coordinates</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        create a object with the data of the swmm curve data as relative coordinates</span>
 
 <span class="sd">        Args:</span>
@@ -1807,7 +1589,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            CrossSectionMisc: of the shape coordinates</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cross_section</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">relative_coordinates</span><span class="p">:</span>
@@ -1816,37 +1598,50 @@
         <span class="k">return</span> <span class="n">cross_section</span></div></div>
 </pre></div>
 
-          </article>
-        </div>
-      </div>
-    </main>
-  </div>
-  <footer class="md-footer">
-    <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid">
-          
-          
-        </a>
-        
-      </nav>
-    </div>
-    <div class="md-footer-meta md-typeset">
-      <div class="md-footer-meta__inner md-grid">
-        <div class="md-footer-copyright">
-          <div class="md-footer-copyright__highlight">
-              &#169; Copyright 2020, Pichler.
-              
+           </div>
+           
           </div>
-            Created using
-            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
-             and
-            <a href="https://github.com/bashtage/sphinx-material/">Material for
-              Sphinx</a>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Pichler
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-    </div>
-  </footer>
-  <script src="../../_static/javascripts/application.js"></script>
-  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
 </html>

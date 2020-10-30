@@ -17,12 +17,3 @@ The **units** can be chosen freely, but must be consistent.
     :figclass: align-center
 
     A simple example of a shape
-
-
-.. --------------------------------------------------------
-
-.. rubric:: Footnotes
-
-.. [#f1] Official website of US-EPA SWMM https://www.epa.gov/water-research/storm-water-management-model-swmm
-
-
