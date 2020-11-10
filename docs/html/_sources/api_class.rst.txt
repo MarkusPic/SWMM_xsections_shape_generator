@@ -19,30 +19,16 @@ CrossSection
     __init__
     height
     width
-    add
-    get_points
-    df_abs
     get_width
+    add
     set_double_cross_section
-    check_point_cloud
-    df_rel
-    df_rel_fill_swmm
     shape_description
+    get_points
 
-.. rubric:: Macros
-
-.. autosummary::
-    add_and_show
-
-.. rubric:: Text-files / Figures
+.. rubric:: Figures
 
 .. autosummary::
-    profile_rel_plot
-    profile_abs_plot
-    profile_abs_figure
-    dat_file
-    inp_string
-    input_file
+    profile_figure
 
 .. rubric:: Shape parameters
 
@@ -65,12 +51,15 @@ CrossSectionHolding
 
 .. rubric:: Class
 
-.. currentmodule:: shape_generator.shape_generator
+.. currentmodule:: shape_generator.shape_generator_holding
 
 .. autosummary::
     CrossSectionHolding
 
-.. currentmodule:: shape_generator.shape_generator.CrossSectionHolding
+.. autoclass:: shape_generator.shape_generator.CrossSection
+    :members:
+
+.. currentmodule:: shape_generator.shape_generator_holding.CrossSectionHolding
 
 .. autosummary::
     __init__
@@ -83,33 +72,5 @@ CrossSectionHolding
     box_from_string
     from_point_cloud
 
-CrossSectionMisc
-=======================
-
-.. rubric:: Class
-
-.. currentmodule:: shape_generator.shape_generator
-
-.. autosummary::
-    CrossSectionMisc
-
-.. currentmodule:: shape_generator.shape_generator.CrossSectionMisc
-
-.. autosummary::
-    __init__
-
-.. rubric:: Pre defined Cross Sections
-
-.. autosummary::
-    from_swmm_shape
-
-.. autoclass:: shape_generator.shape_generator.CrossSection
-    :members:
-
-
-.. autoclass:: shape_generator.shape_generator.CrossSectionHolding
-    :members:
-
-
-.. autoclass:: shape_generator.shape_generator.CrossSectionMisc
+.. autoclass:: shape_generator.shape_generator_holding.CrossSectionHolding
     :members:

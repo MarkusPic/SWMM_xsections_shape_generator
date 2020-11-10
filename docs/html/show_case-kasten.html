@@ -446,7 +446,7 @@ div.rendered_html tbody tr:hover {
 <span class="n">width</span> <span class="o">=</span> <span class="mi">150</span>
 <span class="n">kasten</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="o">.</span><span class="n">box_from_string</span><span class="p">(</span><span class="n">no</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span>
 
-<span class="n">fig</span> <span class="o">=</span> <span class="n">kasten</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">kasten</span><span class="o">.</span><span class="n">profile_figure</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -467,7 +467,7 @@ div.rendered_html tbody tr:hover {
 <span class="n">width</span> <span class="o">=</span> <span class="mi">150</span>
 <span class="n">kasten</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="o">.</span><span class="n">box_from_string</span><span class="p">(</span><span class="n">no</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span>
 
-<span class="n">fig</span> <span class="o">=</span> <span class="n">kasten</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">kasten</span><span class="o">.</span><span class="n">profile_figure</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -488,7 +488,8 @@ div.rendered_html tbody tr:hover {
 <span class="n">width</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">kasten</span> <span class="o">=</span> <span class="n">CrossSection</span><span class="o">.</span><span class="n">box_from_string</span><span class="p">(</span><span class="n">no</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span>
 
-<span class="n">fig</span> <span class="o">=</span> <span class="n">kasten</span><span class="o">.</span><span class="n">profile_abs_figure</span><span class="p">()</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">kasten</span><span class="o">.</span><span class="n">profile_figure</span><span class="p">()</span>
+
 </pre></div>
 </div>
 </div>
@@ -500,11 +501,12 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="nb">print</span><span class="p">(</span><span class="n">kasten</span><span class="o">.</span><span class="n">inp_string</span><span class="p">())</span>
+<span></span><span class="kn">from</span> <span class="nn">shape_generator.converter_swmm_api</span> <span class="kn">import</span> <span class="n">convert_shape_generator_to_curve</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">convert_shape_generator_to_curve</span><span class="p">(</span><span class="n">kasten</span><span class="p">)</span><span class="o">.</span><span class="n">to_inp_line</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
@@ -513,22 +515,23 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Pr_K.60H_K  shape 0.002 0.049
-Pr_K.60H_K        0.008 0.097
-Pr_K.60H_K        0.017 0.139
-Pr_K.60H_K        0.030 0.180
-Pr_K.60H_K        0.043 0.210
-Pr_K.60H_K        0.188 0.500
-Pr_K.60H_K        0.754 0.500
-Pr_K.60H_K        0.789 0.494
-Pr_K.60H_K        0.824 0.478
-Pr_K.60H_K        0.861 0.448
-Pr_K.60H_K        0.895 0.407
-Pr_K.60H_K        0.925 0.357
-Pr_K.60H_K        0.951 0.297
-Pr_K.60H_K        0.972 0.230
-Pr_K.60H_K        0.987 0.159
-Pr_K.60H_K        0.997 0.077
+Pr_K.60H_K  SHAPE  0.0020  0.0488
+Pr_K.60H_K         0.0080  0.0967
+Pr_K.60H_K         0.0170  0.1387
+Pr_K.60H_K         0.0300  0.1800
+Pr_K.60H_K         0.0430  0.2102
+Pr_K.60H_K         0.1879  0.5000
+Pr_K.60H_K         0.7540  0.4999
+Pr_K.60H_K         0.7890  0.4939
+Pr_K.60H_K         0.8240  0.4776
+Pr_K.60H_K         0.8610  0.4480
+Pr_K.60H_K         0.8950  0.4073
+Pr_K.60H_K         0.9250  0.3571
+Pr_K.60H_K         0.9510  0.2973
+Pr_K.60H_K         0.9720  0.2299
+Pr_K.60H_K         0.9870  0.1591
+Pr_K.60H_K         0.9970  0.0772
+
 </pre></div></div>
 </div>
 </div>
