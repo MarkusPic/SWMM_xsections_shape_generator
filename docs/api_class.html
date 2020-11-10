@@ -1,0 +1,1150 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Main Function &mdash; SWMM CrossSection shape Generator 0.2.alpha documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples Classes" href="api_examples.html" />
+    <link rel="prev" title="Helper Functions" href="api_helpers.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> SWMM CrossSection shape Generator
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Overview:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">General information</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api_helpers.html">Helper Functions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Main Function</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#crosssection">CrossSection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#crosssectionholding">CrossSectionHolding</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_examples.html">Examples Classes</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="show_case.html">Examples for general profile shapes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="show_case-kasten.html">Examples for box shaped profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="standard_cross_section.html">Standard cross section</a></li>
+<li class="toctree-l1"><a class="reference internal" href="show_case_swmm_standard.html">SWMM Standard cross section as an example</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SWMM CrossSection shape Generator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Main Function</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="main-function">
+<h1>Main Function<a class="headerlink" href="#main-function" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="crosssection">
+<h2>CrossSection<a class="headerlink" href="#crosssection" title="Permalink to this headline">¶</a></h2>
+<p class="rubric">Class</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection" title="shape_generator.shape_generator.CrossSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CrossSection</span></code></a>(label[, description, height, …])</p></td>
+<td><p>main class A Class that should help to generate custom cross section shapes for the SWMM software.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.__init__" title="shape_generator.shape_generator.CrossSection.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(label[, description, height, …])</p></td>
+<td><p>Initialise the cross section class</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.height" title="shape_generator.shape_generator.CrossSection.height"><code class="xref py py-obj docutils literal notranslate"><span class="pre">height</span></code></a></p></td>
+<td><p>absolute height of the CS</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.width" title="shape_generator.shape_generator.CrossSection.width"><code class="xref py py-obj docutils literal notranslate"><span class="pre">width</span></code></a></p></td>
+<td><p>absolute width of the CS</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.get_width" title="shape_generator.shape_generator.CrossSection.get_width"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_width</span></code></a>()</p></td>
+<td><p>get absolute width of cross section</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.add" title="shape_generator.shape_generator.CrossSection.add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code></a>(x_or_expr[, y])</p></td>
+<td><p>add part of cross section</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.set_double_cross_section" title="shape_generator.shape_generator.CrossSection.set_double_cross_section"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_double_cross_section</span></code></a>()</p></td>
+<td><p>make the cross section as a double section (=Doppelprofil)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.shape_description" title="shape_generator.shape_generator.CrossSection.shape_description"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shape_description</span></code></a></p></td>
+<td><p>list of functions to describe the cross section shape</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.get_points" title="shape_generator.shape_generator.CrossSection.get_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_points</span></code></a>()</p></td>
+<td><p>create absolute point coordinates and write it into <code class="xref py py-attr docutils literal notranslate"><span class="pre">points</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Figures</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.profile_figure" title="shape_generator.shape_generator.CrossSection.profile_figure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">profile_figure</span></code></a>([relative, half])</p></td>
+<td><p>create a plot of the cross section</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Shape parameters</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.b_w_t" title="shape_generator.shape_generator.CrossSection.b_w_t"><code class="xref py py-obj docutils literal notranslate"><span class="pre">b_w_t</span></code></a>(hi)</p></td>
+<td><p>width of the cross section at a certain height (Wasseroberflächenbreite im teilgefüllten Querschnitt)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.l_u_t" title="shape_generator.shape_generator.CrossSection.l_u_t"><code class="xref py py-obj docutils literal notranslate"><span class="pre">l_u_t</span></code></a>(hi)</p></td>
+<td><p>wetted perimeter in the partially filled cross section at a certain water level height (benetzter Umfang im teilgefüllten Querschnitt)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.area_t" title="shape_generator.shape_generator.CrossSection.area_t"><code class="xref py py-obj docutils literal notranslate"><span class="pre">area_t</span></code></a>(hi)</p></td>
+<td><p>flow area in the partially filled cross section at a certain water level height (Fließquerschnitt im teilgefüllten Querschnitt)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.r_hyd_t" title="shape_generator.shape_generator.CrossSection.r_hyd_t"><code class="xref py py-obj docutils literal notranslate"><span class="pre">r_hyd_t</span></code></a>(hi)</p></td>
+<td><p>hydraulic radius in the partially filled cross section at a certain water level height (hydraulischer Radius im teilgefüllten Querschnitt)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.area_v" title="shape_generator.shape_generator.CrossSection.area_v"><code class="xref py py-obj docutils literal notranslate"><span class="pre">area_v</span></code></a></p></td>
+<td><p>flow area of the full filled cross section (Fließquerschnitt im vollgefüllten Querschnitt)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.r_hyd_v" title="shape_generator.shape_generator.CrossSection.r_hyd_v"><code class="xref py py-obj docutils literal notranslate"><span class="pre">r_hyd_v</span></code></a></p></td>
+<td><p>hydraulic radius of the full filled cross section (hydraulischer Radius im vollgefüllten Querschnitt)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.l_u_v" title="shape_generator.shape_generator.CrossSection.l_u_v"><code class="xref py py-obj docutils literal notranslate"><span class="pre">l_u_v</span></code></a></p></td>
+<td><p>wetted perimeter of the full filled cross section (benetzter Umfang im vollgefüllten Querschnitt)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.velocity_t" title="shape_generator.shape_generator.CrossSection.velocity_t"><code class="xref py py-obj docutils literal notranslate"><span class="pre">velocity_t</span></code></a>(hi, slope, k)</p></td>
+<td><p>calculate velocity in partially filled sewer channel</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.velocity_v" title="shape_generator.shape_generator.CrossSection.velocity_v"><code class="xref py py-obj docutils literal notranslate"><span class="pre">velocity_v</span></code></a>(slope, k)</p></td>
+<td><p>calculate velocity in partially filled sewer channel</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.flow_t" title="shape_generator.shape_generator.CrossSection.flow_t"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flow_t</span></code></a>(hi, slope, k)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">param hi</dt>
+<dd class="field-odd"><p>water level = height in mm</p>
+</dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.flow_v" title="shape_generator.shape_generator.CrossSection.flow_v"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flow_v</span></code></a>(slope, k)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">param slope</dt>
+<dd class="field-odd"><p>absolute slope in m/m</p>
+</dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shape_generator.shape_generator.CrossSection.h_t" title="shape_generator.shape_generator.CrossSection.h_t"><code class="xref py py-obj docutils literal notranslate"><span class="pre">h_t</span></code></a>(Q_t, slope, k)</p></td>
+<td><p>get the height of the water level based on the known flow</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="crosssectionholding">
+<h2>CrossSectionHolding<a class="headerlink" href="#crosssectionholding" title="Permalink to this headline">¶</a></h2>
+<p class="rubric">Class</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding" title="shape_generator.shape_generator_holding.CrossSectionHolding"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CrossSectionHolding</span></code></a>(label[, add_dim, add_dn])</p></td>
+<td><p>cross section class for Holding Graz</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="shape_generator.shape_generator.CrossSection">
+<em class="property">class </em><code class="sig-prename descclassname">shape_generator.shape_generator.</code><code class="sig-name descname">CrossSection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">height</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">width</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">working_directory</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">unit</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection" title="Permalink to this definition">¶</a></dt>
+<dd><p>main class
+A Class that should help to generate custom cross section shapes for the SWMM software.</p>
+<dl class="py attribute">
+<dt id="shape_generator.shape_generator.CrossSection.label">
+<code class="sig-name descname">label</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.label" title="Permalink to this definition">¶</a></dt>
+<dd><p>name/label/number of the cross section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="shape_generator.shape_generator.CrossSection.description">
+<code class="sig-name descname">description</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>optional description of the cross section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="shape_generator.shape_generator.CrossSection.shape">
+<code class="sig-name descname">shape</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>descriptions of the cross section as commands in a list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="shape_generator.shape_generator.CrossSection.accuracy">
+<code class="sig-name descname">accuracy</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of decimal points to use for the export</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="shape_generator.shape_generator.CrossSection.working_directory">
+<code class="sig-name descname">working_directory</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.working_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>directory where the files get saved</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="shape_generator.shape_generator.CrossSection.unit">
+<code class="sig-name descname">unit</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>unit of entered values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="shape_generator.shape_generator.CrossSection.double">
+<code class="sig-name descname">double</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.double" title="Permalink to this definition">¶</a></dt>
+<dd><p>if the cross section two separate cross sections</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">height</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">width</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">working_directory</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">unit</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialise the cross section class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – main name/label/number of the cross section</p></li>
+<li><p><strong>description</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – optional description of the cross section</p></li>
+<li><p><strong>height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – absolute height of the CS</p></li>
+<li><p><strong>width</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>]</em>) – absolute width of the CS (optional) can be estimated</p></li>
+<li><p><strong>working_directory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – directory where the files are saved</p></li>
+<li><p><strong>unit</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – enter unit to add the unit in the plots</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.height">
+<em class="property">property </em><code class="sig-name descname">height</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.height" title="Permalink to this definition">¶</a></dt>
+<dd><p>absolute height of the CS</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>absolute height of the CS</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.width">
+<em class="property">property </em><code class="sig-name descname">width</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>absolute width of the CS</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>absolute width of the CS</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.get_width">
+<code class="sig-name descname">get_width</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.get_width"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.get_width" title="Permalink to this definition">¶</a></dt>
+<dd><p>get absolute width of cross section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>width of cross section</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.out_filename">
+<em class="property">property </em><code class="sig-name descname">out_filename</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.out_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>filename of the figure/text-file to be created</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>filename</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x_or_expr</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>add part of cross section</p>
+<p>can be a:</p>
+<ul class="simple">
+<li><p>function/expression</p></li>
+<li><p>point (x,y) coordinates</p></li>
+<li><p>boundary condition (x or y) of a surrounding function = only x or y is given and the other is <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p></li>
+<li><p>slope (x=slope, y=unit of slope)</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_or_expr</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em> , </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em>, </em><em>CustomExpr</em><em>]</em>) – <ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">float</span></code></a> : x coordinate or x-axis boundary or slope if any str keyword is used in argument <code class="docutils literal notranslate"><span class="pre">y</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">CustomExpr</span></code> : Expression/function for the cross section part,
+i.e.:  <code class="xref py py-obj docutils literal notranslate"><span class="pre">shape_generator.Circle</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">Slope</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">Vertical</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">Horizontal</span></code></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> : if a y-axis boundary is given</p></li>
+</ul>
+</p></li>
+<li><p><strong>y</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – <p>y coordinate of unit of slope</p>
+<ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">float</span></code></a> : x coordinate or x-axis boundary</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> : if a x-axis boundary is given or an expression in <code class="docutils literal notranslate"><span class="pre">x_or_expr</span></code></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> : argument x is a slope</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">slope</span></code> : ready to use slope 1 / <span class="math notranslate nohighlight">\(\Delta\)</span> y</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">°slope</span></code> : slope as an angle in degree (°)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%slope</span></code> : slope in percentage (%)</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.set_double_cross_section">
+<code class="sig-name descname">set_double_cross_section</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.set_double_cross_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.set_double_cross_section" title="Permalink to this definition">¶</a></dt>
+<dd><p>make the cross section as a double section (=Doppelprofil)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.shape_description">
+<em class="property">property </em><code class="sig-name descname">shape_description</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.shape_description" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of functions to describe the cross section shape</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>description of the cross section shape</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.get_points">
+<code class="sig-name descname">get_points</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.get_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.get_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>create absolute point coordinates and write it into <code class="xref py py-attr docutils literal notranslate"><span class="pre">points</span></code></p>
+<p>To create a <code class="xref py py-obj docutils literal notranslate"><span class="pre">list[tuple]</span></code> of all the points to describe the cross section.
+This function replaces the Expressions given in <a class="reference internal" href="#shape_generator.shape_generator.CrossSection.add" title="shape_generator.shape_generator.CrossSection.add"><code class="xref py py-attr docutils literal notranslate"><span class="pre">add</span></code></a> to points with x and y coordinates
+and writes them into the <code class="xref py py-attr docutils literal notranslate"><span class="pre">points</span></code> attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>absolute point coordinates</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a>,<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.profile_figure">
+<code class="sig-name descname">profile_figure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">relative</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">half</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.3.2)">matplotlib.figure.Figure</a><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.profile_figure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.profile_figure" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a plot of the cross section</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.b_w_t">
+<code class="sig-name descname">b_w_t</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hi</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.b_w_t"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.b_w_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>width of the cross section at a certain height
+(Wasseroberflächenbreite im teilgefüllten Querschnitt)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hi</strong> (<em>float | numpy.ndarray</em>) – a certain height</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>width at the certain height</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float | numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.l_u_t">
+<code class="sig-name descname">l_u_t</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hi</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.l_u_t"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.l_u_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>wetted perimeter in the partially filled cross section at a certain water level height
+(benetzter Umfang im teilgefüllten Querschnitt)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hi</strong> (<em>float | numpy.ndarray</em>) – a certain height</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>wetted perimeter at the certain height</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float | numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.l_u_v">
+<em class="property">property </em><code class="sig-name descname">l_u_v</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.l_u_v" title="Permalink to this definition">¶</a></dt>
+<dd><p>wetted perimeter of the full filled cross section
+(benetzter Umfang im vollgefüllten Querschnitt)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>wetted perimeter</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float | numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.area_t">
+<code class="sig-name descname">area_t</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hi</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.area_t"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.area_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>flow area in the partially filled cross section at a certain water level height
+(Fließquerschnitt im teilgefüllten Querschnitt)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hi</strong> (<em>float | numpy.ndarray</em>) – a certain height</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>flow area at the certain height</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float | numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.area_v">
+<em class="property">property </em><code class="sig-name descname">area_v</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.area_v" title="Permalink to this definition">¶</a></dt>
+<dd><p>flow area of the full filled cross section
+(Fließquerschnitt im vollgefüllten Querschnitt)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>flow area</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float | numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.r_hyd_t">
+<code class="sig-name descname">r_hyd_t</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hi</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.r_hyd_t"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.r_hyd_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>hydraulic radius in the partially filled cross section at a certain water level height
+(hydraulischer Radius im teilgefüllten Querschnitt)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hi</strong> (<em>float | numpy.ndarray</em>) – a certain height</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>hydraulic radius at the certain height</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float | numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.r_hyd_v">
+<em class="property">property </em><code class="sig-name descname">r_hyd_v</code><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.r_hyd_v" title="Permalink to this definition">¶</a></dt>
+<dd><p>hydraulic radius of the full filled cross section
+(hydraulischer Radius im vollgefüllten Querschnitt)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>hydraulic radius</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float | numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.velocity_v">
+<code class="sig-name descname">velocity_v</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">slope</span></em>, <em class="sig-param"><span class="n">k</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.velocity_v"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.velocity_v" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculate velocity in partially filled sewer channel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>slope</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – ablosute slope in m/m</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Betriebliche Rauhigkeit in mm</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>full filling velocity in m/s</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>DWA-A 110 Section 4.1.1 Vollfüllung</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.velocity_t">
+<code class="sig-name descname">velocity_t</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hi</span></em>, <em class="sig-param"><span class="n">slope</span></em>, <em class="sig-param"><span class="n">k</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.velocity_t"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.velocity_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculate velocity in partially filled sewer channel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – water level = height in mm</p></li>
+<li><p><strong>slope</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – ablosute slope in m/m</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Betriebliche Rauhigkeit in mm</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>velocity in m/s</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>DWA-A 110 Section 4.1.2 Teilfüllung</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.flow_t">
+<code class="sig-name descname">flow_t</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hi</span></em>, <em class="sig-param"><span class="n">slope</span></em>, <em class="sig-param"><span class="n">k</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.flow_t"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.flow_t" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – water level = height in mm</p></li>
+<li><p><strong>slope</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – ablosute slope in m/m</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Betriebliche Rauhigkeit in mm</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>flow rate in L/s</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.flow_v">
+<code class="sig-name descname">flow_v</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">slope</span></em>, <em class="sig-param"><span class="n">k</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.flow_v"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.flow_v" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>slope</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – absolute slope in m/m</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Betriebliche Rauhigkeit in mm</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>full filling flow rate in L/s</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator.CrossSection.h_t">
+<code class="sig-name descname">h_t</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Q_t</span></em>, <em class="sig-param"><span class="n">slope</span></em>, <em class="sig-param"><span class="n">k</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator.html#CrossSection.h_t"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator.CrossSection.h_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the height of the water level based on the known flow</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Q_t</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – flow in L/s</p></li>
+<li><p><strong>slope</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – absolute slope in m/m</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Betriebliche Rauhigkeit in mm</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>height of the water level</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.__init__" title="shape_generator.shape_generator_holding.CrossSectionHolding.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(label[, add_dim, add_dn])</p></td>
+<td><p>Initialise the cross section class</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Pre defined Cross Sections</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.standard" title="shape_generator.shape_generator_holding.CrossSectionHolding.standard"><code class="xref py py-obj docutils literal notranslate"><span class="pre">standard</span></code></a>(label, description, height[, …])</p></td>
+<td><p>standard cross section</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.box" title="shape_generator.shape_generator_holding.CrossSectionHolding.box"><code class="xref py py-obj docutils literal notranslate"><span class="pre">box</span></code></a>(label, height, width[, channel, bench, …])</p></td>
+<td><p>pre defined box (=Kasten) cross section</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.box_from_string" title="shape_generator.shape_generator_holding.CrossSectionHolding.box_from_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">box_from_string</span></code></a>(label, **kwargs)</p></td>
+<td><p>create pre defined box (=Kasten) cross section with the string label.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.from_point_cloud" title="shape_generator.shape_generator_holding.CrossSectionHolding.from_point_cloud"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_point_cloud</span></code></a>(relative_coordinates, …)</p></td>
+<td><p>get the cross sections from a point cloud where every point is relative to the lowers point in the cross section</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="shape_generator.shape_generator_holding.CrossSectionHolding">
+<em class="property">class </em><code class="sig-prename descclassname">shape_generator.shape_generator_holding.</code><code class="sig-name descname">CrossSectionHolding</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label</span></em>, <em class="sig-param"><span class="n">add_dim</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">add_dn</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator_holding.html#CrossSectionHolding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator_holding.CrossSectionHolding" title="Permalink to this definition">¶</a></dt>
+<dd><p>cross section class for Holding Graz</p>
+<dl class="py attribute">
+<dt id="shape_generator.shape_generator_holding.CrossSectionHolding.add_dim">
+<code class="sig-name descname">add_dim</code><a class="headerlink" href="#shape_generator.shape_generator_holding.CrossSectionHolding.add_dim" title="Permalink to this definition">¶</a></dt>
+<dd><p>add the dimension (height x width) to the label and output filename</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="shape_generator.shape_generator_holding.CrossSectionHolding.add_dn">
+<code class="sig-name descname">add_dn</code><a class="headerlink" href="#shape_generator.shape_generator_holding.CrossSectionHolding.add_dn" title="Permalink to this definition">¶</a></dt>
+<dd><p>add the channel diameter (DN …) to the label and output filename</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator_holding.CrossSectionHolding.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label</span></em>, <em class="sig-param"><span class="n">add_dim</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">add_dn</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator_holding.html#CrossSectionHolding.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator_holding.CrossSectionHolding.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialise the cross section class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – name/label/number of the cross section</p></li>
+<li><p><strong>add_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if the dimensions should be added to <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.out_filename" title="shape_generator.shape_generator_holding.CrossSectionHolding.out_filename"><code class="xref py py-attr docutils literal notranslate"><span class="pre">out_filename</span></code></a> used for the export</p></li>
+<li><p><strong>add_dn</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>]</em>) – if the channel dimension should be added to <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.out_filename" title="shape_generator.shape_generator_holding.CrossSectionHolding.out_filename"><code class="xref py py-attr docutils literal notranslate"><span class="pre">out_filename</span></code></a>
+used for the export enter the diameter as float</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><em>object</em></a>) – see <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.__init__" title="shape_generator.shape_generator_holding.CrossSectionHolding.__init__"><code class="xref py py-attr docutils literal notranslate"><span class="pre">__init__</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>description</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – optional description of the cross section</p></li>
+<li><p><strong>height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – absolute height of the CS</p></li>
+<li><p><strong>width</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>]</em>) – absolute width of the CS (optional) can be calculated</p></li>
+<li><p><strong>working_directory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – directory where the files get saved</p></li>
+<li><p><strong>unit</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – enter unit to add the unit in the plots</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator_holding.CrossSectionHolding.out_filename">
+<em class="property">property </em><code class="sig-name descname">out_filename</code><a class="headerlink" href="#shape_generator.shape_generator_holding.CrossSectionHolding.out_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>filename of the figure/text-file to be created</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>filename</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator_holding.CrossSectionHolding.standard">
+<em class="property">classmethod </em><code class="sig-name descname">standard</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label</span></em>, <em class="sig-param"><span class="n">description</span></em>, <em class="sig-param"><span class="n">height</span></em>, <em class="sig-param"><span class="n">width</span><span class="o">=</span><span class="default_value">nan</span></em>, <em class="sig-param"><span class="n">r_channel</span><span class="o">=</span><span class="default_value">nan</span></em>, <em class="sig-param"><span class="n">r_roof</span><span class="o">=</span><span class="default_value">nan</span></em>, <em class="sig-param"><span class="n">r_wall</span><span class="o">=</span><span class="default_value">nan</span></em>, <em class="sig-param"><span class="n">slope_bench</span><span class="o">=</span><span class="default_value">nan</span></em>, <em class="sig-param"><span class="n">r_round</span><span class="o">=</span><span class="default_value">nan</span></em>, <em class="sig-param"><span class="n">r_wall_bottom</span><span class="o">=</span><span class="default_value">nan</span></em>, <em class="sig-param"><span class="n">h_bench</span><span class="o">=</span><span class="default_value">nan</span></em>, <em class="sig-param"><span class="n">pre_bench</span><span class="o">=</span><span class="default_value">nan</span></em>, <em class="sig-param"><span class="n">w_channel</span><span class="o">=</span><span class="default_value">nan</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator_holding.html#CrossSectionHolding.standard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator_holding.CrossSectionHolding.standard" title="Permalink to this definition">¶</a></dt>
+<dd><p>standard cross section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – see <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.__init__" title="shape_generator.shape_generator_holding.CrossSectionHolding.__init__"><code class="xref py py-attr docutils literal notranslate"><span class="pre">__init__</span></code></a></p></li>
+<li><p><strong>description</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – see <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.__init__" title="shape_generator.shape_generator_holding.CrossSectionHolding.__init__"><code class="xref py py-attr docutils literal notranslate"><span class="pre">__init__</span></code></a></p></li>
+<li><p><strong>height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – see <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.__init__" title="shape_generator.shape_generator_holding.CrossSectionHolding.__init__"><code class="xref py py-attr docutils literal notranslate"><span class="pre">__init__</span></code></a></p></li>
+<li><p><strong>width</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – see <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.__init__" title="shape_generator.shape_generator_holding.CrossSectionHolding.__init__"><code class="xref py py-attr docutils literal notranslate"><span class="pre">__init__</span></code></a></p></li>
+<li><p><strong>r_channel</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – radius of the dry-weather channel (=Trockenwetter Rinne)</p></li>
+<li><p><strong>w_channel</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – half width of the channel, only in combination with <code class="docutils literal notranslate"><span class="pre">r_channel</span></code> active</p></li>
+<li><p><strong>pre_bench</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – slope of the upper end of the channel in degree, only in combination with</p></li>
+<li><p><strong>active</strong> (<em>r_wall</em>) – </p></li>
+<li><p><strong>r_round</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – radius of the rounding of the edges, only in combination with <code class="docutils literal notranslate"><span class="pre">r_channel</span></code> active</p></li>
+<li><p><strong>h_bench</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – height where the bench begins, only in combination with <code class="docutils literal notranslate"><span class="pre">r_channel</span></code> active</p></li>
+<li><p><strong>slope_bench</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – slope of the bench (=Berme) in degree, or slope of the rainwater-floor (</p></li>
+<li><p><strong>=Regenwetterrinne</strong><strong>)</strong> – </p></li>
+<li><p><strong>r_roof</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – radius of the roof (=Decke)</p></li>
+<li><p><strong>r_wall</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – radius of the sidewall (=Seitenwand), only in combination with <code class="docutils literal notranslate"><span class="pre">r_roof</span></code> active</p></li>
+<li><p><strong>r_wall_bottom</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – radius of the bottom sidewall (=untere Seitenwand), only in combination with</p></li>
+<li><p><strong>active</strong> – </p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><em>object</em></a>) – see <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.__init__" title="shape_generator.shape_generator_holding.CrossSectionHolding.__init__"><code class="xref py py-attr docutils literal notranslate"><span class="pre">__init__</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>working_directory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – directory where the files get saved</p></li>
+<li><p><strong>unit</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – enter unit to add the unit in the plots</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>standard cross section</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding" title="shape_generator.shape_generator_holding.CrossSectionHolding">CrossSectionHolding</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>see <a class="reference internal" href="standard_cross_section.html"><span class="doc">Standard cross section</span></a></p>
+<div class="align-center figure" id="id1">
+<img alt="standard cross section" src="_images/standard.gif" />
+<p class="caption"><span class="caption-text">Standard cross section</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>english</p></th>
+<th class="head"><p>deutsch</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>channel</p></td>
+<td><p>Trockenwetter-Rinne</p></td>
+</tr>
+<tr class="row-odd"><td><p>roof</p></td>
+<td><p>Firste/Decke</p></td>
+</tr>
+<tr class="row-even"><td><p>wall</p></td>
+<td><p>Seitenwand</p></td>
+</tr>
+<tr class="row-odd"><td><p>bench</p></td>
+<td><p>Berme</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator_holding.CrossSectionHolding.box">
+<em class="property">classmethod </em><code class="sig-name descname">box</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label</span></em>, <em class="sig-param"><span class="n">height</span></em>, <em class="sig-param"><span class="n">width</span></em>, <em class="sig-param"><span class="n">channel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bench</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">roof</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">rounding</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator_holding.html#CrossSectionHolding.box"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator_holding.CrossSectionHolding.box" title="Permalink to this definition">¶</a></dt>
+<dd><p>pre defined box (=Kasten) cross section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – see <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.__init__" title="shape_generator.shape_generator_holding.CrossSectionHolding.__init__"><code class="xref py py-attr docutils literal notranslate"><span class="pre">__init__</span></code></a></p></li>
+<li><p><strong>height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – see <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.__init__" title="shape_generator.shape_generator_holding.CrossSectionHolding.__init__"><code class="xref py py-attr docutils literal notranslate"><span class="pre">__init__</span></code></a></p></li>
+<li><p><strong>width</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – see <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.__init__" title="shape_generator.shape_generator_holding.CrossSectionHolding.__init__"><code class="xref py py-attr docutils literal notranslate"><span class="pre">__init__</span></code></a></p></li>
+<li><p><strong>channel</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>]</em>) – diameter of the dry weather channel</p></li>
+<li><p><strong>bench</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>]</em>) – <p>bench (=Berme)</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">''</span></code>: flache Berme</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'R'</span></code>: V-förmiges Profil</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'H'</span></code>: Schräge Verschneidung</p></li>
+</ul>
+</p></li>
+<li><p><strong>roof</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>]</em>) – <p>roof (=Decke)</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">''</span></code>: gerade</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'B'</span></code>: Bogen</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'K'</span></code>: Kreis</p></li>
+</ul>
+</p></li>
+<li><p><strong>rounding</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>]</em>) – rounding of the edges</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><em>object</em></a>) – see <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.__init__" title="shape_generator.shape_generator_holding.CrossSectionHolding.__init__"><code class="xref py py-attr docutils literal notranslate"><span class="pre">__init__</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>description</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – optional longer name of the cross section</p></li>
+<li><p><strong>working_directory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – directory where the files get saved</p></li>
+<li><p><strong>unit</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – enter unit to add the unit in the plots</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pre defined box (=Kasten) cross section</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding" title="shape_generator.shape_generator_holding.CrossSectionHolding">CrossSectionHolding</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>see <a class="reference internal" href="show_case-kasten.html"><span class="doc">Examples for box shaped profiles</span></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator_holding.CrossSectionHolding.box_from_string">
+<em class="property">classmethod </em><code class="sig-name descname">box_from_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator_holding.html#CrossSectionHolding.box_from_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator_holding.CrossSectionHolding.box_from_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>create pre defined box (=Kasten) cross section with the string label.</p>
+<p>This function takes the information from the label and pass them to the <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.box" title="shape_generator.shape_generator_holding.CrossSectionHolding.box"><code class="xref py py-attr docutils literal notranslate"><span class="pre">box</span></code></a> - function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – see the <a class="reference internal" href="show_case-kasten.html"><span class="doc">Examples for box shaped profiles</span></a></p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><em>object</em></a>) – see <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.__init__" title="shape_generator.shape_generator_holding.CrossSectionHolding.__init__"><code class="xref py py-attr docutils literal notranslate"><span class="pre">__init__</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – see <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.__init__" title="shape_generator.shape_generator_holding.CrossSectionHolding.__init__"><code class="xref py py-attr docutils literal notranslate"><span class="pre">__init__</span></code></a></p></li>
+<li><p><strong>width</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – see <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.__init__" title="shape_generator.shape_generator_holding.CrossSectionHolding.__init__"><code class="xref py py-attr docutils literal notranslate"><span class="pre">__init__</span></code></a></p></li>
+<li><p><strong>rounding</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>]</em>) – rounding of the edges</p></li>
+<li><p><strong>description</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – optional longer name of the cross section</p></li>
+<li><p><strong>working_directory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – directory where the files get saved</p></li>
+<li><p><strong>unit</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – enter unit to add the unit in the plots</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pre defined box (=Kasten) cross section</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding" title="shape_generator.shape_generator_holding.CrossSectionHolding">CrossSectionHolding</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>see <a class="reference internal" href="show_case-kasten.html"><span class="doc">Examples for box shaped profiles</span></a></p>
+<div class="align-center figure" id="id2">
+<img alt="Kasten-Profile" src="_images/Kasten-Profile.gif" />
+<p class="caption"><span class="caption-text">Kasten-Profile</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.shape_generator_holding.CrossSectionHolding.from_point_cloud">
+<em class="property">classmethod </em><code class="sig-name descname">from_point_cloud</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">relative_coordinates</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/shape_generator_holding.html#CrossSectionHolding.from_point_cloud"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.shape_generator_holding.CrossSectionHolding.from_point_cloud" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the cross sections from a point cloud where every point is relative to the lowers point in the
+cross section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>relative_coordinates</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>]</em><em>] </em><em>| numpy.array</em>) – list of height- and width tuple
+with the origin in the lowest point of the cross section</p></li>
+<li><p><strong>*args</strong> – arguments, see <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.__init__" title="shape_generator.shape_generator_holding.CrossSectionHolding.__init__"><code class="xref py py-attr docutils literal notranslate"><span class="pre">__init__</span></code></a></p></li>
+<li><p><strong>**kwargs</strong> – keyword arguments, see <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.__init__" title="shape_generator.shape_generator_holding.CrossSectionHolding.__init__"><code class="xref py py-attr docutils literal notranslate"><span class="pre">__init__</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – main name/label/number of the cross section</p></li>
+<li><p><strong>description</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – optional longer name of the cross section</p></li>
+<li><p><strong>height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – absolute height of the CS</p></li>
+<li><p><strong>width</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>]</em>) – absolute width of the CS (optional) can be calculated</p></li>
+<li><p><strong>working_directory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – directory where the files get saved</p></li>
+<li><p><strong>unit</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – enter unit to add the unit in the plots</p></li>
+<li><p><strong>add_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if the dimensions should be added to <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.out_filename" title="shape_generator.shape_generator_holding.CrossSectionHolding.out_filename"><code class="xref py py-attr docutils literal notranslate"><span class="pre">out_filename</span></code></a> used for the export</p></li>
+<li><p><strong>add_dn</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>]</em>) – if the channel dimension should be added to <a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding.out_filename" title="shape_generator.shape_generator_holding.CrossSectionHolding.out_filename"><code class="xref py py-attr docutils literal notranslate"><span class="pre">out_filename</span></code></a>
+used for the export enter the diameter as float</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>of the point cloud</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#shape_generator.shape_generator_holding.CrossSectionHolding" title="shape_generator.shape_generator_holding.CrossSectionHolding">CrossSectionHolding</a></p>
+</dd>
+</dl>
+<div class="align-center figure" id="id3">
+<img alt="point cloud" src="_images/point_cloud.gif" />
+<p class="caption"><span class="caption-text">Point cloud</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api_examples.html" class="btn btn-neutral float-right" title="Examples Classes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="api_helpers.html" class="btn btn-neutral float-left" title="Helper Functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Pichler
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

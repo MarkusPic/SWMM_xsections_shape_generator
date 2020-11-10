@@ -1,0 +1,533 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Index &mdash; SWMM CrossSection shape Generator 0.2.alpha documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> SWMM CrossSection shape Generator
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Overview:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">General information</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api_helpers.html">Helper Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_class.html">Main Function</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_examples.html">Examples Classes</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="show_case.html">Examples for general profile shapes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="show_case-kasten.html">Examples for box shaped profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="standard_cross_section.html">Standard cross section</a></li>
+<li class="toctree-l1"><a class="reference internal" href="show_case_swmm_standard.html">SWMM Standard cross section as an example</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SWMM CrossSection shape Generator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Index</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#_"><strong>_</strong></a>
+ | <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
+ 
+</div>
+<h2 id="_">_</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_examples.html#shape_generator.example_cross_sections.CircleSection.__init__">__init__() (shape_generator.example_cross_sections.CircleSection method)</a>
+
+      <ul>
+        <li><a href="api_examples.html#shape_generator.example_cross_sections.EggSection.__init__">(shape_generator.example_cross_sections.EggSection method)</a>
+</li>
+        <li><a href="api_helpers.html#shape_generator.helpers.Circle.__init__">(shape_generator.helpers.Circle method)</a>
+</li>
+        <li><a href="api_helpers.html#shape_generator.helpers.Horizontal.__init__">(shape_generator.helpers.Horizontal method)</a>
+</li>
+        <li><a href="api_helpers.html#shape_generator.helpers.Slope.__init__">(shape_generator.helpers.Slope method)</a>
+</li>
+        <li><a href="api_helpers.html#shape_generator.helpers.Vertical.__init__">(shape_generator.helpers.Vertical method)</a>
+</li>
+        <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.__init__">(shape_generator.shape_generator.CrossSection method)</a>
+</li>
+        <li><a href="api_class.html#shape_generator.shape_generator_holding.CrossSectionHolding.__init__">(shape_generator.shape_generator_holding.CrossSectionHolding method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.accuracy">accuracy (shape_generator.shape_generator.CrossSection attribute)</a>
+</li>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.add">add() (shape_generator.shape_generator.CrossSection method)</a>
+</li>
+      <li><a href="api_class.html#shape_generator.shape_generator_holding.CrossSectionHolding.add_dim">add_dim (shape_generator.shape_generator_holding.CrossSectionHolding attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator_holding.CrossSectionHolding.add_dn">add_dn (shape_generator.shape_generator_holding.CrossSectionHolding attribute)</a>
+</li>
+      <li><a href="api_helpers.html#shape_generator.helpers.Slope.area">area() (shape_generator.helpers.Slope method)</a>
+</li>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.area_t">area_t() (shape_generator.shape_generator.CrossSection method)</a>
+</li>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.area_v">area_v() (shape_generator.shape_generator.CrossSection property)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.b_w_t">b_w_t() (shape_generator.shape_generator.CrossSection method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator_holding.CrossSectionHolding.box">box() (shape_generator.shape_generator_holding.CrossSectionHolding class method)</a>
+</li>
+      <li><a href="api_class.html#shape_generator.shape_generator_holding.CrossSectionHolding.box_from_string">box_from_string() (shape_generator.shape_generator_holding.CrossSectionHolding class method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_helpers.html#shape_generator.helpers.channel_end">channel_end() (in module shape_generator.helpers)</a>
+</li>
+      <li><a href="api_helpers.html#shape_generator.helpers.Circle">Circle (class in shape_generator.helpers)</a>
+</li>
+      <li><a href="api_examples.html#shape_generator.example_cross_sections.CircleSection">CircleSection (class in shape_generator.example_cross_sections)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_helpers.html#shape_generator.helpers.combine_input_files">combine_input_files() (in module shape_generator.helpers)</a>
+</li>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection">CrossSection (class in shape_generator.shape_generator)</a>
+</li>
+      <li><a href="api_class.html#shape_generator.shape_generator_holding.CrossSectionHolding">CrossSectionHolding (class in shape_generator.shape_generator_holding)</a>
+</li>
+      <li><a href="api_helpers.html#shape_generator.helpers.csv">csv() (in module shape_generator.helpers)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_helpers.html#shape_generator.helpers.deg2slope">deg2slope() (in module shape_generator.helpers)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.description">description (shape_generator.shape_generator.CrossSection attribute)</a>
+</li>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.double">double (shape_generator.shape_generator.CrossSection attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_examples.html#shape_generator.example_cross_sections.EggSection">EggSection (class in shape_generator.example_cross_sections)</a>
+</li>
+      <li><a href="api_helpers.html#shape_generator.helpers.Slope.end_point">end_point() (shape_generator.helpers.Slope method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_helpers.html#shape_generator.helpers.Circle.expr">expr() (shape_generator.helpers.Circle method)</a>
+
+      <ul>
+        <li><a href="api_helpers.html#shape_generator.helpers.Slope.expr">(shape_generator.helpers.Slope method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.flow_t">flow_t() (shape_generator.shape_generator.CrossSection method)</a>
+</li>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.flow_v">flow_v() (shape_generator.shape_generator.CrossSection method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator_holding.CrossSectionHolding.from_point_cloud">from_point_cloud() (shape_generator.shape_generator_holding.CrossSectionHolding class method)</a>
+</li>
+      <li><a href="api_helpers.html#shape_generator.helpers.Slope.from_points">from_points() (shape_generator.helpers.Slope class method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.get_points">get_points() (shape_generator.shape_generator.CrossSection method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.get_width">get_width() (shape_generator.shape_generator.CrossSection method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.h_t">h_t() (shape_generator.shape_generator.CrossSection method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.height">height() (shape_generator.shape_generator.CrossSection property)</a>
+</li>
+      <li><a href="api_helpers.html#shape_generator.helpers.Horizontal">Horizontal (class in shape_generator.helpers)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.l_u_t">l_u_t() (shape_generator.shape_generator.CrossSection method)</a>
+</li>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.l_u_v">l_u_v() (shape_generator.shape_generator.CrossSection property)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.label">label (shape_generator.shape_generator.CrossSection attribute)</a>
+</li>
+      <li><a href="api_helpers.html#shape_generator.helpers.Slope.length">length() (shape_generator.helpers.Slope method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    module
+
+      <ul>
+        <li><a href="api_helpers.html#module-shape_generator.helpers">shape_generator.helpers</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.out_filename">out_filename() (shape_generator.shape_generator.CrossSection property)</a>
+
+      <ul>
+        <li><a href="api_class.html#shape_generator.shape_generator_holding.CrossSectionHolding.out_filename">(shape_generator.shape_generator_holding.CrossSectionHolding property)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.profile_figure">profile_figure() (shape_generator.shape_generator.CrossSection method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.r_hyd_t">r_hyd_t() (shape_generator.shape_generator.CrossSection method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.r_hyd_v">r_hyd_v() (shape_generator.shape_generator.CrossSection property)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.set_double_cross_section">set_double_cross_section() (shape_generator.shape_generator.CrossSection method)</a>
+</li>
+      <li><a href="api_helpers.html#shape_generator.helpers.Slope.set_end_point">set_end_point() (shape_generator.helpers.Slope method)</a>
+</li>
+      <li><a href="api_helpers.html#shape_generator.helpers.Slope.set_start_point">set_start_point() (shape_generator.helpers.Slope method)</a>
+</li>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.shape">shape (shape_generator.shape_generator.CrossSection attribute)</a>
+</li>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.shape_description">shape_description() (shape_generator.shape_generator.CrossSection property)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    shape_generator.helpers
+
+      <ul>
+        <li><a href="api_helpers.html#module-shape_generator.helpers">module</a>
+</li>
+      </ul></li>
+      <li><a href="api_helpers.html#shape_generator.helpers.Slope">Slope (class in shape_generator.helpers)</a>
+</li>
+      <li><a href="api_helpers.html#shape_generator.helpers.Slope.solve">solve() (shape_generator.helpers.Slope method)</a>
+</li>
+      <li><a href="api_class.html#shape_generator.shape_generator_holding.CrossSectionHolding.standard">standard() (shape_generator.shape_generator_holding.CrossSectionHolding class method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_helpers.html#shape_generator.helpers.to_xs_dict">to_xs_dict() (in module shape_generator.helpers)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.unit">unit (shape_generator.shape_generator.CrossSection attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.velocity_t">velocity_t() (shape_generator.shape_generator.CrossSection method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.velocity_v">velocity_v() (shape_generator.shape_generator.CrossSection method)</a>
+</li>
+      <li><a href="api_helpers.html#shape_generator.helpers.Vertical">Vertical (class in shape_generator.helpers)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.width">width() (shape_generator.shape_generator.CrossSection property)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_class.html#shape_generator.shape_generator.CrossSection.working_directory">working_directory (shape_generator.shape_generator.CrossSection attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Pichler
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

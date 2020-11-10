@@ -1,0 +1,548 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Helper Functions &mdash; SWMM CrossSection shape Generator 0.2.alpha documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Main Function" href="api_class.html" />
+    <link rel="prev" title="General information" href="main.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> SWMM CrossSection shape Generator
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Overview:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">General information</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Helper Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_class.html">Main Function</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_examples.html">Examples Classes</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="show_case.html">Examples for general profile shapes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="show_case-kasten.html">Examples for box shaped profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="standard_cross_section.html">Standard cross section</a></li>
+<li class="toctree-l1"><a class="reference internal" href="show_case_swmm_standard.html">SWMM Standard cross section as an example</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SWMM CrossSection shape Generator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Helper Functions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="helper-functions">
+<h1>Helper Functions<a class="headerlink" href="#helper-functions" title="Permalink to this headline">¶</a></h1>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.helpers.csv" title="shape_generator.helpers.csv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">csv</span></code></a>(txt[, comment])</p></td>
+<td><p>Read the string in txt as csv file and return the content as DataFrame.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shape_generator.helpers.to_xs_dict" title="shape_generator.helpers.to_xs_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_xs_dict</span></code></a>(txt[, comment])</p></td>
+<td><p>Read the string in txt as csv file and return the content as DataFrame.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.helpers.deg2slope" title="shape_generator.helpers.deg2slope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deg2slope</span></code></a>(degree)</p></td>
+<td><p>convert degrees to a slope (<span class="math notranslate nohighlight">\(\Delta x / \Delta y\)</span>)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shape_generator.helpers.channel_end" title="shape_generator.helpers.channel_end"><code class="xref py py-obj docutils literal notranslate"><span class="pre">channel_end</span></code></a>(r, end_degree)</p></td>
+<td><p>get vertical end of the channel based on the radius of the channel and an end angle</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.helpers.combine_input_files" title="shape_generator.helpers.combine_input_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">combine_input_files</span></code></a>(shape_path[, …])</p></td>
+<td><p>combine all generated shape text files to a single inp-like text file</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shape_generator.helpers.Slope" title="shape_generator.helpers.Slope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Slope</span></code></a>(slope[, unit])</p></td>
+<td><p>get function/expression of a straight line with a given point which it intercepts</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.helpers.Vertical" title="shape_generator.helpers.Vertical"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Vertical</span></code></a>(y)</p></td>
+<td><p>function of a vertical line</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shape_generator.helpers.Horizontal" title="shape_generator.helpers.Horizontal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Horizontal</span></code></a>()</p></td>
+<td><p>function of a horizontal line</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.helpers.Circle" title="shape_generator.helpers.Circle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Circle</span></code></a>(r[, x_m, y_m, clockwise])</p></td>
+<td><p>function of a circle</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-shape_generator.helpers"></span><dl class="py function">
+<dt id="shape_generator.helpers.csv">
+<code class="sig-prename descclassname">shape_generator.helpers.</code><code class="sig-name descname">csv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">txt</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the string in txt as csv file and return the content as DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>txt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – content of csv</p></li>
+<li><p><strong>comment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – comment sign</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>profile label and values</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="shape_generator.helpers.to_xs_dict">
+<code class="sig-prename descclassname">shape_generator.helpers.</code><code class="sig-name descname">to_xs_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">txt</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#to_xs_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.to_xs_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the string in txt as csv file and return the content as DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>txt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – content of csv</p></li>
+<li><p><strong>comment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – comment sign</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>profile label and values</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="shape_generator.helpers.deg2slope">
+<code class="sig-prename descclassname">shape_generator.helpers.</code><code class="sig-name descname">deg2slope</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">degree</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#deg2slope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.deg2slope" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert degrees to a slope (<span class="math notranslate nohighlight">\(\Delta x / \Delta y\)</span>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>degree</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – angle in degree</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>slope</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
+</dd>
+</dl>
+<div class="align-center figure" id="id1">
+<img alt="slope" src="_images/slope.gif" />
+<p class="caption"><span class="caption-text">Slope</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="shape_generator.helpers.channel_end">
+<code class="sig-prename descclassname">shape_generator.helpers.</code><code class="sig-name descname">channel_end</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">r</span></em>, <em class="sig-param"><span class="n">end_degree</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#channel_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.channel_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>get vertical end of the channel based on the radius of the channel and an end angle</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – radius of the channel</p></li>
+<li><p><strong>end_degree</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – end angle in degree (°)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>height of the channel when the circle reaches a certain angle</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
+</dd>
+</dl>
+<div class="align-center figure" id="id2">
+<img alt="channel end" src="_images/channel_end.gif" />
+<p class="caption"><span class="caption-text">Channel end</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="shape_generator.helpers.combine_input_files">
+<code class="sig-prename descclassname">shape_generator.helpers.</code><code class="sig-name descname">combine_input_files</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape_path</span></em>, <em class="sig-param"><span class="n">delete_original</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#combine_input_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.combine_input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>combine all generated shape text files to a single inp-like text file</p>
+<p>When running the <code class="xref py py-func docutils literal notranslate"><span class="pre">shape_generator.shape_generator.Profile.input_file()</span></code> function, a .txt file will be created.
+Those txt files will be combines to a single file with this function.
+This makes it easier to import all shapes to the .inp file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shape_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – path where the shapes are stored</p></li>
+<li><p><strong>delete_original</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – whether to delete the original single files</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Class Functions</p>
+<dl class="py class">
+<dt id="shape_generator.helpers.Slope">
+<em class="property">class </em><code class="sig-prename descclassname">shape_generator.helpers.</code><code class="sig-name descname">Slope</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">slope</span></em>, <em class="sig-param"><span class="n">unit</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#Slope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.Slope" title="Permalink to this definition">¶</a></dt>
+<dd><p>get function/expression of a straight line with a given point which it intercepts</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>slope</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – slope</p></li>
+<li><p><strong>p0</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.9)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>]</em>) – point as a set of a x and a y coordinate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>linear function</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.sympy.org/latest/modules/core.html#sympy.core.expr.Expr" title="(in SymPy v1.6.2)">sympy.core.expr.Expr</a></p>
+</dd>
+</dl>
+<div class="align-center figure" id="id3">
+<img alt="straight line" src="_images/gerade.gif" />
+<p class="caption"><span class="caption-text">Straight line</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+<dl class="py method">
+<dt id="shape_generator.helpers.Slope.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">slope</span></em>, <em class="sig-param"><span class="n">unit</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#Slope.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.Slope.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.helpers.Slope.set_start_point">
+<code class="sig-name descname">set_start_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">point</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#Slope.set_start_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.Slope.set_start_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>set start point</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.helpers.Slope.set_end_point">
+<code class="sig-name descname">set_end_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">point</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#Slope.set_end_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.Slope.set_end_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>set end point</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.helpers.Slope.expr">
+<code class="sig-name descname">expr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#Slope.expr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.Slope.expr" title="Permalink to this definition">¶</a></dt>
+<dd><p>get sympy expression</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.helpers.Slope.solve">
+<code class="sig-name descname">solve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">i</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#Slope.solve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.Slope.solve" title="Permalink to this definition">¶</a></dt>
+<dd><p>get y value</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.helpers.Slope.from_points">
+<em class="property">classmethod </em><code class="sig-name descname">from_points</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span></em>, <em class="sig-param"><span class="n">end</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#Slope.from_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.Slope.from_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>set the slope by giving the start and end point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>)</strong> (<em>end</em>) – </p></li>
+<li><p><strong>(</strong><strong>)</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.helpers.Slope.end_point">
+<code class="sig-name descname">end_point</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#Slope.end_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.Slope.end_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the end point</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.helpers.Slope.length">
+<code class="sig-name descname">length</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">i0</span></em>, <em class="sig-param"><span class="n">i1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#Slope.length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.Slope.length" title="Permalink to this definition">¶</a></dt>
+<dd><p>get shape length between two values</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.helpers.Slope.area">
+<code class="sig-name descname">area</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">i0</span></em>, <em class="sig-param"><span class="n">i1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#Slope.area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.Slope.area" title="Permalink to this definition">¶</a></dt>
+<dd><p>get shape area between two values</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="shape_generator.helpers.Vertical">
+<em class="property">class </em><code class="sig-prename descclassname">shape_generator.helpers.</code><code class="sig-name descname">Vertical</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#Vertical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.Vertical" title="Permalink to this definition">¶</a></dt>
+<dd><p>function of a vertical line</p>
+<dl class="py method">
+<dt id="shape_generator.helpers.Vertical.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#Vertical.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.Vertical.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – y value of the vertical line</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="shape_generator.helpers.Horizontal">
+<em class="property">class </em><code class="sig-prename descclassname">shape_generator.helpers.</code><code class="sig-name descname">Horizontal</code><a class="reference internal" href="_modules/shape_generator/helpers.html#Horizontal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.Horizontal" title="Permalink to this definition">¶</a></dt>
+<dd><p>function of a horizontal line</p>
+<dl class="py method">
+<dt id="shape_generator.helpers.Horizontal.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#Horizontal.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.Horizontal.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="shape_generator.helpers.Circle">
+<em class="property">class </em><code class="sig-prename descclassname">shape_generator.helpers.</code><code class="sig-name descname">Circle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">r</span></em>, <em class="sig-param"><span class="n">x_m</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">y_m</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">clockwise</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#Circle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.Circle" title="Permalink to this definition">¶</a></dt>
+<dd><p>function of a circle</p>
+<div class="align-center figure" id="id4">
+<img alt="circle" src="_images/kreis.gif" />
+<p class="caption"><span class="caption-text">Circle</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+<dl class="py method">
+<dt id="shape_generator.helpers.Circle.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">r</span></em>, <em class="sig-param"><span class="n">x_m</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">y_m</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">clockwise</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#Circle.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.Circle.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – radius</p></li>
+<li><p><strong>x_m</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – x axis value of the mid point</p></li>
+<li><p><strong>y_m</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – y axis value of the mid point</p></li>
+<li><p><strong>clockwise</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – whether the circle is clockwise or anticlockwise</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shape_generator.helpers.Circle.expr">
+<code class="sig-name descname">expr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/helpers.html#Circle.expr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shape_generator.helpers.Circle.expr" title="Permalink to this definition">¶</a></dt>
+<dd><p>get function/expression of a circle with a given mid point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>function of the circle</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.sympy.org/latest/modules/core.html#sympy.core.expr.Expr" title="(in SymPy v1.6.2)">sympy.core.expr.Expr</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api_class.html" class="btn btn-neutral float-right" title="Main Function" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="main.html" class="btn btn-neutral float-left" title="General information" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Pichler
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

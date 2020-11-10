@@ -1,0 +1,289 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>shape_generator.example_cross_sections &mdash; SWMM CrossSection shape Generator 0.2.alpha documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> SWMM CrossSection shape Generator
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Overview:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">General information</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api_helpers.html">Helper Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_class.html">Main Function</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_examples.html">Examples Classes</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../show_case.html">Examples for general profile shapes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../show_case-kasten.html">Examples for box shaped profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../standard_cross_section.html">Standard cross section</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../show_case_swmm_standard.html">SWMM Standard cross section as an example</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SWMM CrossSection shape Generator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>shape_generator.example_cross_sections</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for shape_generator.example_cross_sections</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">Circle</span><span class="p">,</span> <span class="n">CrossSection</span>
+
+
+<div class="viewcode-block" id="EggSection"><a class="viewcode-back" href="../../api_examples.html#shape_generator.example_cross_sections.EggSection">[docs]</a><span class="k">class</span> <span class="nc">EggSection</span><span class="p">(</span><span class="n">CrossSection</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    egg shaped cross section</span>
+
+<span class="sd">    .. figure:: images/ei.gif</span>
+<span class="sd">            :align: center</span>
+<span class="sd">            :alt: egg</span>
+<span class="sd">            :figclass: align-center</span>
+
+<span class="sd">            Egg Section (DWA-A 110, 2006)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="EggSection.__init__"><a class="viewcode-back" href="../../api_examples.html#shape_generator.example_cross_sections.EggSection.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;init</span>
+<span class="sd">        egg shaped cross section</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            r (float): radius of the egg</span>
+<span class="sd">            label (str): name/label/number of the cross section; dafault = &quot;Ei &lt;width&gt;/&lt;height&gt;&quot;</span>
+<span class="sd">            description (str): optional description of the cross section</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">r</span>
+        <span class="n">roh</span> <span class="o">=</span> <span class="n">r</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="mi">3</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="c1"># h1 = roh - (r + roh) / (R - roh) * roh</span>
+        <span class="n">h1</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">r</span>
+
+        <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Ei </span><span class="si">{:0.0f}</span><span class="s1">/</span><span class="si">{:0.0f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+
+        <span class="n">CrossSection</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Circle</span><span class="p">(</span><span class="n">roh</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="n">roh</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">h1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Circle</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">r</span><span class="p">,</span> <span class="n">y_m</span><span class="o">=-</span><span class="p">(</span><span class="n">R</span> <span class="o">-</span> <span class="n">r</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">r</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Circle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">r</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="CircleSection"><a class="viewcode-back" href="../../api_examples.html#shape_generator.example_cross_sections.CircleSection">[docs]</a><span class="k">class</span> <span class="nc">CircleSection</span><span class="p">(</span><span class="n">CrossSection</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    circle cross section</span>
+
+<span class="sd">    .. figure:: images/kreis1.gif</span>
+<span class="sd">            :align: center</span>
+<span class="sd">            :alt: circle</span>
+<span class="sd">            :figclass: align-center</span>
+
+<span class="sd">            Circle Section (DWA-A 110, 2006)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CircleSection.__init__"><a class="viewcode-back" href="../../api_examples.html#shape_generator.example_cross_sections.CircleSection.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;init</span>
+<span class="sd">        circle cross section</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            r (float): radius of the circle</span>
+<span class="sd">            label (str): name/label/number of the cross section; dafault = &quot;DN &lt;diameter&gt;&quot;</span>
+<span class="sd">            description (str): optional description of the cross section</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">r</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">d</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="n">d</span>
+
+        <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;DN </span><span class="si">{:0.0f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+        <span class="n">CrossSection</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Circle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">x_m</span><span class="o">=</span><span class="n">r</span><span class="p">))</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Pichler
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
