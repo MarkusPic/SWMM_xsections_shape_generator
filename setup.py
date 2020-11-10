@@ -15,7 +15,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='SWMM_xsections_shape_generator',
-    version='0.3',
+    version='0.3.1',
     packages=['shape_generator'],
     url='https://github.com/MarkusPic/SWMM_xsections_shape_generator',
     license='MIT',
@@ -29,5 +29,14 @@ setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
+        'Topic :: Scientific/Engineering',
+        'Topic :: Software Development :: Libraries',
+        'Topic :: Software Development :: Libraries :: Application Frameworks',
+        # 'Framework :: SWMM',
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Science/Research',
+        'Natural Language :: English'
     ],
+    keywords='swmm environment civil engineering api',
+    python_requires='>= 3.5',
 )
