@@ -9,7 +9,7 @@ def convert_shape_generator_to_curve(gen: CrossSection) -> Curve:
     # [1:-1] without first and last point / not needed in swmm
     height = np.array(x[1:-1]) / gen.height
     area = np.array(y[1:-1]) / gen.height * 2
-    return Curve(Name=gen.label, Type=Curve.TYPES.SHAPE, points=[[float(h), float(a)] for h, a in zip(height, area)])
+    return Curve(Name=gen.out_filename, Type=Curve.TYPES.SHAPE, points=[[float(h), float(a)] for h, a in zip(height, area)])
 
 
 def from_swmm_shape(curve: Curve, height=100, *args, **kwargs) -> CrossSection:
