@@ -403,6 +403,15 @@ class CrossSection:
             if len(x) > self.max_number_points:
                 x, y = self._get_points_legacy()
 
+            # -------------------------
+            # prevent duplicate x values (raises SWMM error)
+            if len(x[1:-1]) != len(set(x[1:-1])):
+                x = list(x)
+                for i in range(1, len(x)-1):
+                    if (x[i] != 0) and (x[i] == x[i-1]):
+                        x[i] += step
+
+            # -------------------------
             self.points = x, y
 
         return self.points
@@ -431,16 +440,16 @@ class CrossSection:
         # delete errors
         df = df[df['x'].expanding().max() == df['x']].copy()
 
-        # change x duplicates
-        dupls = df['x'].duplicated(keep=False)
-        if dupls.any():
-            nx = df['x'][dupls]
-
-            def raise_values(s):
-                return s + Series(index=s.index, data=range(len(s.index))) * 10 ** (-self.accuracy)
-
-            nx = nx.groupby(nx).apply(raise_values)
-            df.loc[nx.index, 'x'] = nx
+        # # change x duplicates
+        # dupls = df['x'].duplicated(keep=False)
+        # if dupls.any():
+        #     nx = df['x'][dupls]
+        #
+        #     def raise_values(s):
+        #         return s + Series(index=s.index, data=range(len(s.index))) * 10 ** (-self.accuracy)
+        #
+        #     nx = nx.groupby(nx).apply(raise_values)
+        #     df.loc[nx.index, 'x'] = nx
 
         self._df_abs = (df * self.height).copy()
 
