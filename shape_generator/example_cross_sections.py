@@ -22,17 +22,17 @@ class EggSection(CrossSection):
             description (str): optional description of the cross section
         """
         R = 3 * r
-        roh = r / 2
+        rho = r / 2
         height = r * 3
         width = r * 2
-        # h1 = roh - (r + roh) / (R - roh) * roh
+        # h1 = rho - (r + rho) / (R - rho) * rho
         h1 = 0.2 * r
 
         if label is None:
             label = 'Ei {:0.0f}/{:0.0f}'.format(width, height)
 
         CrossSection.__init__(self, label=label, description=description, width=width, height=height)
-        self.add(Circle(roh, x_m=roh))
+        self.add(Circle(rho, x_m=rho))
         self.add(h1)
         self.add(Circle(R, x_m=2 * r, y_m=-(R - r)))
         self.add(2 * r)

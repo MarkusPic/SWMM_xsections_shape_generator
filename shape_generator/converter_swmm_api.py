@@ -1,5 +1,5 @@
 from shape_generator import CrossSection
-from swmm_api.input_file.inp_sections import Curve
+from swmm_api.input_file.sections import Curve
 import numpy as np
 
 

@@ -453,7 +453,7 @@ class CrossSection:
 
         self._df_abs = (df * self.height).copy()
 
-    def profile_figure(self, relative=False, half=False) -> plt.Figure:
+    def profile_figure(self, relative=False, half=False, fill=False, **kwargs) -> plt.Figure:
         """create a plot of the cross section"""
         def custom_round(x_, base):
             return base * ceil(float(x_) / base)
@@ -506,7 +506,9 @@ class CrossSection:
             wi = append(wi, wi[::-1]*-1)
 
         # -------------------------
-        ax.plot(wi, hi, marker='.', ls='-', zorder=1000000, clip_on=False)
+        ax.plot(wi, hi, marker='.', ls='-', zorder=1000000, clip_on=False, **kwargs)
+        if fill:
+            ax.fill(wi, hi)
 
         # -------------------------
         # ax.legend().remove()
