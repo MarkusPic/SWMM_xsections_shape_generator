@@ -453,11 +453,7 @@ class CrossSection:
 
         self._df_abs = (df * self.height).copy()
 
-    def profile_figure(self, relative=False, half=False, fill=False, **kwargs) -> plt.Figure:
-        """create a plot of the cross section"""
-        def custom_round(x_, base):
-            return base * ceil(float(x_) / base)
-
+    def profile_axis(self, ax, relative=False, half=False, fill=False, marker='.', ls='-', **kwargs):
         x, y = self.get_points()
         hi = array(x)
         wi = array(y)
@@ -465,14 +461,32 @@ class CrossSection:
         w = wi.max()
         h = hi.max()
 
-        # -------------------------
-        fig, ax = plt.subplots()
-
-        # -------------------------
         if relative:
             hi /= h
             wi /= h
 
+        if not half:
+            hi = append(hi, hi[::-1])
+            wi = append(wi, wi[::-1]*-1)
+
+        # -------------------------
+        ax.plot(wi, hi, marker=marker, ls=ls, zorder=1000000, clip_on=False, **kwargs)
+        if fill:
+            ax.fill(wi, hi)
+
+        return ax, (h, w)
+
+    def profile_figure(self, relative=False, half=False, fill=False, **kwargs) -> plt.Figure:
+        """create a plot of the cross section"""
+        def custom_round(x_, base):
+            return base * ceil(float(x_) / base)
+
+        # -------------------------
+        fig, ax = plt.subplots()
+
+        ax, (h, w) = self.profile_axis(ax, relative=relative, half=half, fill=fill, **kwargs)
+        # -------------------------
+        if relative:
             xlim = 1
             ylim = 1
             base = 0.2
@@ -501,14 +515,6 @@ class CrossSection:
         else:
 
             xlim_left = -xlim
-
-            hi = append(hi, hi[::-1])
-            wi = append(wi, wi[::-1]*-1)
-
-        # -------------------------
-        ax.plot(wi, hi, marker='.', ls='-', zorder=1000000, clip_on=False, **kwargs)
-        if fill:
-            ax.fill(wi, hi)
 
         # -------------------------
         # ax.legend().remove()
