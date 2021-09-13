@@ -113,7 +113,7 @@ class CrossSection:
             str: filename
 
         """
-        return path.join(self.working_directory, str(self.label))
+        return os.path.join(self.working_directory, str(self.label))
 
     def _reset_shape(self):
         self.points = list()

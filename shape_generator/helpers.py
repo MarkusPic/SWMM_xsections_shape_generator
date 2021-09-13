@@ -126,11 +126,11 @@ def combine_input_files(shape_path, delete_original=False):
         shape_path (str): path where the shapes are stored
         delete_original (bool): whether to delete the original single files
     """
-    with open(path.join(shape_path, 'all_shapes.txt'), 'w') as outfile:
+    with open(os.path.join(shape_path, 'all_shapes.txt'), 'w') as outfile:
         for fname in listdir(shape_path):
             if not fname.endswith('_shape.txt'):
                 continue
-            in_fn = path.join(shape_path, fname)
+            in_fn = os.path.join(shape_path, fname)
             with open(in_fn) as infile:
                 outfile.write(infile.read())
                 outfile.write('\n\n')

@@ -69,7 +69,7 @@ class CrossSectionHolding(CrossSection):
             str: filename
 
         """
-        file = path.join(self.working_directory, '{}'.format(self.label))
+        file = os.path.join(self.working_directory, '{}'.format(self.label))
         if self.add_dim:
             file += '_{:0.0f}'.format(self.height)
             if self.width:
