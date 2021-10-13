@@ -1,6 +1,6 @@
 import re
+import os
 from math import cos, radians
-from os import path
 
 from numpy import NaN, array, interp, argmax, ndarray, min, max, append
 from pandas import isna, notna
