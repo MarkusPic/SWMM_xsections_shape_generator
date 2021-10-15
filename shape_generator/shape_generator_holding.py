@@ -37,7 +37,7 @@ class CrossSectionHolding(CrossSection):
 
         """
         if isinstance(label, (float, int)):
-            label = '{:0.0f}'.format(label)
+            label = f'{label:0.0f}'
         else:
             label = label
 
@@ -52,12 +52,12 @@ class CrossSectionHolding(CrossSection):
     def __str__(self):
         s = CrossSection.__str__(self)
         if self.add_dim:
-            s += '  |  {:0.0f}'.format(self.height)
+            s += f'  |  {self.height:0.0f}'
             if self.width:
-                s += 'x{:0.0f}'.format(self.width)
+                s += f'x{self.width:0.0f}'
 
         if self.add_dn:
-            s += '  |  DN{:0.0f}'.format(self.add_dn)
+            s += f'  |  DN{self.add_dn:0.0f}'
         return s
 
     @property
@@ -69,14 +69,14 @@ class CrossSectionHolding(CrossSection):
             str: filename
 
         """
-        file = os.path.join(self.working_directory, '{}'.format(self.label))
+        file = os.path.join(self.working_directory, str(self.label))
         if self.add_dim:
-            file += '_{:0.0f}'.format(self.height)
+            file += f'_{self.height:0.0f}'
             if self.width:
-                file += 'x{:0.0f}'.format(self.width)
+                file += f'x{self.width:0.0f}'
 
         if self.add_dn:
-            file += '_DN{:0.0f}'.format(self.add_dn)
+            file += f'_DN{self.add_dn:0.0f}'
         return file
 
     ####################################################################################################################
@@ -254,8 +254,9 @@ class CrossSectionHolding(CrossSection):
             see :doc:`show_case-kasten`
         """
         name = 'K'
-        cross_section = cls(label=label, width=width, height=height, **kwargs)
+        cross_section = cls(label=label, height=height, width=width, **kwargs)
 
+        # ------------------------------------------------
         if isna(channel):
             channel = None
         else:
@@ -267,17 +268,19 @@ class CrossSectionHolding(CrossSection):
         if isna(roof):
             roof = ''
 
+        # ------------------------------------------------
         if channel or bench:
             name += '.'
             bench = str(bench).strip()
 
             if isinstance(channel, float):
-                name += '{:0.0f}'.format(channel)
+                name += f'{channel:0.0f}'
                 # diameter to radius
                 channel /= 2
                 cross_section.add(Circle(channel, x_m=channel))
 
             if isinstance(bench, str):
+                # '' | 'R' | 'H'
                 if bench != '45':
                     name += str(bench)
 
@@ -301,11 +304,12 @@ class CrossSectionHolding(CrossSection):
                     # cross_section.add(channel, width / 2)
                     # cross_section.add(channel + rounding, width / 2)
 
-                    if 1:
-                        cross_section.add(channel_end(channel, 45))
-                        cross_section.add(45, '°slope')
-                    else:
-                        cross_section.add(channel, channel)
+                    # --------either this
+                    cross_section.add(channel_end(channel, 45))
+                    cross_section.add(45, '°slope')
+                    # --------or this
+                    # cross_section.add(channel, channel)
+                    # --------
                     cross_section.add(channel + rounding, None)
                     cross_section.add(5, '°slope')
                     cross_section.add(None, width / 2)
@@ -314,7 +318,9 @@ class CrossSectionHolding(CrossSection):
             # ebene Sohle
             cross_section.add(0, width / 2)
 
+        # ------------------------------------------------
         if roof:
+            # '' | 'B' | 'K'
             name += '_' + str(roof)
 
             if roof == '':
@@ -334,6 +340,7 @@ class CrossSectionHolding(CrossSection):
             # gerade Decke
             cross_section.add(height, width / 2)
 
+        # ------------------------------------------------
         if cross_section.label is None or cross_section.label == '':
             cross_section.label = name
 
@@ -373,6 +380,7 @@ class CrossSectionHolding(CrossSection):
                 Kasten-Profile
         """
         infos = re.findall(r'(K)(\.?)(\d*)([RH]?)_?([BK]?)', label)  # _(\d+)x(\d+)
+        # 'Pr_K.30K' == 'Pr_K.30_K'
         if len(infos) == 1:
             infos = infos[0]
             _, _, channel, bench, roof = infos
