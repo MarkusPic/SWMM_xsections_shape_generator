@@ -1,14 +1,10 @@
-from io import StringIO
-from os import path, listdir, remove
-from math import radians, tan, cos, pi, atan, sin
-from pandas import read_csv
+import io
+import math
+import os
+import warnings
 
-import sympy as sy
 import numpy as np
-
-# these variables are used to solve symbolic mathematical equations
-# x is the control variable over the height ... max(x) = H_cross_section
-x = sy.Symbol('x', real=True, positive=True)
+import pandas as pd
 
 accuracy = 10
 
@@ -35,7 +31,7 @@ def csv(txt, comment=None):
     Returns:
         dict: profile label and values
     """
-    df = read_csv(StringIO(txt), index_col=0, skipinitialspace=True, skip_blank_lines=True, comment=comment)
+    df = pd.read_csv(io.StringIO(txt), index_col=0, skipinitialspace=True, skip_blank_lines=True, comment=comment)
     df = df[df.index.notnull()].copy()
     df.index = df.index.astype(str)
     return df
@@ -86,7 +82,7 @@ def deg2slope(degree):
 
         Slope
     """
-    return tan(radians(degree))
+    return math.tan(math.radians(degree))
 
 
 def channel_end(r, end_degree):
@@ -107,12 +103,7 @@ def channel_end(r, end_degree):
 
         Channel end
     """
-    return r * (1 - cos(radians(end_degree)))
-
-
-def sqrt(i):
-    """ Return the square root of x. """
-    return i ** (1 / 2)
+    return r * (1 - math.cos(math.radians(end_degree)))
 
 
 def combine_input_files(shape_path, delete_original=False):
@@ -127,7 +118,7 @@ def combine_input_files(shape_path, delete_original=False):
         delete_original (bool): whether to delete the original single files
     """
     with open(os.path.join(shape_path, 'all_shapes.txt'), 'w') as outfile:
-        for fname in listdir(shape_path):
+        for fname in os.listdir(shape_path):
             if not fname.endswith('_shape.txt'):
                 continue
             in_fn = os.path.join(shape_path, fname)
@@ -135,22 +126,58 @@ def combine_input_files(shape_path, delete_original=False):
                 outfile.write(infile.read())
                 outfile.write('\n\n')
             if delete_original:
-                remove(in_fn)
-    print('Files are combined and originals {}deleted.'.format('' if delete_original else 'NOT '))
+                os.remove(in_fn)
+    print(f'Files are combined and originals{" " if delete_original else " NOT "}deleted.')
+
+
+def get_intersection_point(expr1, expr2, x_from, x_to):
+    from scipy.optimize import minimize_scalar
+    x_i = minimize_scalar(lambda j: abs(expr1.solve_y(j) - expr2.solve_y(j)), bounds=(x_from, x_to), method='bounded', options=dict(xatol=.01)).x
+    # y_i = float(expr1.solve_y(x_i))
+
+    # import sympy as sy
+    # # these variables are used to solve symbolic mathematical equations
+    # # x is the control variable over the height ... max(x) = H_cross_section
+    # x = sy.Symbol('x', real=True, positive=True)
+    #
+    # expr_eq = expr1.expr(x) - expr2.expr(x)
+    #
+    # res = sy.solve(expr_eq, x)
+    # if len(res) == 0:
+    #
+    #     x_i = minimize_scalar(lambda j: float(expr_eq.subs(x, j)),
+    #                           bounds=(x_from, x_to), method='bounded').x
+    #
+    # elif len(res) == 1:
+    #     x_i = float(res[0])
+    # else:
+    #     # multiple results
+    #     # TODO: how to handle it
+    #     x_i = float(res[0])
+
+    y_i = float(expr1.solve_y(x_i))
+    return x_i, y_i
 
 
 ####################################################################################################################
 class CustomExpr:
     def __init__(self):
-        pass
+        self.x0 = None
+        self.y0 = None
+
+        self.x1 = None
+        self.y1 = None
 
     def __repr__(self):
         return 'Custom Function'
 
-    def expr(self):
+    def expr(self, x):
         pass
 
-    def solve(self, i):
+    def solve_y(self, i):
+        pass
+
+    def solve_x(self, y):
         pass
 
     def length(self, i0, i1):
@@ -159,9 +186,76 @@ class CustomExpr:
     def area(self, i0, i1):
         pass
 
+    def _fix_point(self, point):
+        x, y = point
+        if x is None:
+            x = float(self.solve_x(y))
+
+        if y is None:
+            y = float(self.solve_y(x))
+        return x, y
+
+    def set_start_point(self, point):
+        """set start point"""
+        x0, y0 = self._fix_point(point)
+        self.x0 = x0
+        self.y0 = y0
+
+    def set_end_point(self, point):
+        """set end point"""
+        x1, y1 = self._fix_point(point)
+        self.x1 = x1
+        self.y1 = y1
+
+        if self.get_start_point() == self.get_end_point():
+            warnings.warn('unused part of the shape detected. Ignoring this part.')
+
+    def get_start_point(self):
+        """get the start point"""
+        return self.x0, self.y0
+
+    def get_end_point(self):
+        """get the end point"""
+        return self.x1, self.y1
+
 
 ####################################################################################################################
-class Slope(CustomExpr):
+class Linear(CustomExpr):
+    def __init__(self):
+        CustomExpr.__init__(self)
+
+    def set_points(self, start, end):
+        self.set_start_point(start)
+        self.set_end_point(end)
+
+    @classmethod
+    def from_points(cls, start, end):
+        """
+        set the slope by giving the start and end point
+
+        Args:
+            start ():
+            end ():
+
+        Returns:
+
+        """
+        x0, y0 = start
+        x1, y1 = end
+
+        if abs(y0 - y1) < 1.0e-6:
+            new_obj = Vertical(y0)
+        elif abs(x0 - x1) < 1.0e-6:
+            new_obj = Horizontal(x0)
+        else:
+            slope = (x1 - x0) / (y1 - y0)
+            new_obj = Slope(slope)
+
+        new_obj.set_points(start, end)
+        return new_obj
+
+
+class Slope(Linear):
     """
     get function/expression of a straight line with a given point which it intercepts
 
@@ -190,142 +284,102 @@ class Slope(CustomExpr):
         else:
             raise NotImplementedError('Unknown Unit for slope function')
 
-        self.x0 = None
-        self.y0 = None
-
-        self.x1 = None
-        self.y1 = None
-
-        CustomExpr.__init__(self)
+        Linear.__init__(self)
 
     def __repr__(self):
         return f'Slope Function (k={self.slope:0.2f}, zero=[{self.x0:0.2f}, {self.y0:0.2f}])'
 
-    def set_start_point(self, point):
-        """set start point"""
-        x0, y0 = point
-        self.x0 = x0
-        self.y0 = y0
-
-    def set_end_point(self, point):
-        """set end point"""
-        x1, y1 = point
-        self.x1 = x1
-        self.y1 = y1
-
-    def expr(self):
+    def expr(self, x):
         """get sympy expression"""
         return self.y0 + (x - self.x0) / self.slope
 
-    def solve(self, i):
+    def solve_y(self, x):
         """get y value"""
-        return self.y0 + (i - self.x0) / self.slope
+        return self.y0 + (x - self.x0) / self.slope
 
-    @classmethod
-    def from_points(cls, start, end):
-        """
-        set the slope by giving the start and end point
-
-        Args:
-            start ():
-            end ():
-
-        Returns:
-
-        """
-        x0, f0 = start
-        x1, f1 = end
-        if abs(f0 - f1) < 1.0e-6:
-            return Vertical(f0)
-        elif abs(x0 - x1) < 1.0e-6:
-            return Horizontal.from_points(start, end)
-
-        slope = (x1 - x0) / (f1 - f0)
-        new_slope = cls(slope)
-        new_slope.set_start_point(start)
-        new_slope.set_end_point(end)
-        return new_slope
-
-    def end_point(self):
-        """get the end point"""
-        return self.x1, self.y1
+    def solve_x(self, y):
+        return self.x0 + (y - self.y0) * self.slope
 
     def length(self, i0, i1):
         """get shape length between two values"""
-        return sqrt((self.solve(i0) - self.solve(i1)) ** 2 + (i0 - i1) ** 2)
+        return math.sqrt((self.solve_y(i0) - self.solve_y(i1)) ** 2 + (i0 - i1) ** 2)
 
-    def area(self, i0, i1):
+    def area(self, x0, x1):
         """get shape area between two values"""
-        return (self.solve(i0) + self.solve(i1)) / 2 * np.abs(i0 - i1)
+        return (self.solve_y(x0) + self.solve_y(x1)) / 2 * np.abs(x0 - x1)
 
 
 ####################################################################################################################
-class Vertical(CustomExpr):
+class Vertical(Linear):
     """
     function of a vertical line
+
+    for a shape curve this means a constant width
     """
-    def __init__(self, y):
+    def __init__(self, y=None):
         """
 
         Args:
             y (float): y value of the vertical line
         """
-        self.y = y
-        CustomExpr.__init__(self)
+        Linear.__init__(self)
+        if y is not None:
+            self.set_y(y)
 
     def __repr__(self):
         return f'Vertical Function (y={self.y:0.2f})'
 
-    def expr(self):
+    def expr(self, x):
         return self.y + x * 0
 
-    def solve(self, i):
-        return self.y + i * 0
+    def solve_y(self, x):
+        if isinstance(x, (list, tuple, np.ndarray)):
+            return [self.y]*len(x)
+        else:
+            return self.y
 
-    def length(self, i0, i1):
-        return i1 - i0
+    def solve_x(self, y):
+        pass
 
-    def area(self, i0, i1):
-        return self.length(i0, i1) * self.y
+    def length(self, x0, x1):
+        return x1 - x0
+
+    def area(self, x0, x1):
+        return self.length(x0, x1) * self.y
+
+    @property
+    def y(self):
+        return self.y0
+
+    def set_y(self, y):
+        self.y0 = y
+        self.y1 = y
 
 
 ####################################################################################################################
-class Horizontal(CustomExpr):
+class Horizontal(Linear):
     """
     function of a horizontal line
     """
-    def __init__(self):
-        CustomExpr.__init__(self)
-        self.x = None
-        self.y0 = None
-        self.y1 = None
-
-    def set_x(self, i):
-        self.x = i
-
-    def set_points(self, start, end):
-        x0, y0 = start
-        x1, y1 = end
-
-        if x0 == x1:
-            self.x = x0
-        else:
-            if x0 is not None:
-                self.x = x0
-            elif x1 is not None:
-                self.x = x1
-
-        self.y0 = y0
-        self.y1 = y1
+    def __init__(self, x=None):
+        Linear.__init__(self)
+        if x is not None:
+            self.set_x(x)
 
     def __repr__(self):
         return 'Horizontal Function'
 
-    def expr(self):
+    def expr(self, x):
         return self.y1
 
-    def solve(self, i):
-        return self.y1
+    def solve_y(self, i):
+        pass
+
+    def solve_x(self, y):
+        if isinstance(y, (list, tuple, np.ndarray)):
+            return [self.x]*len(y)
+        else:
+            return self.x
 
     def length(self, i0, i1):
         return np.abs(self.y1 - self.y0)
@@ -333,17 +387,13 @@ class Horizontal(CustomExpr):
     def area(self, i0, i1):
         return 0
 
-    @classmethod
-    def from_points(cls, start, end):
-        h = cls()
-        h.set_points(start, end)
-        return h
+    @property
+    def x(self):
+        return self.x0
 
-    def start_point(self):
-        return self.x, self.y0
-
-    def end_point(self):
-        return self.x, self.y1
+    def set_x(self, x):
+        self.x0 = x
+        self.x1 = x
 
 
 ####################################################################################################################
@@ -379,7 +429,7 @@ class Circle(CustomExpr):
     def __repr__(self):
         return f'Circle Function (radius={self.r:0.2f}, mid=[{self.x_m:0.2f}, {self.y_m:0.2f}])'
 
-    def expr(self):
+    def expr(self, x):
         """
         get function/expression of a circle with a given mid point
 
@@ -387,6 +437,7 @@ class Circle(CustomExpr):
         Returns:
             sympy.core.expr.Expr: function of the circle
         """
+        import sympy as sy
         return sy.sqrt(sy.Float(self.r) ** 2 - (x - sy.Float(self.x_m)) ** 2) * (-1 if self.clockwise else 1) + \
                sy.Float(self.y_m)
 
@@ -401,15 +452,15 @@ class Circle(CustomExpr):
             float: angle in rad
         """
         if isinstance(i, np.ndarray):
-            return np.arctan((i - self.x_m) / (self.solve(i) - self.y_m))
+            return np.arctan((i - self.x_m) / (self.solve_y(i) - self.y_m))
 
         else:
-            if (self.solve(i) - self.y_m) == 0:
-                a = pi / 2
+            if (self.solve_y(i) - self.y_m) == 0:
+                a = math.pi / 2
                 if (i - self.x_m) < 0:
                     a *= -1
             else:
-                a = np.arctan((i - self.x_m) / (self.solve(i) - self.y_m))
+                a = np.arctan((i - self.x_m) / (self.solve_y(i) - self.y_m))
             return a
 
     def _d_alpha(self, i0, i1):
@@ -425,12 +476,15 @@ class Circle(CustomExpr):
         """
         return np.abs(self._alpha(i0) - self._alpha(i1))
 
-    def solve(self, i):
-        return sqrt(self.r ** 2 - (i - self.x_m) ** 2) * (-1 if self.clockwise else 1) + self.y_m
+    def solve_y(self, x):
+        return np.sqrt(self.r ** 2 - (x - self.x_m) ** 2) * (-1 if self.clockwise else 1) + self.y_m
+
+    def solve_x(self, y):
+        return np.sqrt(self.r ** 2 - (y - self.y_m) ** 2) * (-1 if self.clockwise else 1) + self.x_m
 
     def length(self, i0, i1):
         return self._d_alpha(i0, i1) * self.r
 
     def area(self, i0, i1):
         alpha = self._d_alpha(i0, i1)
-        return self.r ** 2 / 2 * (alpha - np.sin(alpha)) + (self.solve(i0) + self.solve(i1)) / 2 * (i1 - i0)
+        return self.r ** 2 / 2 * (alpha - np.sin(alpha)) + (self.solve_y(i0) + self.solve_y(i1)) / 2 * (i1 - i0)

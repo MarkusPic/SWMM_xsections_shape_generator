@@ -1,11 +1,10 @@
-import re
+import math
 import os
-from math import cos, radians
+import re
 
-from numpy import NaN, array, interp, argmax, ndarray, min, max, append
-from pandas import isna, notna
+import numpy as np
 
-from .helpers import sqrt, channel_end, Circle
+from .helpers import channel_end, Circle
 from .shape_generator import CrossSection
 
 
@@ -81,8 +80,8 @@ class CrossSectionHolding(CrossSection):
 
     ####################################################################################################################
     @classmethod
-    def standard(cls, label, description, height, width=NaN, r_channel=NaN, r_roof=NaN, r_wall=NaN, slope_bench=NaN,
-                 r_round=NaN, r_wall_bottom=NaN, h_bench=NaN, pre_bench=NaN, w_channel=NaN, **kwargs):
+    def standard(cls, label, description, height, width=None, r_channel=None, r_roof=None, r_wall=None, slope_bench=None,
+                 r_round=None, r_wall_bottom=None, h_bench=None, pre_bench=None, w_channel=None, **kwargs):
         """
         standard cross section
 
@@ -142,63 +141,62 @@ class CrossSectionHolding(CrossSection):
         """
 
         # ------------------------------------------------
-        cross_section = cls(label=label, description=description, height=height,
-                            width=(width if notna(width) else None), **kwargs)
+        cross_section = cls(label=label, description=description, height=height, width=width, **kwargs)
 
         # ------------------------------------------------
         # TW-Rinne
-        if notna(r_channel):
+        if r_channel is not None:
             cross_section.add(Circle(r_channel, x_m=r_channel))
 
             # ------------------------------------------------
-            if notna(pre_bench):
+            if pre_bench is not None:
                 cross_section.add(channel_end(r_channel, pre_bench))
 
-                if notna(h_bench) or isna(slope_bench):
+                if (h_bench is not None) or (slope_bench is None):
                     cross_section.add(pre_bench, '°slope')
 
-                if notna(h_bench):
+                if h_bench is not None:
                     cross_section.add(h_bench)
 
-            elif notna(w_channel):
+            elif w_channel is not None:
                 cross_section.add(None, w_channel)
 
             else:
-                if notna(h_bench):
+                if h_bench is not None:
                     cross_section.add(h_bench)
                 else:
                     cross_section.add(r_channel)
-                    if isna(r_round):
+                    if r_round is None:
                         r_round = 0
                     cross_section.add(r_channel + r_round, r_channel)
 
         # ------------------------------------------------
-        if notna(slope_bench):
+        if slope_bench is not None:
             # Berme winkel in °
             cross_section.add(slope_bench, '°slope')
 
         # ------------------------------------------------
-        if isna(r_channel) and isna(slope_bench):
+        if (r_channel is None) and (slope_bench is None):
             cross_section.add(0, width / 2)
 
         # ------------------------------------------------
-        if isna(r_roof):
+        if r_roof is None:
             # eckige Decke
             cross_section.add(None, width / 2)
             cross_section.add(height, width / 2)
 
         else:
-            if isna(r_wall):
+            if r_wall is None:
                 cross_section.add(None, width / 2)
                 cross_section.add(height - r_roof, width / 2)
             else:
                 # ------------------------------------------------
-                h1 = sqrt((r_wall - r_roof) ** 2 - (r_wall - width / 2) ** 2)
+                h1 = math.sqrt((r_wall - r_roof) ** 2 - (r_wall - width / 2) ** 2)
                 # h_middle = round(height - r_roof - h1, 8)
                 h_middle = height - r_roof - h1
 
                 # ------------------------------------------------
-                if isna(r_wall_bottom):
+                if r_wall_bottom is None:
                     cross_section.add(None, width / 2)
                     cross_section.add(h_middle, width / 2)
 
@@ -257,15 +255,13 @@ class CrossSectionHolding(CrossSection):
         cross_section = cls(label=label, height=height, width=width, **kwargs)
 
         # ------------------------------------------------
-        if isna(channel):
-            channel = None
-        else:
+        if channel is not None:
             channel = float(channel)
 
-        if isna(bench):
+        if bench is None:
             bench = ''
 
-        if isna(roof):
+        if roof is None:
             roof = ''
 
         # ------------------------------------------------
@@ -329,7 +325,7 @@ class CrossSectionHolding(CrossSection):
 
             elif roof == 'B':
                 # Bogen-Decke
-                cross_section.add(height - width * (1 - cos(radians(30))), width / 2)
+                cross_section.add(height - width * (1 - math.cos(math.radians(30))), width / 2)
                 cross_section.add(Circle(width, x_m=height - width))
 
             elif roof == 'K':
@@ -397,7 +393,7 @@ class CrossSectionHolding(CrossSection):
 
         # --------------------------------------
         else:
-            raise NotImplementedError('"{}" unknown !'.format(label))
+            raise NotImplementedError(f'"{label}" unknown !')
 
     @classmethod
     def from_point_cloud(cls, relative_coordinates, *args, **kwargs):
@@ -434,9 +430,9 @@ class CrossSectionHolding(CrossSection):
         """
         if isinstance(relative_coordinates, (list, tuple)):
             x, y = zip(*relative_coordinates)
-            x = array(x)
-            y = array(y)
-        elif isinstance(relative_coordinates, ndarray):
+            x = np.array(x)
+            y = np.array(y)
+        elif isinstance(relative_coordinates, np.ndarray):
             x = relative_coordinates[:, 0]
             y = relative_coordinates[:, 1]
         else:
@@ -448,12 +444,12 @@ class CrossSectionHolding(CrossSection):
         cross_section = cls(*args, **kwargs)
 
         # for the interpolation
-        y = append(y, [0])
-        x = append(x, [0])
+        y = np.append(y, [0])
+        x = np.append(x, [0])
 
         yi = sorted(set(y))
-        xi = interp(yi, y[:argmax(y) + 1], x[:argmax(y) + 1]) - \
-             interp(yi, y[::-1][:argmax(y[::-1]) + 1], x[::-1][:argmax(y[::-1]) + 1])
+        xi = np.interp(yi, y[:np.argmax(y) + 1], x[:np.argmax(y) + 1]) - \
+             np.interp(yi, y[::-1][:np.argmax(y[::-1]) + 1], x[::-1][:np.argmax(y[::-1]) + 1])
         xi /= 2
         for x, y in zip(yi, xi):
             if y == 0 and x in (0, height):

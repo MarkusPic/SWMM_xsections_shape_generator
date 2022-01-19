@@ -1,15 +1,14 @@
+import os
 import warnings
-from os import path
 
 import matplotlib.pyplot as plt
-import sympy as sy
-from numpy import array, arange, ndarray, ceil, log10, floor, NaN, append
+import numpy as np
 
 from .curve_simplification import ramer_douglas
-from .helpers import Circle, x, CustomExpr, Slope, Horizontal, sqrt
+from .helpers import Circle, CustomExpr, Slope, Horizontal, get_intersection_point  # , x
 
-g = 9.81  # m/s^2 Erdbeschleunigung
-ny = 1.31e-6  # m^2/s bei 10°C von Wasser
+g = 9.81  # m/s² Erdbeschleunigung
+ny = 1.31e-6  # m²/s bei 10°C von Wasser
 
 
 ########################################################################################################################
@@ -78,7 +77,7 @@ class CrossSection:
         return str(self)
 
     def __str__(self):
-        return '{}:  {}'.format(self.label, self.description)
+        return f'{self.label}:  {self.description}'
 
     @property
     def height(self):
@@ -198,119 +197,79 @@ class CrossSection:
         """
         if self._shape_description is None:
             # result list
-            function = list()
-
-            def add_slope_to_function(point0, point1):
-                start = point0[0]
-                end = point1[0]
-                yi = Slope.from_points(point0, point1)
-                function.append((start, end, yi))
+            expr_list = []
 
             # boundary condition
-            last_point = (0, 0)
-            final_point = (self.height, 0)
+            point_final = (self.height, 0)
 
+            is_next_final_point = False
             for i, shape_i in enumerate(self.shape):
+                # _________________________________
+                if i == 0:
+                    point_prev = (0, 0)
+                else:
+                    point_prev = expr_list[-1].get_end_point()
 
                 # _________________________________
                 # boundary condition
                 if (i + 1) == len(self.shape):
-                    shape_next = final_point
+                    is_next_final_point = True
+                    shape_next = point_final
                 else:
                     shape_next = self.shape[i + 1]
 
-                # _________________________________
-                # if isinstance(shape_i, tuple) and shape_i[1] == 'slope':
-                #     shape_i = Slope(shape_i[0])
-                #     shape_i.set_start_point(last_point)
-
                 # ____________________________________________________________
                 if isinstance(shape_i, tuple):
+                    # shape_i ist ein tuple aus x und y Koordinate (x,y)
+                    # nächster Punkt in der Shape
+                    point_i = shape_i
 
-                    if (shape_i[0] is None) or (shape_i[1] is None):
+                    if (point_i[0] is None) or (point_i[1] is None):
                         # this part is only used as boundary condition
-                        if shape_next == final_point:
-                            start = last_point[0]
-                            end = shape_next[0]
-                            yi = Slope.from_points(last_point, shape_next)
-                            function.append((start, end, yi))
-
+                        if is_next_final_point:
+                            expr_i = Slope.from_points(point_prev, point_final)
+                            expr_list.append(expr_i)
                         continue
 
-                    if last_point[1] is not None:
-                        start = last_point[0]
-                        end = shape_i[0]
-                        yi = Slope.from_points(last_point, shape_i)
-                        function.append((start, end, yi))
+                    if point_prev[1] is not None:
+                        expr_i = Slope.from_points(point_prev, point_i)
+                        expr_list.append(expr_i)
 
-                    if shape_next == final_point:
-                        start = shape_i[0]
-                        end = shape_next[0]
-                        yi = Slope.from_points(shape_i, shape_next)
-                        function.append((start, end, yi))
+                    if is_next_final_point:
+                        expr_i = Slope.from_points(point_i, point_final)
+                        expr_list.append(expr_i)
 
-                    # ________________________________
-
-                    last_point = (end, shape_i[1])
+                    del point_i, expr_i
 
                 # ____________________________________________________________
                 elif isinstance(shape_i, CustomExpr):
-                    yi = shape_i
+                    # shape_i ist eine Funktion zur Beschreibung der Shape
+                    expr_i = shape_i  # CustomExpr = Horizontal, Vertical, Circle, Slope
 
-                    if isinstance(yi, Slope) and yi.x0 is None:
-                        yi.set_start_point(last_point)
+                    expr_i.set_start_point(point_prev)
 
-                    start = last_point[0]
+                    if isinstance(shape_next, tuple):
+                        expr_i.set_end_point(shape_next)
 
-                    if isinstance(yi, Horizontal):
-                        if isinstance(shape_next, tuple):
-                            yi.set_points(last_point, shape_next)
-
-                        elif isinstance(shape_next, CustomExpr):
-                            warnings.warn('must be implemented', FutureWarning)
+                    elif isinstance(shape_next, CustomExpr):
+                        expr_i.set_end_point(get_intersection_point(expr_i, expr2=shape_next,
+                                                                    x_from=point_prev[0], x_to=self.height))
 
                     else:
-                        if isinstance(shape_next, tuple):
-                            end = shape_next[0]
+                        raise NotImplementedError('Unknown Input in shape')
 
-                            if end is None and shape_next[1] is not None:
-                                end = sy.solve(yi.expr() - shape_next[1], x)[0]
+                    expr_list.append(expr_i)
 
-                        elif isinstance(shape_next, CustomExpr):
-                            res = sy.solve(yi.expr() - shape_next.expr(), x)
-                            if len(res) == 0:
-                                from scipy.optimize import minimize_scalar
-                                end = minimize_scalar(lambda j: float((yi.expr() - shape_next.expr()).subs(x, j)),
-                                                      bounds=(start, self.height), method='bounded').x
-
-                            elif len(res) == 1:
-                                end = float(res[0])
-                            else:
-                                # multiple results
-                                # TODO: how to handle it
-                                end = float(res[0])
-
-                        else:
-                            raise NotImplementedError('Unknown Input in shape')
-
-                        end = float(end)
-
-                        if start == end:
-                            warnings.warn('unused part of the shape detected. Ignoring this part.')
-                            continue
-
-                    function.append((start, end, yi))
-
-                    # ____________________________
-                    if isinstance(shape_next, tuple) and shape_next[1] is not None:
-                        last_point = (end, shape_next[1])
-                    else:
-                        last_point = (end, float(yi.solve(end)))
+                    del expr_i
 
             # ____________________________________________________________
-            self._shape_description = function
+            self._shape_description = expr_list
 
         return self._shape_description
+
+    def iter_shape_description(self):
+        for shape in self.shape_description:  # type: CustomExpr
+            yield shape.x0, shape.x1, shape
 
     def _get_points_legacy(self):
         """create absolute point coordinates and write it into :py:attr:`~df_abs`
@@ -324,7 +283,7 @@ class CrossSection:
         """
         # number of expressions used in shape
         warnings.warn('get_points | legacy mode')
-        num_functions = sum([isinstance(i[2], Circle) for i in self.shape_description])
+        num_functions = sum([isinstance(i, Circle) for i in self.shape_description])
 
         step = None
         # if functions are used in shape
@@ -334,8 +293,8 @@ class CrossSection:
             num_points = (len(self.shape_description) - num_functions) * 2
 
             # calculate the net height of the circle functions.
-            function_steps = {i: s[1] - s[0] for i, s in enumerate(self.shape_description) if
-                              isinstance(self.shape_description[i][2], Circle)}
+            function_steps = {i: s[1] - s[0] for i, s in enumerate(self.iter_shape_description()) if
+                              isinstance(self.shape_description[i], Circle)}
             # step size used to discretise the expressions
             step = sum(function_steps.values()) / (self.max_number_points - num_points)
 
@@ -346,12 +305,12 @@ class CrossSection:
         x = list()
         y = list()
 
-        for start, end, f in self.shape_description:
+        for start, end, f in self.iter_shape_description():
             if isinstance(f, Circle):
                 # this_step = (end - start) / floor((end - start) / step)
                 # print(step, ' vs ', this_step)
-                nx = arange(start, end + step, step).clip(max=end)
-                ny = f.solve(nx)
+                nx = np.arange(start, end + step, step).clip(max=end)
+                ny = f.solve_y(nx)
                 x += list(nx)
                 y += list(ny)
             elif isinstance(f, Horizontal):
@@ -360,13 +319,13 @@ class CrossSection:
                 x += [x0, x1]
                 y += [y0, y1]
             else:
-                nx = array([start, end])
+                nx = np.array([start, end])
                 x += list(nx)
-                y += list(f.solve(nx))
+                y += list(f.solve_y(nx))
 
         return x, y
 
-    def get_points(self):
+    def get_points(self, simplify=True):
         """create absolute point coordinates and write it into :py:attr:`~points`
 
         To create a :obj:`list[tuple]` of all the points to describe the cross section.
@@ -383,22 +342,24 @@ class CrossSection:
             x = list()
             y = list()
 
-            for start, end, f in self.shape_description:
+            for start, end, f in self.iter_shape_description():
                 if isinstance(f, Circle):
-                    nx = arange(start, end + step, step).clip(max=end)
-                    ny = f.solve(nx)
+                    nx = np.arange(start, end + step, step).clip(max=end)
+                    ny = f.solve_y(nx)
                     x += list(nx)
                     y += list(ny)
                 elif isinstance(f, Horizontal):
-                    x0, y0 = f.start_point()
-                    x1, y1 = f.end_point()
+                    x0, y0 = f.get_start_point()
+                    x1, y1 = f.get_end_point()
                     x += [x0, x1]
                     y += [y0, y1]
                 else:
-                    nx = array([start, end])
+                    nx = np.array([start, end])
                     x += list(nx)
-                    y += list(f.solve(nx))
-            x, y = zip(*ramer_douglas(list(zip(x, y)), dist=step))
+                    y += list(f.solve_y(nx))
+
+            if simplify:
+                x, y = zip(*ramer_douglas(list(zip(x, y)), dist=step))
 
             if len(x) > self.max_number_points:
                 x, y = self._get_points_legacy()
@@ -455,8 +416,8 @@ class CrossSection:
 
     def profile_axis(self, ax, relative=False, half=False, fill=False, marker='.', ls='-', **kwargs):
         x, y = self.get_points()
-        hi = array(x)
-        wi = array(y)
+        hi = np.array(x)
+        wi = np.array(y)
 
         w = wi.max()
         h = hi.max()
@@ -466,8 +427,8 @@ class CrossSection:
             wi /= h
 
         if not half:
-            hi = append(hi, hi[::-1])
-            wi = append(wi, wi[::-1]*-1)
+            hi = np.append(hi, hi[::-1])
+            wi = np.append(wi, wi[::-1]*-1)
 
         # -------------------------
         ax.plot(wi, hi, marker=marker, ls=ls, zorder=1000000, clip_on=False, **kwargs)
@@ -479,7 +440,7 @@ class CrossSection:
     def profile_figure(self, relative=False, half=False, fill=False, **kwargs) -> plt.Figure:
         """create a plot of the cross section"""
         def custom_round(x_, base):
-            return base * ceil(float(x_) / base)
+            return base * np.ceil(float(x_) / base)
 
         # -------------------------
         fig, ax = plt.subplots()
@@ -494,20 +455,22 @@ class CrossSection:
             # -------------------------
             ax.set_ylabel('rel H')
             ax.set_xlabel('B/H')
-            ax.set_title('{}: {}'.format(self.label, self.description))
+            ax.set_title(f'{self.label}: {self.description}')
 
         else:
-            base = 10 ** floor(log10(w))
+            base = 10 ** np.floor(np.log10(w))
             xlim = custom_round(w, base)
             ylim = custom_round(h, base)
 
             # -------------------------
             n = self.label
             if self.label != self.description:
-                n += ': {}'.format(self.description)
+                n += f': {self.description}'
 
-            ax.set_title('{}\n{:0.0f}x{:0.0f}'.format(n, h, custom_round(w * 2, base/2)) +
-                         (self.unit if self.unit is not None else ''))
+            t = f'{n}\n{h:0.0f}x{custom_round(w * 2, base/2):0.0f}'
+            if self.unit is not None:
+                t += self.unit
+            ax.set_title(t)
 
         # -------------------------
         if half:
@@ -519,13 +482,13 @@ class CrossSection:
         # -------------------------
         # ax.legend().remove()
         ax.set_aspect('equal', 'box')
-        ax.set_xticks(arange(xlim_left, xlim, base), minor=False)
+        ax.set_xticks(np.arange(xlim_left, xlim, base), minor=False)
         if base / 2 != 0:
-            ax.set_xticks(arange(xlim_left, xlim, base / 2), minor=True)
+            ax.set_xticks(np.arange(xlim_left, xlim, base / 2), minor=True)
 
-        ax.set_yticks(arange(0, ylim, base), minor=False)
+        ax.set_yticks(np.arange(0, ylim, base), minor=False)
         if base / 2 != 0:
-            ax.set_yticks(arange(0, ylim, base / 2), minor=True)
+            ax.set_yticks(np.arange(0, ylim, base / 2), minor=True)
 
         # ax.set_axis_off()
         # ax.set_frame_on(False)
@@ -558,19 +521,19 @@ class CrossSection:
         Returns:
             float | numpy.ndarray: width at the certain height
         """
-        if isinstance(hi, ndarray):
-            w = array([NaN] * hi.size)
+        if isinstance(hi, np.ndarray):
+            w = np.array([np.NaN] * hi.size)
             # w = hi.copy()
 
-            for i, (lower, upper, f) in enumerate(self.shape_description):
+            for i, (lower, upper, f) in enumerate(self.iter_shape_description()):
                 b = (hi >= lower) & (hi <= upper)
-                w[b] = f.solve(hi[b])
+                w[b] = f.solve_y(hi[b])
 
             return w * 2
         else:
-            for lower, upper, f in self.shape_description:
+            for lower, upper, f in self.iter_shape_description():
                 if lower <= hi <= upper:
-                    return f.solve(hi) * 2
+                    return f.solve_y(hi) * 2
 
     def l_u_t(self, hi):
         """
@@ -583,10 +546,10 @@ class CrossSection:
         Returns:
             float | numpy.ndarray: wetted perimeter at the certain height
         """
-        if isinstance(hi, ndarray):
-            l = array([0.] * hi.size)
+        if isinstance(hi, np.ndarray):
+            l = np.array([0.] * hi.size)
 
-            for i, (lower, upper, f) in enumerate(self.shape_description):
+            for i, (lower, upper, f) in enumerate(self.iter_shape_description()):
                 b = hi > upper
                 l[b] += f.length(lower, upper)
 
@@ -595,7 +558,7 @@ class CrossSection:
 
         else:
             l = 0
-            for lower, upper, f in self.shape_description:
+            for lower, upper, f in self.iter_shape_description():
                 if hi > upper:
                     l += f.length(lower, upper)
                 elif lower <= hi <= upper:
@@ -630,10 +593,10 @@ class CrossSection:
         Returns:
             float | numpy.ndarray: flow area at the certain height
         """
-        if isinstance(hi, ndarray):
-            a = array([0.] * hi.size)
+        if isinstance(hi, np.ndarray):
+            a = np.array([0.] * hi.size)
 
-            for i, (lower, upper, f) in enumerate(self.shape_description):
+            for i, (lower, upper, f) in enumerate(self.iter_shape_description()):
                 b = hi > upper
                 a[b] += f.area(lower, upper)
 
@@ -642,7 +605,7 @@ class CrossSection:
 
         else:
             a = 0
-            for lower, upper, f in self.shape_description:
+            for lower, upper, f in self.iter_shape_description():
                 if hi > upper:
                     a += f.area(lower, upper)
                 elif lower <= hi <= upper:
@@ -721,7 +684,7 @@ class CrossSection:
             J = slope  # / 1000
             k = k / 1000  # from mm to m
             self._v_v[k][slope] = (
-                    -2 * log10(2.51 * ny / (4 * r_hyd * sqrt(2 * g * J)) + k / (14.84 * r_hyd)) * sqrt(
+                    -2 * np.log10(2.51 * ny / (4 * r_hyd * np.sqrt(2 * g * J)) + k / (14.84 * r_hyd)) * np.sqrt(
                 2 * g * 4 * r_hyd * J))
 
         return self._v_v[k][slope]

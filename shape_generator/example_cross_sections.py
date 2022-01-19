@@ -29,7 +29,7 @@ class EggSection(CrossSection):
         h1 = 0.2 * r
 
         if label is None:
-            label = 'Ei {:0.0f}/{:0.0f}'.format(width, height)
+            label = f'Ei {width:0.0f}/{height:0.0f}'
 
         CrossSection.__init__(self, label=label, description=description, width=width, height=height)
         self.add(Circle(rho, x_m=rho))
@@ -64,7 +64,7 @@ class CircleSection(CrossSection):
         width = d
 
         if label is None:
-            label = 'DN {:0.0f}'.format(d)
+            label = f'DN {d:0.0f}'
 
         CrossSection.__init__(self, label=label, description=description, width=width, height=height)
         self.add(Circle(r, x_m=r))
