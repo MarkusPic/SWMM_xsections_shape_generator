@@ -17,6 +17,8 @@ read the documentation of SWMM provided on the [official website of EPA](https:/
 [![PyPI - Downloads](https://img.shields.io/pypi/dw/SWMM-xsections-shape-generator)](https://pypi.python.org/pypi/SWMM-xsections-shape-generator)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/SWMM-xsections-shape-generator)](https://pypi.python.org/pypi/SWMM-xsections-shape-generator)
 
+[![SWMM-xsections-shape-generator](https://snyk.io/advisor/python/SWMM-xsections-shape-generator/badge.svg)](https://snyk.io/advisor/python/SWMM-xsections-shape-generator)
+
 ## Install
 
 The script is written in Python3.

@@ -111,6 +111,18 @@ class CrossSection:
         else:
             return max(self.points[1]) * 2
 
+    def get_height(self):
+        """
+        get absolute height of cross-section
+
+        Returns:
+            float: height of cross-section
+        """
+        if not self.get_points():
+            return None
+        else:
+            return max(self.points[0])
+
     @property
     def out_filename(self):
         """
@@ -360,7 +372,10 @@ class CrossSection:
 
             if simplify:
                 x, y = zip(*ramer_douglas(list(zip(x, y)), dist=step))
-
+            else:
+                x_, y_ = zip(*ramer_douglas(list(zip(x, y)), dist=step))
+                print(f'Possible reduction with keyword `simplify=True´: from {len(x)} to {len(x_)} points '
+                      f'(with Ramer-Douglas, distance={step})')
             if len(x) > self.max_number_points:
                 x, y = self._get_points_legacy()
 
@@ -414,17 +429,16 @@ class CrossSection:
 
         self._df_abs = (df * self.height).copy()
 
-    def profile_axis(self, ax, relative=False, half=False, fill=False, marker='.', ls='-', **kwargs):
-        x, y = self.get_points()
+    def profile_axis(self, ax, simplify=True, relative=False, half=False, fill=False, marker='.', ls='-', **kwargs):
+        x, y = self.get_points(simplify=simplify)
         hi = np.array(x)
         wi = np.array(y)
 
-        w = wi.max()
-        h = hi.max()
+        height = self.get_height()
 
         if relative:
-            hi /= h
-            wi /= h
+            hi /= height
+            wi /= height
 
         if not half:
             hi = np.append(hi, hi[::-1])
@@ -435,42 +449,46 @@ class CrossSection:
         if fill:
             ax.fill(wi, hi)
 
-        return ax, (h, w)
+        return ax
 
-    def profile_figure(self, relative=False, half=False, fill=False, **kwargs) -> plt.Figure:
+    def profile_figure(self, simplify=True, relative=False, half=False, fill=False, **kwargs) -> plt.Figure:
         """create a plot of the cross section"""
-        def custom_round(x_, base):
-            return base * np.ceil(float(x_) / base)
+        def ceil_base(i, base):
+            return base * np.ceil(float(i) / base)
 
         # -------------------------
         fig, ax = plt.subplots()
 
-        ax, (h, w) = self.profile_axis(ax, relative=relative, half=half, fill=fill, **kwargs)
+        ax = self.profile_axis(ax, simplify=simplify, relative=relative, half=half, fill=fill, **kwargs)
+        h = self.get_height()
+        w = self.get_width() / 2
         # -------------------------
+        title = f'{self.label}'
+        if (self.label != self.description) and (self.description is not None) and (self.description != ''):
+            title += f': {self.description}'
+
         if relative:
-            xlim = 1
-            ylim = 1
-            base = 0.2
+            base = 0.1
 
             # -------------------------
             ax.set_ylabel('rel H')
             ax.set_xlabel('B/H')
-            ax.set_title(f'{self.label}: {self.description}')
 
         else:
             base = 10 ** np.floor(np.log10(w))
-            xlim = custom_round(w, base)
-            ylim = custom_round(h, base)
 
             # -------------------------
-            n = self.label
-            if self.label != self.description:
-                n += f': {self.description}'
-
-            t = f'{n}\n{h:0.0f}x{custom_round(w * 2, base/2):0.0f}'
+            title = f'{title}\n{h:0.0f}x{ceil_base(w * 2, base/2):0.0f}'
             if self.unit is not None:
-                t += self.unit
-            ax.set_title(t)
+                title += self.unit
+
+        # title += f'\nRaster: {base}'
+        ax.text(base * .5, base * 2, str(base), size='xx-small', ha='center', va='bottom')
+        ax.text(base * 1, base * 2.5, str(base), size='xx-small', va='center', ha='right', rotation=90)
+
+        ax.set_title(title)
+        xlim = ceil_base(w, base)
+        ylim = ceil_base(h, base)
 
         # -------------------------
         if half:
@@ -480,7 +498,6 @@ class CrossSection:
             xlim_left = -xlim
 
         # -------------------------
-        # ax.legend().remove()
         ax.set_aspect('equal', 'box')
         ax.set_xticks(np.arange(xlim_left, xlim, base), minor=False)
         if base / 2 != 0:
@@ -490,17 +507,12 @@ class CrossSection:
         if base / 2 != 0:
             ax.set_yticks(np.arange(0, ylim, base / 2), minor=True)
 
-        # ax.set_axis_off()
-        # ax.set_frame_on(False)
-        # ax.axis()
         ax.tick_params(which='both', length=0, width=0, labelbottom=False, labeltop=False, labelleft=False,
                        labelright=False, bottom=False, top=False, left=False, right=False)
 
         ax.set_xlim(xlim_left, xlim)
         ax.set_ylim(0, ylim)
         ax.grid(True)
-        # ax.grid(True, which='minor', linestyle=':', linewidth=0.5)
-        ax.set_xlabel(None)
         ax.set_axisbelow(True)
 
         # ------------------
