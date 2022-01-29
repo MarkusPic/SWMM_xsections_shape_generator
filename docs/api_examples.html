@@ -1,0 +1,225 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Examples Classes &#8212; SWMM CrossSection shape Generator 0.3.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples for general profile shapes" href="show_case.html" />
+    <link rel="prev" title="Main Function" href="api_class.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="show_case.html" title="Examples for general profile shapes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="api_class.html" title="Main Function"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SWMM CrossSection shape Generator 0.3.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Examples Classes</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="examples-classes">
+<h1>Examples Classes<a class="headerlink" href="#examples-classes" title="Permalink to this headline">¶</a></h1>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shape_generator.example_cross_sections.CircleSection" title="shape_generator.example_cross_sections.CircleSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CircleSection</span></code></a>(r[, label])</p></td>
+<td><p>circle cross section</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shape_generator.example_cross_sections.EggSection" title="shape_generator.example_cross_sections.EggSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EggSection</span></code></a>(r[, label])</p></td>
+<td><p>egg shaped cross section</p></td>
+</tr>
+</tbody>
+</table>
+<section id="circlesection">
+<h2>CircleSection<a class="headerlink" href="#circlesection" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="shape_generator.example_cross_sections.CircleSection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">shape_generator.example_cross_sections.</span></span><span class="sig-name descname"><span class="pre">CircleSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/example_cross_sections.html#CircleSection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shape_generator.example_cross_sections.CircleSection" title="Permalink to this definition">¶</a></dt>
+<dd><p>circle cross section</p>
+<figure class="align-center" id="id1">
+<img alt="circle" src="_images/kreis1.gif" />
+<figcaption>
+<p><span class="caption-text">Circle Section (DWA-A 110, 2006)</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<dl class="py method">
+<dt class="sig sig-object py" id="shape_generator.example_cross_sections.CircleSection.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/example_cross_sections.html#CircleSection.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shape_generator.example_cross_sections.CircleSection.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>init
+circle cross section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – radius of the circle</p></li>
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – name/label/number of the cross section; dafault = “DN &lt;diameter&gt;”</p></li>
+<li><p><strong>description</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – optional description of the cross section</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="eggsection">
+<h2>EggSection<a class="headerlink" href="#eggsection" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="shape_generator.example_cross_sections.EggSection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">shape_generator.example_cross_sections.</span></span><span class="sig-name descname"><span class="pre">EggSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/example_cross_sections.html#EggSection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shape_generator.example_cross_sections.EggSection" title="Permalink to this definition">¶</a></dt>
+<dd><p>egg shaped cross section</p>
+<figure class="align-center" id="id2">
+<img alt="egg" src="_images/ei.gif" />
+<figcaption>
+<p><span class="caption-text">Egg Section (DWA-A 110, 2006)</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<dl class="py method">
+<dt class="sig sig-object py" id="shape_generator.example_cross_sections.EggSection.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/example_cross_sections.html#EggSection.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shape_generator.example_cross_sections.EggSection.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>init
+egg shaped cross section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – radius of the egg</p></li>
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – name/label/number of the cross section; dafault = “Ei &lt;width&gt;/&lt;height&gt;”</p></li>
+<li><p><strong>description</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – optional description of the cross section</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="swmm-standard-shapes">
+<h2>SWMM Standard Shapes<a class="headerlink" href="#swmm-standard-shapes" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="shape_generator.example_cross_sections.swmm_std_cross_sections">
+<span class="sig-prename descclassname"><span class="pre">shape_generator.example_cross_sections.</span></span><span class="sig-name descname"><span class="pre">swmm_std_cross_sections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shape_generator/example_cross_sections.html#swmm_std_cross_sections"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shape_generator.example_cross_sections.swmm_std_cross_sections" title="Permalink to this definition">¶</a></dt>
+<dd><p>get a SWMM pre-defined cross-section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shape</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – name of the cross-section. one of:
+- ARCH
+- CIRCULAR
+- EGG
+- HORSESHOE
+- GOTHIC
+- CATENARY
+- SEMIELLIPTICAL
+- BASKETHANDLE
+- SEMICIRCULAR
+- HORIZ_ELLIPSE
+- VERT_ELLIPSE</p></li>
+<li><p><strong>height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – height of the cross-section</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="api_class.html#shape_generator.shape_generator.CrossSection" title="shape_generator.shape_generator.CrossSection">CrossSection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Examples Classes</a><ul>
+<li><a class="reference internal" href="#circlesection">CircleSection</a></li>
+<li><a class="reference internal" href="#eggsection">EggSection</a></li>
+<li><a class="reference internal" href="#swmm-standard-shapes">SWMM Standard Shapes</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="api_class.html"
+                          title="previous chapter">Main Function</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="show_case.html"
+                          title="next chapter">Examples for general profile shapes</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="show_case.html" title="Examples for general profile shapes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="api_class.html" title="Main Function"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SWMM CrossSection shape Generator 0.3.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Examples Classes</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Pichler.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>
