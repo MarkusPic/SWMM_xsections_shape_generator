@@ -1,5 +1,4 @@
 import math
-import os
 import re
 
 import numpy as np
@@ -17,14 +16,16 @@ class CrossSectionHolding(CrossSection):
         add_dn (bool): add the channel diameter (DN ...) to the label and output filename
     """
 
-    def __init__(self, label, add_dim=False, add_dn=None, **kwargs):
-        """Initialise the cross section class
+    def __init__(self, label, description=None, add_dim=False, add_dn=None, **kwargs):
+        """Initialise the cross-section class
 
         Args:
-            label (str): name/label/number of the cross section
+            label (str): name/label/number of the cross-section
+            description (Optional[str]): optional description of the cross-section
             add_dim (bool): if the dimensions should be added to :py:attr:`~out_filename` used for the export
             add_dn (Optional[float]): if the channel dimension should be added to :py:attr:`~out_filename`
                                     used for the export enter the diameter as float
+
             **kwargs (object): see :py:attr:`~__init__`
 
         Keyword Args:
@@ -35,53 +36,50 @@ class CrossSectionHolding(CrossSection):
             unit (Optional[str]): enter unit to add the unit in the plots
 
         """
-        if isinstance(label, (float, int)):
+        if isinstance(label, float):
             label = f'{label:0.0f}'
         else:
-            label = label
-
-        if not label.startswith('Pr_'):
-            label = 'Pr_' + label
+            label = str(label)
+        label = label.strip('Pr_')
 
         self.add_dim = add_dim
         self.add_dn = add_dn
 
+        self.description = description
+
         CrossSection.__init__(self, label, **kwargs)
 
-    def __str__(self):
-        s = CrossSection.__str__(self)
+    def __repr__(self):
+        return f'CrossSectionHolding({self})'
+
+    @property
+    def identifier(self):
+        s = 'Pr_' + self.label
+
         if self.add_dim:
-            s += f'  |  {self.height:0.0f}'
+            s += f'+{self.height:0.0f}'
             if self.width:
                 s += f'x{self.width:0.0f}'
 
         if self.add_dn:
-            s += f'  |  DN{self.add_dn:0.0f}'
+            s += f'+DN{self.add_dn:0.0f}'
+
         return s
 
-    @property
-    def out_filename(self):
-        """
-        filename of the figure/text-file to be created
+    def name_string(self):
+        return self.identifier.replace('+', ' | ')
 
-        Returns:
-            str: filename
-
-        """
-        file = os.path.join(self.working_directory, str(self.label))
-        if self.add_dim:
-            file += f'_{self.height:0.0f}'
-            if self.width:
-                file += f'x{self.width:0.0f}'
-
-        if self.add_dn:
-            file += f'_DN{self.add_dn:0.0f}'
-        return file
+    def title_string(self):
+        s = CrossSection.title_string(self)
+        if (self.description is not None) and (self.label != self.description):
+            s += f': {str(self.description).strip()}'
+        return s
 
     ####################################################################################################################
     @classmethod
-    def standard(cls, label, description, height, width=None, r_channel=None, r_roof=None, r_wall=None, slope_bench=None,
-                 r_round=None, r_wall_bottom=None, h_bench=None, pre_bench=None, w_channel=None, **kwargs):
+    def standard(cls, label, description=None, height=np.NaN, width=None, r_channel=None, r_roof=None, r_wall=None,
+                 slope_bench=None, r_round=None, r_wall_bottom=None, h_bench=None, pre_bench=None, w_channel=None,
+                 **kwargs):
         """
         standard cross section
 

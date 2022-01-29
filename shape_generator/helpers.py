@@ -1,68 +1,7 @@
-import io
 import math
-import os
 import warnings
-
+from abc import ABC, abstractmethod
 import numpy as np
-import pandas as pd
-
-accuracy = 10
-
-
-def to_num(x):
-    if x == '':
-        return None
-    elif x.replace('-', '').isdecimal():
-        return int(x)
-    elif ('.' in x) and (x.lower().replace('.', '').replace('-', '').replace('e', '').isdecimal()):
-        return float(x)
-    else:
-        return x
-
-
-def csv(txt, comment=None):
-    """
-    Read the string in txt as csv file and return the content as DataFrame.
-
-    Args:
-        txt (str): content of csv
-        comment (str): comment sign
-
-    Returns:
-        dict: profile label and values
-    """
-    df = pd.read_csv(io.StringIO(txt), index_col=0, skipinitialspace=True, skip_blank_lines=True, comment=comment)
-    df = df[df.index.notnull()].copy()
-    df.index = df.index.astype(str)
-    return df
-
-
-def to_xs_dict(txt, comment=None):
-    """
-    Read the string in txt as csv file and return the content as DataFrame.
-
-    Args:
-        txt (str): content of csv
-        comment (str): comment sign
-
-    Returns:
-        dict: profile label and values
-    """
-    di = dict()
-    names = []
-    for line in txt.split('\n'):
-        if line == '':
-            continue
-        elif isinstance(comment, str) and line.startswith(comment):
-            continue
-        elif not names:
-            names = [n.strip() for n in line.split(',')[1:]]
-            di['_names'] = names
-        else:
-            name, *values = [n.strip() for n in line.split(',')]
-            # di[name] = {k: to_num(v) for k, v in zip(names, values)}
-            di[name] = [to_num(v) for v in values]
-    return di
 
 
 def deg2slope(degree):
@@ -106,30 +45,6 @@ def channel_end(r, end_degree):
     return r * (1 - math.cos(math.radians(end_degree)))
 
 
-def combine_input_files(shape_path, delete_original=False):
-    """combine all generated shape text files to a single inp-like text file
-
-    When running the :func:`shape_generator.shape_generator.Profile.input_file` function, a .txt file will be created.
-    Those txt files will be combines to a single file with this function.
-    This makes it easier to import all shapes to the .inp file.
-
-    Args:
-        shape_path (str): path where the shapes are stored
-        delete_original (bool): whether to delete the original single files
-    """
-    with open(os.path.join(shape_path, 'all_shapes.txt'), 'w') as outfile:
-        for fname in os.listdir(shape_path):
-            if not fname.endswith('_shape.txt'):
-                continue
-            in_fn = os.path.join(shape_path, fname)
-            with open(in_fn) as infile:
-                outfile.write(infile.read())
-                outfile.write('\n\n')
-            if delete_original:
-                os.remove(in_fn)
-    print(f'Files are combined and originals{" " if delete_original else " NOT "}deleted.')
-
-
 def get_intersection_point(expr1, expr2, x_from, x_to):
     from scipy.optimize import minimize_scalar
     x_i = minimize_scalar(lambda j: abs(expr1.solve_y(j) - expr2.solve_y(j)), bounds=(x_from, x_to), method='bounded', options=dict(xatol=.01)).x
@@ -160,7 +75,7 @@ def get_intersection_point(expr1, expr2, x_from, x_to):
 
 
 ####################################################################################################################
-class CustomExpr:
+class _CustomExpr(ABC):
     def __init__(self):
         self.x0 = None
         self.y0 = None
@@ -171,18 +86,23 @@ class CustomExpr:
     def __repr__(self):
         return 'Custom Function'
 
+    @abstractmethod
     def expr(self, x):
         pass
 
+    @abstractmethod
     def solve_y(self, i):
         pass
 
+    @abstractmethod
     def solve_x(self, y):
         pass
 
+    @abstractmethod
     def length(self, i0, i1):
         pass
 
+    @abstractmethod
     def area(self, i0, i1):
         pass
 
@@ -218,27 +138,47 @@ class CustomExpr:
         """get the end point"""
         return self.x1, self.y1
 
+    def get_points(self, *args, **kwargs):
+        """
+        get the point coordinates for the shape-generator
+
+        Args:
+            *args:
+            **kwargs:
+
+        Returns:
+            tuple[list, list]
+        """
+        pass
 
 ####################################################################################################################
-class Linear(CustomExpr):
+class _Linear(_CustomExpr, ABC):
+    """abstract linear function"""
     def __init__(self):
-        CustomExpr.__init__(self)
+        _CustomExpr.__init__(self)
 
     def set_points(self, start, end):
+        """
+        set the slope by giving the start and end point
+
+        Args:
+            start (tuple[float, float]): start point of the linear function
+            end (tuple[float, float]): end point of the linear function
+        """
         self.set_start_point(start)
         self.set_end_point(end)
 
     @classmethod
     def from_points(cls, start, end):
         """
-        set the slope by giving the start and end point
+        get a linear function by giving the start and end point
 
         Args:
-            start ():
-            end ():
+            start (tuple[float, float]): start point of the linear function
+            end (tuple[float, float]): end point of the linear function
 
         Returns:
-
+            _Linear: linear function
         """
         x0, y0 = start
         x1, y1 = end
@@ -254,14 +194,20 @@ class Linear(CustomExpr):
         new_obj.set_points(start, end)
         return new_obj
 
+    def get_points(self, *args, **kwargs):
+        """get the point coordinates for the shape-generator"""
+        x0, y0 = self.get_start_point()
+        x1, y1 = self.get_end_point()
+        return [x0, x1], [y0, y1]
 
-class Slope(Linear):
+
+class Slope(_Linear):
     """
     get function/expression of a straight line with a given point which it intercepts
 
     Args:
         slope (float): slope
-        p0 (set[float, float]): point as a set of a x and a y coordinate
+        unit (str): point as a set of a x and a y coordinate
 
     Returns:
         sympy.core.expr.Expr: linear function
@@ -284,7 +230,7 @@ class Slope(Linear):
         else:
             raise NotImplementedError('Unknown Unit for slope function')
 
-        Linear.__init__(self)
+        _Linear.__init__(self)
 
     def __repr__(self):
         return f'Slope Function (k={self.slope:0.2f}, zero=[{self.x0:0.2f}, {self.y0:0.2f}])'
@@ -298,6 +244,7 @@ class Slope(Linear):
         return self.y0 + (x - self.x0) / self.slope
 
     def solve_x(self, y):
+        """get x value"""
         return self.x0 + (y - self.y0) * self.slope
 
     def length(self, i0, i1):
@@ -310,7 +257,7 @@ class Slope(Linear):
 
 
 ####################################################################################################################
-class Vertical(Linear):
+class Vertical(_Linear):
     """
     function of a vertical line
 
@@ -322,7 +269,7 @@ class Vertical(Linear):
         Args:
             y (float): y value of the vertical line
         """
-        Linear.__init__(self)
+        _Linear.__init__(self)
         if y is not None:
             self.set_y(y)
 
@@ -357,12 +304,12 @@ class Vertical(Linear):
 
 
 ####################################################################################################################
-class Horizontal(Linear):
+class Horizontal(_Linear):
     """
     function of a horizontal line
     """
     def __init__(self, x=None):
-        Linear.__init__(self)
+        _Linear.__init__(self)
         if x is not None:
             self.set_x(x)
 
@@ -397,7 +344,7 @@ class Horizontal(Linear):
 
 
 ####################################################################################################################
-class Circle(CustomExpr):
+class Circle(_CustomExpr):
     """
     function of a circle
 
@@ -424,7 +371,7 @@ class Circle(CustomExpr):
         self.y_m = float(y_m)
         self.clockwise = clockwise
 
-        CustomExpr.__init__(self)
+        _CustomExpr.__init__(self)
 
     def __repr__(self):
         return f'Circle Function (radius={self.r:0.2f}, mid=[{self.x_m:0.2f}, {self.y_m:0.2f}])'
@@ -488,3 +435,65 @@ class Circle(CustomExpr):
     def area(self, i0, i1):
         alpha = self._d_alpha(i0, i1)
         return self.r ** 2 / 2 * (alpha - np.sin(alpha)) + (self.solve_y(i0) + self.solve_y(i1)) / 2 * (i1 - i0)
+
+    def get_points(self, step):
+        """get the point coordinates for the shape-generator"""
+        nx = np.arange(self.x0, self.x1 + step, step).clip(max=self.x1)
+        ny = self.solve_y(nx)
+        return zip(*ramer_douglas(list(zip(list(nx), list(ny))), dist=step))
+
+
+####################################################################################################################
+# Python package:
+# https://github.com/fhirschmann/rdp
+#
+# ist aber nicht schnell (Faktor 10 langsamer)
+#
+# https://en.wikipedia.org/wiki/Ramer–Douglas–Peucker_algorithm
+#
+# Code von hier:
+# https://stackoverflow.com/questions/2573997/reduce-number-of-points-in-line#10934629
+
+def _vec2d_dist(p1, p2):
+    return (p1[0] - p2[0])**2 + (p1[1] - p2[1])**2
+
+
+def _vec2d_sub(p1, p2):
+    return p1[0]-p2[0], p1[1]-p2[1]
+
+
+def _vec2d_mult(p1, p2):
+    return p1[0]*p2[0] + p1[1]*p2[1]
+
+
+def ramer_douglas(line, dist):
+    """Does Ramer-Douglas-Peucker simplification of a curve with `dist`
+    threshold.
+
+    `line` is a list-of-tuples, where each tuple is a 2D coordinate
+
+    Usage is like so:
+
+    >>> myline = [(0.0, 0.0), (1.0, 2.0), (2.0, 1.0)]
+    >>> simplified = ramer_douglas(myline, dist = 1.0)
+    """
+
+    if len(line) < 3:
+        return line
+
+    begin = line[0]
+    end = line[-1] if line[0] != line[-1] else line[-2]
+
+    distSq = list()
+    for curr in line[1:-1]:
+        tmp = (
+            _vec2d_dist(begin, curr) - _vec2d_mult(_vec2d_sub(end, begin), _vec2d_sub(curr, begin)) ** 2 / _vec2d_dist(begin, end))
+        distSq.append(tmp)
+
+    maxdist = max(distSq)
+    if maxdist < dist ** 2:
+        return [begin, end]
+    # print(maxdist)
+    pos = distSq.index(maxdist)
+    return (ramer_douglas(line[:pos + 2], dist) +
+            ramer_douglas(line[pos + 1:], dist)[1:])

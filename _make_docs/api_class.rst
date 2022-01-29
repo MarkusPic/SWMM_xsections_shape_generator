@@ -17,6 +17,7 @@ CrossSection
 
 .. autosummary::
     __init__
+    identifier
     height
     width
     get_width
@@ -28,6 +29,7 @@ CrossSection
 .. rubric:: Figures
 
 .. autosummary::
+    profile_axis
     profile_figure
 
 .. rubric:: Shape parameters
@@ -45,6 +47,12 @@ CrossSection
     flow_t
     flow_v
     h_t
+
+.. rubric:: swmm_api Functions
+
+.. autosummary::
+    from_curve
+    to_curve
 
 CrossSectionHolding
 =======================

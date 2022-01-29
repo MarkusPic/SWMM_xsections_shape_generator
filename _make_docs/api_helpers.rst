@@ -5,21 +5,16 @@ Helper Functions
 .. currentmodule:: shape_generator.helpers
 
 .. autosummary::
-    csv
-    to_xs_dict
     deg2slope
     channel_end
-    combine_input_files
     Slope
     Vertical
     Horizontal
     Circle
+    ramer_douglas
 
 .. automodule:: shape_generator.helpers
-    :members: csv, to_xs_dict, deg2slope
-
-.. autofunction:: shape_generator.helpers.channel_end
-.. autofunction:: shape_generator.helpers.combine_input_files
+    :members: deg2slope, channel_end, ramer_douglas
 
 
 .. rubric:: Class Functions

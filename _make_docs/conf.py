@@ -20,13 +20,13 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'SWMM CrossSection shape Generator'
-copyright = '2020, Pichler'
+copyright = '2021, Pichler'
 author = 'Pichler'
 
 # The short X.Y version
-version = '0.2'
+version = '0.3.4'
 # The full version, including alpha/beta/rc tags
-release = '0.2.alpha'
+release = '0.3.4'
 
 # -- General configuration ---------------------------------------------------
 
@@ -84,7 +84,7 @@ pygments_style = None
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'  # 'alabaster'
+html_theme = 'nature'  # 'alabaster'
 # html_theme = 'sphinx_material'  # 'alabaster'
 
 # Theme options are theme-specific and customize the look and feel of a theme

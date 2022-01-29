@@ -34,11 +34,11 @@ Packages required for this program will be installed with pip during the install
 pip install SWMM-xsections-shape-generator
 ```
 
-To install the package only for the local user account (without admin rights), add ```--user``` to the install command.
+To install the package only for the local user account (without admin rights), add ```--user``` to the install-command.
 
 ### Update package
 
-To update the package, add ```--upgrade``` to the install command.
+To update the package, add ```--upgrade``` to the install-command.
 
 ```
 pip install SWMM-xsections-shape-generator --upgrade

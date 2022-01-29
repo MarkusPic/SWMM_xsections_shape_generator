@@ -1,4 +1,9 @@
-from . import Circle, CrossSection
+from .helpers import Circle
+from .shape_generator import CrossSection
+import json
+import os
+
+import numpy as np
 
 
 class EggSection(CrossSection):
@@ -12,7 +17,8 @@ class EggSection(CrossSection):
 
             Egg Section (DWA-A 110, 2006)
     """
-    def __init__(self, r, label=None, description=None):
+
+    def __init__(self, r, label=None):
         """init
         egg shaped cross section
 
@@ -31,7 +37,7 @@ class EggSection(CrossSection):
         if label is None:
             label = f'Ei {width:0.0f}/{height:0.0f}'
 
-        CrossSection.__init__(self, label=label, description=description, width=width, height=height)
+        CrossSection.__init__(self, label=label, width=width, height=height)
         self.add(Circle(rho, x_m=rho))
         self.add(h1)
         self.add(Circle(R, x_m=2 * r, y_m=-(R - r)))
@@ -50,7 +56,8 @@ class CircleSection(CrossSection):
 
             Circle Section (DWA-A 110, 2006)
     """
-    def __init__(self, r, label=None, description=None):
+
+    def __init__(self, r, label=None):
         """init
         circle cross section
 
@@ -66,5 +73,47 @@ class CircleSection(CrossSection):
         if label is None:
             label = f'DN {d:0.0f}'
 
-        CrossSection.__init__(self, label=label, description=description, width=width, height=height)
+        CrossSection.__init__(self, label=label, width=width, height=height)
         self.add(Circle(r, x_m=r))
+
+
+# -------------------------------------------------
+# Cross-sections pre-defined in SWMM
+SWMM_STD_CROSS_SECTION_CURVES = json.load(
+    open(os.path.join(os.path.dirname(__file__), 'swmm_std_cross_section_curves.json'), 'r'))
+
+
+def swmm_std_cross_sections(shape, height=1):
+    """
+    get a SWMM pre-defined cross-section
+
+    Args:
+        shape (str): name of the cross-section. one of:
+            - ARCH
+            - CIRCULAR
+            - EGG
+            - HORSESHOE
+            - GOTHIC
+            - CATENARY
+            - SEMIELLIPTICAL
+            - BASKETHANDLE
+            - SEMICIRCULAR
+            - HORIZ_ELLIPSE
+            - VERT_ELLIPSE
+
+        height (float): height of the cross-section
+
+    Returns:
+        CrossSection:
+    """
+    if shape not in SWMM_STD_CROSS_SECTION_CURVES:
+        return
+    rel_with = SWMM_STD_CROSS_SECTION_CURVES[shape]
+    rel_heights = np.linspace(0, 1, len(rel_with))
+    cross_section = CrossSection(shape, height=height)
+    for x, y in zip(rel_heights, rel_with):
+        if (y == 0) and (x in (0, 1)):
+            continue
+        cross_section.add(x, y / 2)
+
+    return cross_section
