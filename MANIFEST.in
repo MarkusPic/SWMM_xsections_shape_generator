@@ -1,0 +1,2 @@
+# Include SWMM standard CrossSection-Curves for the C-source code
+include  shape_generator/swmm_std_cross_section_curves.json

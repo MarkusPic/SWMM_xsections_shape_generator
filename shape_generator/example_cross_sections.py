@@ -79,8 +79,14 @@ class CircleSection(CrossSection):
 
 # -------------------------------------------------
 # Cross-sections pre-defined in SWMM
-SWMM_STD_CROSS_SECTION_CURVES = json.load(
-    open(os.path.join(os.path.dirname(__file__), 'swmm_std_cross_section_curves.json'), 'r'))
+SWMM_STD_CROSS_SECTION_CURVES = None
+
+
+def _load_swmm_std_cross_section_curves():
+    global SWMM_STD_CROSS_SECTION_CURVES
+    if SWMM_STD_CROSS_SECTION_CURVES is None:
+        SWMM_STD_CROSS_SECTION_CURVES = json.load(
+            open(os.path.join(os.path.dirname(__file__), 'swmm_std_cross_section_curves.json'), 'r'))
 
 
 def swmm_std_cross_sections(shape, height=1):
@@ -106,6 +112,11 @@ def swmm_std_cross_sections(shape, height=1):
     Returns:
         CrossSection:
     """
+    global SWMM_STD_CROSS_SECTION_CURVES
+
+    if SWMM_STD_CROSS_SECTION_CURVES is None:
+        _load_swmm_std_cross_section_curves()
+
     if shape not in SWMM_STD_CROSS_SECTION_CURVES:
         return
     rel_with = SWMM_STD_CROSS_SECTION_CURVES[shape]
