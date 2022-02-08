@@ -89,6 +89,15 @@ def _load_swmm_std_cross_section_curves():
             open(os.path.join(os.path.dirname(__file__), 'swmm_std_cross_section_curves.json'), 'r'))
 
 
+width_max_factor = {
+    'EGG'         : 2 / 3,
+    'GOTHIC'      : 0.84,
+    'CATENARY'    : 0.9,
+    'BASKETHANDLE': 0.944,
+    'SEMICIRCULAR': 1.64,
+}
+
+
 def swmm_std_cross_sections(shape, height=1):
     """
     get a SWMM pre-defined cross-section
@@ -119,10 +128,10 @@ def swmm_std_cross_sections(shape, height=1):
 
     if shape not in SWMM_STD_CROSS_SECTION_CURVES:
         return
-    rel_with = SWMM_STD_CROSS_SECTION_CURVES[shape]
-    rel_heights = np.linspace(0, 1, len(rel_with))
+    rel_with = np.array(SWMM_STD_CROSS_SECTION_CURVES[shape])*height*width_max_factor.get(shape, 1)
+    rel_heights = np.linspace(0, 1, len(rel_with))*height
     cross_section = CrossSection(shape, height=height)
-    for x, y in zip(rel_heights, rel_with):
+    for x, y in zip(rel_heights.round(8), rel_with.round(8)):
         if (y == 0) and (x in (0, 1)):
             continue
         cross_section.add(x, y / 2)

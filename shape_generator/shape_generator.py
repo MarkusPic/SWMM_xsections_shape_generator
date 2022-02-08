@@ -429,7 +429,7 @@ class CrossSection:
                 base = int(base)
 
             # -------------------------
-            title = f'{title}\n{h:0.0f}x{ceil_base(w * 2, base/2):0.0f}'
+            title = f'{title}\n{h}x{ceil_base(w * 2, base/2)}'
             if self.unit is not None:
                 title += self.unit
 
