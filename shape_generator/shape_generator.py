@@ -641,10 +641,10 @@ class CrossSection:
             DWA-A 110 Section 4.1.1 Vollfüllung
         """
         if self._v_v is None:
-            self._v_v = dict()
+            self._v_v = {}
 
         if k not in self._v_v:
-            self._v_v[k] = dict()
+            self._v_v[k] = {}
 
         if slope not in self._v_v[k]:
             self._v_v[k][slope] = None
