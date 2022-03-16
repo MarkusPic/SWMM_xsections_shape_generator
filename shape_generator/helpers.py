@@ -484,7 +484,7 @@ def ramer_douglas(line, dist):
     begin = line[0]
     end = line[-1] if line[0] != line[-1] else line[-2]
 
-    distSq = list()
+    distSq = []
     for curr in line[1:-1]:
         tmp = (
             _vec2d_dist(begin, curr) - _vec2d_mult(_vec2d_sub(end, begin), _vec2d_sub(curr, begin)) ** 2 / _vec2d_dist(begin, end))

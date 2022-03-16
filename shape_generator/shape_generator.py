@@ -45,7 +45,7 @@ class CrossSection:
         self._width = width
         self.unit = unit
         # _______________________________
-        self.shape = list()
+        self.shape = []
         self._shape_description = None  # functions to describe the cross-section
         # _______________________________
         self.accuracy = accuracy
@@ -54,7 +54,7 @@ class CrossSection:
 
         # _______________________________
         # Profile data
-        self.points = list()
+        self.points = []
 
         # _______________________________
         # calculate stationary flow
@@ -131,7 +131,7 @@ class CrossSection:
         self.double = True
 
     def _reset_shape(self):
-        self.points = list()
+        self.points = []
         self._shape_description = None
 
     def add(self, x_or_expr, y=None):
@@ -286,8 +286,8 @@ class CrossSection:
         """
         if not self.points:
             step = 10 ** (-self.accuracy) * self.height
-            x = list()
-            y = list()
+            x = []
+            y = []
 
             for shape in self.shape_description:
                 x_i, y_i = shape.get_points(step)
