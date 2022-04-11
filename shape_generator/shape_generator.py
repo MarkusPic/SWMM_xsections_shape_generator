@@ -734,7 +734,7 @@ class CrossSection:
         # [1:-1] without first and last point / not needed in swmm
         height = np.array(x[1:-1]) / self.height
         area = np.array(y[1:-1]) / self.height * 2
-        return Curve(Name=self.identifier, Type=Curve.TYPES.SHAPE,
+        return Curve(name=self.identifier, Type=Curve.TYPES.SHAPE,
                      points=[[float(h), float(a)] for h, a in zip(height, area)])
 
     @classmethod
@@ -751,7 +751,7 @@ class CrossSection:
         Returns:
             CrossSection: of the shape coordinates
         """
-        cross_section = CrossSection(curve.Name, height=height, *args, **kwargs)
+        cross_section = CrossSection(curve.name, height=height, *args, **kwargs)
         for x, y in curve.points:
             cross_section.add(x * height, y * height / 2)
         return cross_section
