@@ -424,7 +424,7 @@ class Circle(_CustomExpr):
         return np.abs(self._alpha(i0) - self._alpha(i1))
 
     def solve_y(self, x):
-        return np.sqrt(self.r ** 2 - (x - self.x_m) ** 2) * (-1 if self.clockwise else 1) + self.y_m
+        return np.sqrt(np.maximum(self.r ** 2 - (x - self.x_m) ** 2, 0)) * (-1 if self.clockwise else 1) + self.y_m
 
     def solve_x(self, y):
         return np.sqrt(self.r ** 2 - (y - self.y_m) ** 2) * (-1 if self.clockwise else 1) + self.x_m
@@ -435,6 +435,63 @@ class Circle(_CustomExpr):
     def area(self, i0, i1):
         alpha = self._d_alpha(i0, i1)
         return self.r ** 2 / 2 * (alpha - np.sin(alpha)) + (self.solve_y(i0) + self.solve_y(i1)) / 2 * (i1 - i0)
+
+    def get_points(self, step):
+        """get the point coordinates for the shape-generator"""
+        nx = np.arange(self.x0, self.x1 + step, step).clip(max=self.x1)
+        ny = self.solve_y(nx)
+        return zip(*ramer_douglas(list(zip(list(nx), list(ny))), dist=step))
+
+
+####################################################################################################################
+class PowerExpr(_CustomExpr):
+    def __init__(self, exponent, p=1, x_bottom=0, y_bottom=0):
+        """
+        power function
+
+        Args:
+            exponent (float): exponent
+            x_m (float): x axis value of the mid point
+            y_m (float): y axis value of the mid point
+        """
+        self.exponent = float(exponent)
+        self.p = p
+        # self.x_bottom = float(x_bottom)
+        # self.y_bottom = float(y_bottom)
+
+        _CustomExpr.__init__(self)
+
+    def __repr__(self):
+        # return f'Power Function (exponent={self.exponent:0.2f}, bottom=[{self.x_bottom:0.2f}, {self.y_bottom:0.2f}])'
+        return f'Power Function (exponent={self.exponent:0.2f})'
+
+    def expr(self, x):
+        """
+        get function/expression of a power function with a given mid point
+
+
+        Returns:
+            sympy.core.expr.Expr: function of the circle
+        """
+        import sympy as sy
+        return sy.Float(self.p) * x ** sy.Float(self.exponent)
+
+    def solve_y(self, x):
+        return self.p * x ** (1/self.exponent)
+
+    def solve_x(self, y):
+        return (y / self.p) ** self.exponent
+
+    def _first_derivative(self, i):
+        return (1/self.exponent) * i ** ((1/self.exponent)-1)
+
+    def length(self, i0, i1):
+        from scipy.integrate import quad
+        return quad(lambda i: (1 + self._first_derivative(i))**(1/2), i0, i1)[0]
+
+    def area(self, i0, i1):
+        from scipy.integrate import quad
+        return quad(self.solve_y, i0, i1)[0]
 
     def get_points(self, step):
         """get the point coordinates for the shape-generator"""

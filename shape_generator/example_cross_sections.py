@@ -98,13 +98,12 @@ width_max_factor = {
 }
 
 
-def swmm_std_cross_sections(shape, height=1):
+def swmm_std_cross_sections(shape, height=1, width=None, label=None):
     """
     get a SWMM pre-defined cross-section
 
     Args:
         shape (str): name of the cross-section. one of:
-            - ARCH
             - CIRCULAR
             - EGG
             - HORSESHOE
@@ -113,10 +112,13 @@ def swmm_std_cross_sections(shape, height=1):
             - SEMIELLIPTICAL
             - BASKETHANDLE
             - SEMICIRCULAR
+
+            - ARCH
             - HORIZ_ELLIPSE
             - VERT_ELLIPSE
 
         height (float): height of the cross-section
+        width (float | Optional): width of the cross-section
 
     Returns:
         CrossSection:
@@ -130,10 +132,17 @@ def swmm_std_cross_sections(shape, height=1):
         return
     rel_with = np.array(SWMM_STD_CROSS_SECTION_CURVES[shape])*height*width_max_factor.get(shape, 1)
     rel_heights = np.linspace(0, 1, len(rel_with))*height
-    cross_section = CrossSection(shape, height=height)
+
+    cross_section = CrossSection(label, height=height)
+
+    if width is not None:
+        factor_width = width/height
+    else:
+        factor_width = 1
+
     for x, y in zip(rel_heights.round(8), rel_with.round(8)):
         if (y == 0) and (x in (0, 1)):
             continue
-        cross_section.add(x, y / 2)
+        cross_section.add(x, (y * factor_width) / 2)
 
     return cross_section
