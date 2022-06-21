@@ -40,7 +40,9 @@ class CrossSectionHolding(CrossSection):
             label = f'{label:0.0f}'
         else:
             label = str(label)
-        label = label.strip('Pr_')
+
+        if label.startswith('Pr_'):
+            label = label[3:]
 
         self.add_dim = add_dim
         self.add_dn = add_dn
@@ -57,7 +59,7 @@ class CrossSectionHolding(CrossSection):
         s = 'Pr_' + self.label
 
         if self.add_dim:
-            s += f'+{self.height:0.0f}'
+            s += f'_{self.height:0.0f}'  # besser mit "+" aber scho so im Modell ...
             if self.width:
                 s += f'x{self.width:0.0f}'
 
@@ -222,7 +224,7 @@ class CrossSectionHolding(CrossSection):
             label (str): see :py:attr:`~__init__`
             height (float): see :py:attr:`~__init__`
             width (float): see :py:attr:`~__init__`
-            channel (Optional[float]): diameter of the dry weather channel
+            channel (Optional[float]): diameter of the dry weather channel (same unit as heght and width)
             bench (Optional[float]): bench (=Berme)
 
                 - ``''``: flache Berme
@@ -304,8 +306,11 @@ class CrossSectionHolding(CrossSection):
                     # --------or this
                     # cross_section.add(channel, channel)
                     # --------
-                    cross_section.add(channel + rounding, None)
-                    cross_section.add(5, '°slope')
+                    if channel*2**(1/2) < (width/2):  # Eine Berme gibt es nur, wenn die Breite es zulässt.
+                        cross_section.add(channel + rounding, None)
+                        cross_section.add(5, '°slope')
+                    # else:
+                    #     print()
                     cross_section.add(None, width / 2)
 
         else:
@@ -380,7 +385,7 @@ class CrossSectionHolding(CrossSection):
             _, _, channel, bench, roof = infos
 
             if channel != '':
-                channel = float(channel)
+                channel = float(channel) * 10  # cm to mm
             else:
                 channel = None
 

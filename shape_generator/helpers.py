@@ -427,7 +427,7 @@ class Circle(_CustomExpr):
         return np.sqrt(np.maximum(self.r ** 2 - (x - self.x_m) ** 2, 0)) * (-1 if self.clockwise else 1) + self.y_m
 
     def solve_x(self, y):
-        return np.sqrt(self.r ** 2 - (y - self.y_m) ** 2) * (-1 if self.clockwise else 1) + self.x_m
+        return self.x_m - np.sqrt(self.r ** 2 - (y - self.y_m) ** 2) * (-1 if self.clockwise else 1)
 
     def length(self, i0, i1):
         return self._d_alpha(i0, i1) * self.r
