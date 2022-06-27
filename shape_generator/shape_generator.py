@@ -755,3 +755,46 @@ class CrossSection:
         for x, y in curve.points:
             cross_section.add(x * height, y * height / 2)
         return cross_section
+
+    ####################################################################################################################
+    def write_dxf(self, dxf_path):
+        """
+        Draws a crosssection to a dxf file
+
+        Args:
+            dxf_path (str): file path of the dxf file (no exception handling for wrong path)
+        """
+        import ezdxf
+
+        x, y = self.get_points()
+        hi = np.array(x)
+        wi = np.array(y)
+
+        hi = np.append(hi, hi[::-1])
+        wi = np.append(wi, wi[::-1]*-1)
+
+
+        # points = self.shape
+        #
+        # points.insert(0, (0, 0))
+        # points.append((int(self.height), 0))
+        #
+        # for i in reversed(range(1, len(points) - 1)):
+        #     points.append((points[i][0], points[i][1] * (-1)))
+
+        doc = ezdxf.new(dxfversion="R2010")
+        # doc.layers.add("TEXTLAYER", color=2)
+        msp = doc.modelspace()
+
+        n = len(hi)
+        for i in range(0, n):
+            if i == n - 1:
+                p2 = (wi[0], hi[0])
+            else:
+                p2 =(wi[i+1], hi[i+1])
+
+            msp.add_line((wi[i], hi[i]), p2, dxfattribs={"color": 7})
+        doc.saveas(dxf_path)
+
+
+
