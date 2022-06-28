@@ -151,6 +151,11 @@ class _CustomExpr(ABC):
         """
         pass
 
+    @property
+    def bulge(self):
+        return 0
+
+
 ####################################################################################################################
 class _Linear(_CustomExpr, ABC):
     """abstract linear function"""
@@ -442,6 +447,11 @@ class Circle(_CustomExpr):
         ny = self.solve_y(nx)
         return zip(*ramer_douglas(list(zip(list(nx), list(ny))), dist=step))
 
+    @property
+    def bulge(self):
+        segment = ((self.x0 - self.x1) ** 2 + (self.y0 - self.y1) ** 2) ** (1 / 2)
+        height = self.r - (self.r ** 2 - segment ** 2 / 4) ** (1 / 2)
+        return height / (segment / 2)
 
 ####################################################################################################################
 class PowerExpr(_CustomExpr):
