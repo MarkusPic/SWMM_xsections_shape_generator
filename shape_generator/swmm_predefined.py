@@ -1,10 +1,12 @@
+import warnings
+
 from .helpers import Circle, Slope, PowerExpr
 from .shape_generator import CrossSection
 
 
 class Circular(CrossSection):
     def __init__(self, diameter, label=None):
-        r = diameter/2
+        r = diameter / 2
         height = diameter
         width = diameter
 
@@ -17,23 +19,23 @@ class Circular(CrossSection):
 
 class CircularFilled(CrossSection):
     def __init__(self, diameter, filled_depth, label=None):
-        r = diameter/2
+        r = diameter / 2
         height = diameter
         width = diameter
 
         if label is None:
             label = f'DN {diameter:0.0f} ({filled_depth} sediments)'
 
-        width_bottom = (r**2 - (r-filled_depth)**2)**(1/2)
+        width_bottom = (r ** 2 - (r - filled_depth) ** 2) ** (1 / 2)
 
         CrossSection.__init__(self, label=label, width=width, height=height)
         self.add(0, width_bottom)
-        self.add(Circle(r, x_m=r-filled_depth))
+        self.add(Circle(r, x_m=r - filled_depth))
 
 
 class Egg(CrossSection):
     def __init__(self, height, label=None):
-        r = height/3
+        r = height / 3
         R = 3 * r
         rho = r / 2
         # height = r * 3
@@ -55,8 +57,8 @@ class Egg(CrossSection):
 class RectangularClosed(CrossSection):
     def __init__(self, height, width, label=None):
         CrossSection.__init__(self, label=label, width=width, height=height)
-        self.add(0, width/2)
-        self.add(height, width/2)
+        self.add(0, width / 2)
+        self.add(height, width / 2)
 
 
 class RectangularOpen(RectangularClosed):
@@ -68,9 +70,9 @@ class RectangularRound(CrossSection):
     def __init__(self, height, width, radius_bottom, label=None):
         CrossSection.__init__(self, label=label, width=width, height=height)
 
-        if radius_bottom >= width/2:
+        if radius_bottom >= width / 2:
             self.add(Circle(radius_bottom, x_m=radius_bottom))
-            height_round = radius_bottom - (radius_bottom ** 2 - (width/2) ** 2) ** (1 / 2)
+            height_round = radius_bottom - (radius_bottom ** 2 - (width / 2) ** 2) ** (1 / 2)
             self.add(height_round)
             # self.add(None, width/2)
             self.add(height, width / 2)
@@ -92,7 +94,7 @@ class Triangular(CrossSection):
 class Power(CrossSection):
     def __init__(self, height, width_max, exponent, label=None):
         CrossSection.__init__(self, label=label, width=width_max, height=height)
-        self.add(PowerExpr(exponent=exponent, p=width_max/(2*height**(1/exponent))))
+        self.add(PowerExpr(exponent=exponent, p=width_max / (2 * height ** (1 / exponent))))
 
 
 class Parabolic(Power):
@@ -100,9 +102,13 @@ class Parabolic(Power):
         Power.__init__(self, label=label, width_max=width_max, exponent=2, height=height)
 
 
-# class Trapezoidal(CrossSection):
-#     def __init__(self, height, width_base, slope_left, slope_right, label=None):
-#         CrossSection.__init__(self, label=label, width=width, height=height)
-#         self.add(0, width_base/2)
-#         self.add(Slope())
-#         self.add(height, width/2)
+class Trapezoidal(CrossSection):
+    def __init__(self, height, width_base, slope_left, slope_right, label=None):
+        slope_mean = (slope_left + slope_right) / 2
+        warnings.warn('Creating Trapezoidal cross-section. Asymmetric cross-section not possible - force symmetry')
+        width = width_base + slope_mean * height
+        CrossSection.__init__(self, label=label, width=width, height=height)
+        self.add(0, width_base / 2)
+        self.add(Slope(slope_mean))
+        # self.add(height, width / 2)
+        self.add(height)

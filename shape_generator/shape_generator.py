@@ -429,7 +429,7 @@ class CrossSection:
                 base = int(base)
 
             # -------------------------
-            title = f'{title}\n{h}x{ceil_base(w * 2, base/2)}'
+            title = f'{title}\n{h}x{w*2}'
             if self.unit is not None:
                 title += self.unit
 
@@ -445,18 +445,19 @@ class CrossSection:
         if half:
             xlim_left = 0
         else:
-
             xlim_left = -xlim
 
         # -------------------------
         ax.set_aspect('equal', 'box')
         ax.set_xticks(np.arange(xlim_left, xlim, base), minor=False)
-        if base / 2 != 0:
+        if len(ax.get_xticks()) < 10:
             ax.set_xticks(np.arange(xlim_left, xlim, base / 2), minor=True)
+            ax.grid(True, which='minor')
 
         ax.set_yticks(np.arange(0, ylim, base), minor=False)
-        if base / 2 != 0:
+        if len(ax.get_yticks()) < 10:
             ax.set_yticks(np.arange(0, ylim, base / 2), minor=True)
+            ax.grid(True, which='minor')
 
         ax.tick_params(which='both', length=0, width=0, labelbottom=False, labeltop=False, labelleft=False,
                        labelright=False, bottom=False, top=False, left=False, right=False)
