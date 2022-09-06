@@ -729,19 +729,19 @@ class CrossSection:
     # swmm_api functions
     ####################################################################################################################
     def to_curve(self):
-        """create a SWMM curve object with the data of the swmm-shape_generator-CrossSection"""
+        """Create a SWMM curve object with the data of the swmm-shape_generator-CrossSection."""
         from swmm_api.input_file.sections import Curve
         x, y = self.get_points()
         # [1:-1] without first and last point / not needed in swmm
         height = np.array(x[1:-1]) / self.height
         area = np.array(y[1:-1]) / self.height * 2
-        return Curve(name=self.identifier, Type=Curve.TYPES.SHAPE,
+        return Curve(name=self.identifier, kind=Curve.TYPES.SHAPE,
                      points=[[float(h), float(a)] for h, a in zip(height, area)])
 
     @classmethod
     def from_curve(cls, curve, height=100, *args, **kwargs):
         """
-        create an object with the data of the swmm curve data as relative coordinates
+        Create an object with the data of the swmm curve data as relative coordinates.
 
         Args:
             curve (swmm_api.input_file.sections.Curve): Curve object of the CURVES section in the inp-data file
