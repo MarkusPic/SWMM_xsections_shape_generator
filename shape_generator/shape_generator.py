@@ -651,11 +651,11 @@ class CrossSection:
             self._v_v[k][slope] = None
 
         if self._v_v[k][slope] is None:
-            r_hyd = self.r_hyd_v / 1000  # from mm to m
+            r_hyd = self.r_hyd_v  # m
             J = slope  # / 1000
-            k = k / 1000  # from mm to m
+            k_ = k / 1000  # from mm to m
             self._v_v[k][slope] = (
-                    -2 * np.log10(2.51 * ny / (4 * r_hyd * np.sqrt(2 * g * J)) + k / (14.84 * r_hyd)) * np.sqrt(
+                    -2 * np.log10(2.51 * ny / (4 * r_hyd * np.sqrt(2 * g * J)) + k_ / (14.84 * r_hyd)) * np.sqrt(
                 2 * g * 4 * r_hyd * J))
 
         return self._v_v[k][slope]
@@ -689,7 +689,7 @@ class CrossSection:
         Returns:
             float: flow rate in L/s
         """
-        return self.velocity_t(hi, slope, k) * self.area_t(hi) * 1.0e-6 * 1000
+        return self.velocity_t(hi, slope, k) * self.area_t(hi) * 1000
 
     def flow_v(self, slope, k):
         """
@@ -702,7 +702,7 @@ class CrossSection:
         Returns:
             float: full-filled flow rate in L/s
         """
-        return self.velocity_v(slope, k) * self.area_v * 1.0e-6 * 1000
+        return self.velocity_v(slope, k) * self.area_v * 1000
 
     ####################################################################################################################
     def h_t(self, Q_t, slope, k):
