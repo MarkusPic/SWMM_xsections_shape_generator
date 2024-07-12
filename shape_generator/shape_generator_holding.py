@@ -79,7 +79,7 @@ class CrossSectionHolding(CrossSection):
 
     ####################################################################################################################
     @classmethod
-    def standard(cls, label, description=None, height=np.NaN, width=None, r_channel=None, r_roof=None, r_wall=None,
+    def standard(cls, label, description=None, height=np.nan, width=None, r_channel=None, r_roof=None, r_wall=None,
                  slope_bench=None, r_round=None, r_wall_bottom=None, h_bench=None, pre_bench=None, w_channel=None,
                  **kwargs):
         """

@@ -487,7 +487,7 @@ class CrossSection:
             float | numpy.ndarray: width at the certain height
         """
         if isinstance(hi, np.ndarray):
-            w = np.array([np.NaN] * hi.size)
+            w = np.array([np.nan] * hi.size)
             # w = hi.copy()
 
             for i, (lower, upper, f) in enumerate(self.iter_shape_description()):
