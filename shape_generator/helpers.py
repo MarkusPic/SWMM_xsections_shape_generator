@@ -1,7 +1,7 @@
 import math
+import numpy as np
 import warnings
 from abc import ABC, abstractmethod
-import numpy as np
 
 
 def deg2slope(degree):

@@ -1,7 +1,6 @@
 import math
-import re
-
 import numpy as np
+import re
 
 from .helpers import channel_end, Circle
 from .shape_generator import CrossSection

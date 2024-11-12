@@ -1,9 +1,9 @@
+import json
+import numpy as np
+from pathlib import Path
+
 from .helpers import Circle
 from .shape_generator import CrossSection
-import json
-import os
-
-import numpy as np
 
 
 class EggSection(CrossSection):
@@ -86,7 +86,7 @@ def _load_swmm_std_cross_section_curves():
     global SWMM_STD_CROSS_SECTION_CURVES
     if SWMM_STD_CROSS_SECTION_CURVES is None:
         SWMM_STD_CROSS_SECTION_CURVES = json.load(
-            open(os.path.join(os.path.dirname(__file__), 'swmm_std_cross_section_curves.json'), 'r'))
+            open(Path(__file__).parent / 'swmm_std_cross_section_curves.json', 'r'))
 
 
 width_max_factor = {

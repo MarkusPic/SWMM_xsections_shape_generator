@@ -25,7 +25,7 @@ The script is written in Python3.
 
 ### python Packages
 
-Packages required for this program will be installed with pip during the installation process and can be seen in the 'requirements.txt' file.
+Packages required for this program will be installed with pip during the installation process and can be seen in the [`requirements.txt`](requirements.txt) file.
 
 ### Fresh install
 

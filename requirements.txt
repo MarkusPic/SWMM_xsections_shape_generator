@@ -1,5 +1,6 @@
 numpy
-pandas
-matplotlib
-sympy
-swmm-api
+# matplotlib  # (optional) to create plots of the cross section
+# sympy  # (optional) to solve equations - currently solved numerically with scipy
+# swmm-api  # (optional) to export cross-section as curve in Input file CURVES section
+# scipy  # (optional) extends functionality / length, area, h_T, intersection point
+# ezdxf  # (optional) to read .dxf files

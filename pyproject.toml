@@ -1,3 +1,36 @@
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "SWMM_xsections_shape_generator"
+description = "US-EPA SWMM Cross-Section curve shape generator"
+readme = { file = "README.md", content-type = "text/markdown" }
+keywords = ["swmm", "environment", "civil_engineering"]
+license = { text = "MIT" }
+authors = [
+    { name = "Markus Pichler", email = "markus.pichler@tugraz.at" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Development Status :: 4 - Beta",
+    "Natural Language :: English",
+    "Topic :: Scientific/Engineering",
+    "Intended Audience :: Science/Research"
+]
+requires-python = ">=3.7"
+dependencies = ["numpy"]
+
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = { attr = "shape_generator.__version__" }
+
+[project.urls]
+Homepage = "https://github.com/MarkusPic/SWMM_xsections_shape_generator"
+Documentation = "https://markuspic.github.io/SWMM_xsections_shape_generator/"
+
+[project.optional-dependencies]
+full = ["sympy", "scipy", "swmm-api>=0.3", "matplotlib", "ezdxf"]
